@@ -18,6 +18,6 @@ namespace ucsdscheduleme.Models
         public ICollection<Section> Sections { get; set; }
         public ICollection<Course> PreRequisites { get; set; }
         public ICollection<Course> CoRequisites { get; set; }
-        //public ICollection<Evaluation> Evaluations { get; set; }
+        public ICollection<Evaluation> Evaluations { get; set; }
     }
 }
