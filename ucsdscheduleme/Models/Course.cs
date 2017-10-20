@@ -11,6 +11,7 @@ namespace ucsdscheduleme.Models
         public int Id { get; set; }
         [StringLength(10)]
         public string CourseAbbreviation { get; set; }
+        [StringLength(50)]
         public string CourseName { get; set; }
         public byte Units { get; set; }
         public string Description { get; set; }

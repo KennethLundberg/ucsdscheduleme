@@ -13,11 +13,14 @@ namespace ucsdscheduleme.Models
         public string Term { get; set; }
         public int StudentsEnrolled { get; set; }
         public int NumberOfEvaluation { get; set; }
-        public decimal RecommendedClass { get; set; } // Percentage
-        public decimal RecommendedProfessor { get; set; } // Percentage
+        public decimal RecommendedClass { get; set; } 
+        public decimal RecommendedProfessor { get; set; } 
         public decimal StudyHoursPerWeek { get; set; }
-        public string GradeExpected { get; set; } // Has grade and GPA sometimes
-        public string GradeReceived { get; set; } // Has grade and GPA somtimes, and sometimes just N/A
+        [StringLength(10)]
+        public string AverageGradeExpected { get; set; }
+        [StringLength(10)]
+        public string AverageGradeReceived { get; set; }
+        [StringLength(256)]
         public string URL { get; set; }
     }
 }
