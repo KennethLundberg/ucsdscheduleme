@@ -17,7 +17,7 @@ namespace ucsdscheduleme.Data
         public DbSet<Section> Sections { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<Location> Locations { get; set; }
-        //public DbSet<Professor> Professor { get; set; }
+        public DbSet<Professor> Professor { get; set; }
         //public DbSet<Evaluation> Evaluations { get; set; }
         //public DbSet<Cape> Cape { get; set; }
         //public DbSet<RateMyProfessor> RateMyProfessor { get; set; }
