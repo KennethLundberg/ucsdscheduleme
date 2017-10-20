@@ -8,8 +8,9 @@ using ucsdscheduleme.Models;
 
 namespace ucsdscheduleme.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : Controllerd
     {
+        // poop
         public IActionResult Index()
         {
             return View();
