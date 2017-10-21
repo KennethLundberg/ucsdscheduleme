@@ -1,7 +1,7 @@
 language: csharp
 solution: ucsdscheduleme.sln
 mono: none
-dotnet: 2.02
+dotnet: 2.0.0
 dist: trusty
 script:
  - dotnet restore
