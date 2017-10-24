@@ -1,0 +1,48 @@
+﻿@model ucsdscheduleme.Models.ScrapeViewModel
+@{
+    ViewData["Title"] = "Scrape Portal";
+}
+
+<div class="container">
+    <h4>Scrape Portal</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="ScrapeSingleCape">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Url" class="control-label"></label>
+                    <input asp-for="Url" class="form-control" />
+                    <span asp-validation-for="Url" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ScrapeSite" class="control-label"></label>
+                    <select asp-for="ScrapeSite" class="form-control" asp-items="Html.GetEnumSelectList<ScrapeSite>()"></select>
+                    <br />    
+                    <input type="submit" value="Scrape Single Url" class="btn btn-default" />
+                </div>
+            </form>
+            <hr />
+            <div class="row">
+                @* This is currently disabled because this action isn't going to do anything for awhile.*@
+                <button asp-action="ScrapeAllCapes" class="btn btn-danger disabled">Scrape All Capes</button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            @if (Model != null && Model.ScrapeResults.Count == 1)
+            {
+                var scrapeResult = Model.ScrapeResults.First();
+                <ul class="list-group">
+                    <li class="list-group-item">Fake1: @scrapeResult.Fake1</li>
+                    <li class="list-group-item">Fake2: @scrapeResult.Fake2</li>
+                    <li class="list-group-item">Fake3: @scrapeResult.Fake3</li>
+                </ul>
+            }
+            @* Else if will eventually go here, showing metadata from list of returned scrapes*@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

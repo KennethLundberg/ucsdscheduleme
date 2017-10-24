@@ -1,5 +1,7 @@
 language: csharp
-mono:
-  - latest
-  - 3.12.0
-  - 3.10.0
+solution: ucsdscheduleme.sln
+mono: none
+dotnet: 2.0.0
+dist: trusty
+script:
+ - dotnet restore
