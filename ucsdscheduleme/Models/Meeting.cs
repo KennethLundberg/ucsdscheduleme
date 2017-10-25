@@ -24,12 +24,13 @@ namespace ucsdscheduleme.Models
     public class Meeting
     {
         public int Id { get; set; }
-        public int SectionId { get; set; }
         [StringLength(3)]
         public string number { get; set; }
         public Days Days { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
+
+        public Section Section { get; set; }
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
     }
