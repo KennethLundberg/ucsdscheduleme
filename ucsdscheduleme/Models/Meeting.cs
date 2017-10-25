@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +25,8 @@ namespace ucsdscheduleme.Models
     {
         public int Id { get; set; }
         public int SectionId { get; set; }
+        [StringLength(3)]
+        public string number { get; set; }
         public Days Days { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }

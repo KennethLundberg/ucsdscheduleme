@@ -51,17 +51,17 @@ namespace ucsdscheduleme.Data
             context.SaveChanges();
 
             Meeting lecture1 = new Meeting() { MeetingType = MeetingType.Lecture,
-                    Days = Days.Tuesday, StartTime = 1400, EndTime = 1520, 
-                    Location = centr115 };
+                    Days = Days.Tuesday | Days.Thursday, StartTime = 1400,
+                    EndTime = 1520, Location = centr115, number = "A00" };
             Meeting discussion1 = new Meeting() { MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday, StartTime = 1000, EndTime = 1050, 
-                    Location = pcynh120 };
+                    Location = pcynh120, number = "A02" };
             Meeting discussion2 = new Meeting() { MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday, StartTime = 1100, EndTime = 1150, 
-                    Location = pcynh120 };
+                    Location = pcynh120, number = "A03" };
             Meeting discussion3 = new Meeting() { MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday, StartTime = 1200, EndTime = 1250, 
-                    Location = pcynh120 };
+                    Location = pcynh120, number = "A04" };
             Meeting review1 = new Meeting() { MeetingType = MeetingType.Review,
                     Days = Days.Sunday, StartTime = 1000, EndTime = 1150, 
                     Location = centr101 };
@@ -83,6 +83,7 @@ namespace ucsdscheduleme.Data
             context.Professor.Add();
 
             context.SaveChanges();
+
         }
     }
 }
