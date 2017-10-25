@@ -55,7 +55,7 @@ namespace ucsdscheduleme.Data
             context.SaveChanges();
 
             // Adding Data into the Meeting Table
-            Meeting lecture1 = new Meeting()
+            Meeting CSE20Lecture = new Meeting()
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
@@ -65,7 +65,7 @@ namespace ucsdscheduleme.Data
                 number = "A00"
                 //Section
             };
-            Meeting discussion1 = new Meeting()
+            Meeting CSE20Discussion1 = new Meeting()
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
@@ -74,7 +74,7 @@ namespace ucsdscheduleme.Data
                 number = "A02"
                 //Section
             };
-            Meeting discussion2 = new Meeting()
+            Meeting CSE20Discussion2 = new Meeting()
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
@@ -84,7 +84,7 @@ namespace ucsdscheduleme.Data
                 number = "A03"
                 //Section
             };
-            Meeting discussion3 = new Meeting()
+            Meeting CSE20Discussion3 = new Meeting()
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
@@ -94,7 +94,7 @@ namespace ucsdscheduleme.Data
                 number = "A04"
                 //Section
             };
-            Meeting review1 = new Meeting()
+            Meeting CSE20Review1 = new Meeting()
             {
                 MeetingType = MeetingType.Review,
                 Days = Days.Sunday,
@@ -103,7 +103,7 @@ namespace ucsdscheduleme.Data
                 Location = centr101
                 //Section
             };
-            Meeting final = new Meeting()
+            Meeting CSE20Final = new Meeting()
             {
                 MeetingType = MeetingType.Final,
                 Days = Days.Saturday,
@@ -113,12 +113,12 @@ namespace ucsdscheduleme.Data
                 //Section
             };
 
-            context.Meetings.Add(lecture1);
-            context.Meetings.Add(discussion1);
-            context.Meetings.Add(discussion2);
-            context.Meetings.Add(discussion3);
-            context.Meetings.Add(review1);
-            context.Meetings.Add(final);
+            context.Meetings.Add(CSE20Lecture);
+            context.Meetings.Add(CSE20Discussion1);
+            context.Meetings.Add(CSE20Discussion2);
+            context.Meetings.Add(CSE20Discussion3);
+            context.Meetings.Add(CSE20Review1);
+            context.Meetings.Add(CSE20Final);
 
             context.SaveChanges();
 
@@ -135,7 +135,7 @@ namespace ucsdscheduleme.Data
                 Professor = prof,
                 Meetings = new List<Meeting>()
                 {
-                    lecture1, discussion1, discussion2, discussion3, review1, final
+                    CSE20Lecture, CSE20Discussion1, CSE20Discussion2, CSE20Discussion3, CSE20Review1, CSE20Final
                 }
                 // Course
             };
@@ -162,15 +162,203 @@ namespace ucsdscheduleme.Data
 
             context.Courses.Add(CSE20);
 
+            context.SaveChanges();
+
+            // Adding data into the Cape Table
+            Cape CSE20Cape = new Cape()
+            {
+                Term = "WI17",
+                StudentsEnrolled = 267,
+                NumberOfEvaluation = 210,
+                RecommendedClass = (decimal)89.7,
+                RecommendedProfessor = (decimal)97.5,
+                StudyHoursPerWeek = (decimal)6.69,
+                AverageGradeExpected = "B+ (3.68)",
+                AverageGradeReceived = "B (3.16)"
+                //URL = 
+            };
+
+            context.Cape.Add(CSE20Cape);
+
+            context.SaveChanges();
+
+            // Adding data into the RateMyProfessor Table
+            RateMyProfessor CSE20RateMyProfessor = new RateMyProfessor()
+            {
+                OverallQuality = (decimal)4.4,
+                WouldTakeAgain = 88,
+                LevelOfDifficulty = (decimal)3.4,
+                URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=1516842"
+            };
+
+            context.RateMyProfessor.Add(CSE20RateMyProfessor);
+
+            context.SaveChanges();
 
             // Adding data into the Evaluation Table
             Evaluation CSE20Eval = new Evaluation()
             {
                 Course = CSE20,
-                Professor = prof
-                // Cape
-                // RateMyProfessor
+                Professor = prof,
+                Cape = CSE20Cape,
+                RateMyProfessor = CSE20RateMyProfessor
             };
+
+            context.Evaluations.Add(CSE20Eval);
+
+            context.SaveChanges();
+
+            // Filling out the remaining data
+            CSE20Lecture.Section = CSE20Discussion1.Section = CSE20Discussion2.Section 
+                = CSE20Discussion3.Section = CSE20Review1.Section = CSE20Final.Section = CSE20Section;
+
+            CSE20Section.Course = CSE20;
+
+            CSE20.Evaluations.Add(CSE20Eval);
+
+            // Make all the context save here or one by one like it is now. <------------------
+            // Need to save all meeting types, course, and evaluations <----------------------
+
+            // Adding another class
+            CSE20Lecture = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Days = (Days.Tuesday | Days.Thursday),
+                StartTime = 1100,
+                EndTime = 1220,
+                Location = centr105,
+                number = "B00"
+                //Section
+            };
+            CSE20Discussion1 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1600,
+                EndTime = 1650,
+                Location = wlh2207,
+                number = "B01"
+                //Section
+            };
+            CSE20Discussion2 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1700,
+                EndTime = 1750,
+                Location = wlh2207,
+                number = "B02"
+                //Section
+            };
+            CSE20Discussion3 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1800,
+                EndTime = 1850,
+                Location = wlh2207,
+                number = "B03"
+                //Section
+            };
+            CSE20Review1 = new Meeting()
+            {
+                MeetingType = MeetingType.Review,
+                Days = Days.Sunday,
+                StartTime = 1000,
+                EndTime = 1150,
+                Location = tba
+                //Section
+            };
+            CSE20Final = new Meeting()
+            {
+                MeetingType = MeetingType.Final,
+                Days = Days.Saturday,
+                StartTime = 1130,
+                EndTime = 1429,
+                Location = tba
+                //Section
+            };
+
+            context.Meetings.Add(CSE20Lecture);
+            context.Meetings.Add(CSE20Discussion1);
+            context.Meetings.Add(CSE20Discussion2);
+            context.Meetings.Add(CSE20Discussion3);
+            context.Meetings.Add(CSE20Review1);
+            context.Meetings.Add(CSE20Final);
+
+            context.SaveChanges();
+
+            // Adding data into the Section Table
+            CSE20Section = new Section()
+            {
+                Professor = prof,
+                Meetings = new List<Meeting>()
+                {
+                    CSE20Lecture, CSE20Discussion1, CSE20Discussion2, CSE20Discussion3, CSE20Review1, CSE20Final
+                }
+                // Course
+            };
+
+            context.Sections.Add(CSE20Section);
+
+            context.SaveChanges();
+
+            // Adding data into the Course Table
+            CSE20.Sections.Add(CSE20Section);
+
+            context.SaveChanges();
+
+            // Adding data into the Cape Table
+            CSE20Cape = new Cape()
+            {
+                Term = "WI17",
+                StudentsEnrolled = 101,
+                NumberOfEvaluation = 83,
+                RecommendedClass = (decimal)90.4,
+                RecommendedProfessor = (decimal)97.6,
+                StudyHoursPerWeek = (decimal)7.28,
+                AverageGradeExpected = "B+ (3.65)",
+                AverageGradeReceived = "B (3.16)"
+                //URL = 
+            };
+
+            context.Cape.Add(CSE20Cape);
+
+            context.SaveChanges();
+
+            // Adding data into the RateMyProfessor Table
+            CSE20RateMyProfessor = new RateMyProfessor()
+            {
+                OverallQuality = (decimal)4.4,
+                WouldTakeAgain = 88,
+                LevelOfDifficulty = (decimal)3.4,
+                URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=1516842"
+            };
+
+            context.RateMyProfessor.Add(CSE20RateMyProfessor);
+
+            context.SaveChanges();
+
+            // Adding data into the Evaluation Table
+            CSE20Eval = new Evaluation()
+            {
+                Course = CSE20,
+                Professor = prof,
+                Cape = CSE20Cape,
+                RateMyProfessor = CSE20RateMyProfessor
+            };
+
+            context.Evaluations.Add(CSE20Eval);
+
+            context.SaveChanges();
+
+            // Filling out the remaining data
+            CSE20Lecture.Section = CSE20Discussion1.Section = CSE20Discussion2.Section
+                = CSE20Discussion3.Section = CSE20Review1.Section = CSE20Final.Section = CSE20Section;
+
+            CSE20Section.Course = CSE20;
+
+            CSE20.Evaluations.Add(CSE20Eval);
 
         }
     }
