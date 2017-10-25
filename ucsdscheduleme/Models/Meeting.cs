@@ -25,10 +25,36 @@ namespace ucsdscheduleme.Models
     {
         public int Id { get; set; }
         [StringLength(3)]
-        public string number { get; set; }
+        public string Code { get; set; }
         public Days Days { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
+        private DateTime? _startDate;
+        public DateTime? StartDate
+        {
+            get
+            {
+                if(MeetingType == MeetingType.Final)
+                {
+                    return _startDate;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            set
+            {
+                if(MeetingType == MeetingType.Final)
+                {
+                    _startDate = value;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+        }
 
         public Section Section { get; set; }
         public MeetingType MeetingType { get; set; }

@@ -62,7 +62,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1400,
                 EndTime = 1520,
                 Location = centr115,
-                number = "A00"
+                Code = "A00"
                 //Section
             };
             Meeting CSE20Discussion1 = new Meeting()
@@ -71,7 +71,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1000, EndTime = 1050, 
                 Location = pcynh120,
-                number = "A02"
+                Code = "A02"
                 //Section
             };
             Meeting CSE20Discussion2 = new Meeting()
@@ -81,7 +81,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1100,
                 EndTime = 1150, 
                 Location = pcynh120,
-                number = "A03"
+                Code = "A03"
                 //Section
             };
             Meeting CSE20Discussion3 = new Meeting()
@@ -91,7 +91,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1200,
                 EndTime = 1250, 
                 Location = pcynh120,
-                number = "A04"
+                Code = "A04"
                 //Section
             };
             Meeting CSE20Review1 = new Meeting()
@@ -233,7 +233,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1100,
                 EndTime = 1220,
                 Location = centr105,
-                number = "B00"
+                Code = "B00"
                 //Section
             };
             CSE20Discussion1 = new Meeting()
@@ -243,7 +243,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1600,
                 EndTime = 1650,
                 Location = wlh2207,
-                number = "B01"
+                Code = "B01"
                 //Section
             };
             CSE20Discussion2 = new Meeting()
@@ -253,7 +253,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1700,
                 EndTime = 1750,
                 Location = wlh2207,
-                number = "B02"
+                Code = "B02"
                 //Section
             };
             CSE20Discussion3 = new Meeting()
@@ -263,7 +263,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1800,
                 EndTime = 1850,
                 Location = wlh2207,
-                number = "B03"
+                Code = "B03"
                 //Section
             };
             CSE20Review1 = new Meeting()
@@ -367,7 +367,10 @@ namespace ucsdscheduleme.Data
             CSE20.Evaluations.Add(CSE20Eval);
 
             prof.Evaluations.Add(CSE20Eval);
-            
+
+            var count = context.Sections.First().Meetings.Count;
+
+            bool test = true;
         }
     }
 }
