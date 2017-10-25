@@ -216,6 +216,12 @@ namespace ucsdscheduleme.Data
 
             CSE20.Evaluations.Add(CSE20Eval);
 
+            prof.Sections.Add(CSE20Section);
+
+            prof.Evaluations.Add(CSE20Eval);
+
+            //context.SaveChanges(); <-- Not showing up in the database
+            
             // Make all the context save here or one by one like it is now. <------------------
             // Need to save all meeting types, course, and evaluations <----------------------
 
@@ -360,6 +366,8 @@ namespace ucsdscheduleme.Data
 
             CSE20.Evaluations.Add(CSE20Eval);
 
+            prof.Evaluations.Add(CSE20Eval);
+            
         }
     }
 }
