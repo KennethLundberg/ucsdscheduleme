@@ -13,33 +13,37 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            /*
-            Location center = new Location() { RoomNumber = 101, Building = "Center" };
-            Meeting meeting = new Meeting() { MeetingType = MeetingType.Lab, Days = Days.Friday, StartTime = 10, EndTime = 14, Location = center };
-            Section section = new Section() { CourseId = 123, Meetings = new List<Meeting>() { meeting } };
-
-            Course math = new Course() { CourseName = "CSE 100", Sections = new List<Section>() { section } };
-
-            context.Courses.Add(math);
-
-            context.SaveChanges();
-
-            //var course = context.Courses.First();
-
-            //bool breakpointTester = false;
-            */
-
-            Location centr115 = new Location() { RoomNumber = 115, 
-                    Building = "Center" };
-            Location pcynh120 = new Location() { RoomNumber = 120, 
-                    Building = "Pepper Canyon Hall" };
-            Location centr101 = new Location() { RoomNumber = 101, 
-                    Building = "Center" };
-            Location centr105 = new Location() { RoomNumber = 105, 
-                    Building = "Center" };
-            Location wlh2207 = new Location() { RoomNumber = 2207, 
-                    Building = "Warren Lecture Hall" };
-            Location tba = new Location() { RoomNumber = 0, Building = "TBA" };
+            // Adding data into the Location Table
+            Location centr115 = new Location()
+            {
+                RoomNumber = 115, 
+                Building = "Center"
+            };
+            Location pcynh120 = new Location()
+            {
+                RoomNumber = 120, 
+                Building = "Pepper Canyon Hall"
+            };
+            Location centr101 = new Location()
+            {
+                RoomNumber = 101, 
+                Building = "Center"
+            };
+            Location centr105 = new Location()
+            {
+                RoomNumber = 105, 
+                Building = "Center"
+            };
+            Location wlh2207 = new Location()
+            {
+                RoomNumber = 2207, 
+                Building = "Warren Lecture Hall"
+            };
+            Location tba = new Location()
+            {
+                RoomNumber = 0,
+                Building = "TBA"
+            };
 
             context.Locations.Add(centr115);
             context.Locations.Add(pcynh120);
@@ -50,24 +54,64 @@ namespace ucsdscheduleme.Data
 
             context.SaveChanges();
 
-            Meeting lecture1 = new Meeting() { MeetingType = MeetingType.Lecture,
-                    Days = Days.Tuesday | Days.Thursday, StartTime = 1400,
-                    EndTime = 1520, Location = centr115, number = "A00" };
-            Meeting discussion1 = new Meeting() { MeetingType = MeetingType.Discussion,
-                    Days = Days.Wednesday, StartTime = 1000, EndTime = 1050, 
-                    Location = pcynh120, number = "A02" };
-            Meeting discussion2 = new Meeting() { MeetingType = MeetingType.Discussion,
-                    Days = Days.Wednesday, StartTime = 1100, EndTime = 1150, 
-                    Location = pcynh120, number = "A03" };
-            Meeting discussion3 = new Meeting() { MeetingType = MeetingType.Discussion,
-                    Days = Days.Wednesday, StartTime = 1200, EndTime = 1250, 
-                    Location = pcynh120, number = "A04" };
-            Meeting review1 = new Meeting() { MeetingType = MeetingType.Review,
-                    Days = Days.Sunday, StartTime = 1000, EndTime = 1150, 
-                    Location = centr101 };
-            Meeting final = new Meeting() { MeetingType = MeetingType.Final,
-                    Days = Days.Saturday, StartTime = 1130, EndTime = 1429, 
-                    Location = tba };
+            // Adding Data into the Meeting Table
+            Meeting lecture1 = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Days = (Days.Tuesday | Days.Thursday),
+                StartTime = 1400,
+                EndTime = 1520,
+                Location = centr115,
+                number = "A00"
+                //Section
+            };
+            Meeting discussion1 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1000, EndTime = 1050, 
+                Location = pcynh120,
+                number = "A02"
+                //Section
+            };
+            Meeting discussion2 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1100,
+                EndTime = 1150, 
+                Location = pcynh120,
+                number = "A03"
+                //Section
+            };
+            Meeting discussion3 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1200,
+                EndTime = 1250, 
+                Location = pcynh120,
+                number = "A04"
+                //Section
+            };
+            Meeting review1 = new Meeting()
+            {
+                MeetingType = MeetingType.Review,
+                Days = Days.Sunday,
+                StartTime = 1000,
+                EndTime = 1150, 
+                Location = centr101
+                //Section
+            };
+            Meeting final = new Meeting()
+            {
+                MeetingType = MeetingType.Final,
+                Days = Days.Saturday,
+                StartTime = 1130,
+                EndTime = 1429, 
+                Location = tba
+                //Section
+            };
 
             context.Meetings.Add(lecture1);
             context.Meetings.Add(discussion1);
@@ -78,11 +122,55 @@ namespace ucsdscheduleme.Data
 
             context.SaveChanges();
 
+            // Adding data into the Professor Table
             Professor prof = new Professor() { Name = "Minnes Kemp, Mor Mia" };
 
-            context.Professor.Add();
+            context.Professor.Add(prof);
 
             context.SaveChanges();
+
+            // Adding data into the Section Table
+            Section CSE20Section = new Section()
+            {
+                Professor = prof,
+                Meetings = new List<Meeting>()
+                {
+                    lecture1, discussion1, discussion2, discussion3, review1, final
+                }
+                // Course
+            };
+
+            context.Sections.Add(CSE20Section);
+
+            context.SaveChanges();
+
+            // Adding data into the Course Table
+            Course CSE20 = new Course()
+            {
+                CourseAbbreviation = "CSE20",
+                CourseName = "Intro / Discrete Mathematics",
+                Units = 4,
+                Description = "",
+                Sections = new List<Section>
+                {
+                    CSE20Section
+                }
+                // Pre-Requisite
+                // Co- Requisite
+                // Evaluation
+            };
+
+            context.Courses.Add(CSE20);
+
+
+            // Adding data into the Evaluation Table
+            Evaluation CSE20Eval = new Evaluation()
+            {
+                Course = CSE20,
+                Professor = prof
+                // Cape
+                // RateMyProfessor
+            };
 
         }
     }
