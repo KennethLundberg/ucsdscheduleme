@@ -10,7 +10,7 @@ namespace USM.Test
         [Fact]
         public void myTest()
         {
-            Assert.Equal(1, 1); 
+            Assert.Equal(1, 0); 
         }
     }
 }
