@@ -1,113 +1,144 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ucsdscheduleme.Models;
 
-namespace ucsdscheduleme.Repo {
-    
-    /* The class for each node of the graph */
-    public class Node {
-        public Course course;
-        public Meeting meeting;
-        public ICollection<Node> Edges { get; set; }
-        public bool visited;
-        public bool firstClass;
+namespace ucsdscheduleme.Repo
+{
 
+    // The class for each node of the graph.
+    public class Node
+    {
+        public Node(int index)
+        {
+            Index = index;
+        }
+
+        public Course Course { get; set; }
+        public Meeting Meeting { get; set; }
+
+        public readonly int Index;
+        public bool IsFirstClass { get; set; }
+
+        public List<Node> Edges { get; set; } = new List<Node>();
     }
-    public class ScheduleRepo {
-        public ScheduleRepo() {
-            ICollection<Node> GraphNodes = new Collection<Node>();
+
+    public class ScheduleRepo
+    {
+        /// <summary>
+        /// Finds all possible shedules for a list of courses.
+        /// </summary>
+        /// <param name="coursesToSchedule">Which courses to schedule.</param>
+        /// <returns>List of possible schedules for course list.</returns>
+        public List<List<Meeting>> FindScheduleForClasses(Course[] coursesToSchedule)
+        {
+            List<Node> AllMeetings = new List<Node>();
             List<List<Meeting>> possibleSchedules = new List<List<Meeting>>();
 
-            Course a = new Course();
-            Course b = new Course();
-            Course c = new Course();
-            Course[] possibleCourses = { a, b, c };
-            Course firstCourse = possibleCourses.ElementAt(0);
-            int numClass = possibleCourses.Count();
+            Course firstCourse = coursesToSchedule[0];
+            int numClasses = coursesToSchedule.Length;
 
-            // creating the nodes
-            foreach (Course i in possibleCourses) {
-                foreach (Section j in i.Sections) {
-                    foreach (Meeting k in j.Meetings) {
-                        Node nodes = new Node
+            // Create a node for each meeting.
+            int numNodes = 0;
+            foreach (Course course in coursesToSchedule)
+            {
+                foreach (Section section in course.Sections)
+                {
+                    foreach (Meeting meeting in section.Meetings)
+                    {
+                        Node thisMeeting = new Node(numNodes++)
                         {
-                            visited = false,
-                            course = i,
-                            meeting = k
+                            Course = course,
+                            Meeting = meeting
                         };
-                        GraphNodes.Add(nodes);
-                        nodes.firstClass  = (nodes.course == firstCourse) ? true : false;
+                        AllMeetings.Add(thisMeeting);
+                        thisMeeting.IsFirstClass = thisMeeting.Course == firstCourse;
                     }
                 }
             }
- 
-            // creating the edges
-            for (int i = 0; i < GraphNodes.Count(); i++) {
-                for (int j = i + 1; j < GraphNodes.Count(); j++){
-                    Node node1 = GraphNodes.ElementAt(i);
-                    Node node2 = GraphNodes.ElementAt(j);
-                    if (node1.course != node2.course) {
-                        if (!Conflict(node1.meeting, node2.meeting)) {
-                            node1.Edges.Add(node2); 
+
+            // Create all the edges between meetings
+            for (int i = 0; i < AllMeetings.Count(); i++)
+            {
+                for (int j = i + 1; j < AllMeetings.Count(); j++)
+                {
+                    Node node1 = AllMeetings[i];
+                    Node node2 = AllMeetings[j];
+                    if (node1.Course != node2.Course)
+                    {
+                        if (!Conflict(node1.Meeting, node2.Meeting))
+                        {
+                            node1.Edges.Add(node2);
                         }
                     }
                 }
             }
 
             // dfs on graph to find possible schedules
-            foreach (Node i in GraphNodes) {
-                if (i.firstClass) {
-                    DFS(i); 
+            foreach (Node meeting in AllMeetings)
+            {
+                if (meeting.IsFirstClass)
+                {
+                    DFS(meeting, numClasses, numNodes, ref possibleSchedules);
                 }
             }
 
-            /* Checks for time conflicts */
-            bool Conflict(Meeting meeting1, Meeting meeting2) {
-                if ((meeting1.EndTime > meeting2.StartTime) || (meeting1.StartTime > meeting2.EndTime)) {
-                    return true;
-                }
-                return false;
-            }
+            return possibleSchedules;
+        }
 
-            /* Depth first search */
-            void DFS(Node root) {
-                Node curr;
-                Stack<Node> stack = new Stack<Node>();
-                List <Meeting> temp = new List<Meeting>();
-                temp.Add(root.meeting); 
+        /// <summary>
+        /// Performs DFS on schedule graph.
+        /// </summary>
+        /// <param name="root">Node to do DFS from</param>
+        /// <param name="numClasses">Total number of classes to schedule</param>
+        /// <param name="possibleSchedules">Modified list of possible schedules</param>
+        private void DFS(Node root, int numClasses, int numNodes, ref List<List<Meeting>> possibleSchedules)
+        {
+            Node curr;
+            Stack<Node> stack = new Stack<Node>();
+            bool[] isNodeVisited = new bool[numNodes];
+            List<Meeting> temp = new List<Meeting>();
+            temp.Add(root.Meeting);
 
-                stack.Push(root);
-                root.visited = true;
+            stack.Push(root);
+            isNodeVisited[0] = true;
 
-                while (stack.Count != 0) {
-                    curr = stack.Peek();
-                    stack.Pop();
-                    temp.Remove(curr.meeting);
+            while (stack.Count != 0)
+            {
+                curr = stack.Peek();
+                stack.Pop();
+                temp.Remove(curr.Meeting);
 
-                    foreach (Node i in curr.Edges) {
-                        if (!i.visited) {
-                            stack.Push(i);
-                            temp.Add(i.meeting);
-                            i.visited = true;
+                foreach (Node i in curr.Edges)
+                {
+                    if (!isNodeVisited[i.Index])
+                    {
+                        stack.Push(i);
+                        temp.Add(i.Meeting);
+                        isNodeVisited[i.Index] = true;
 
-                            if (temp.Count() == numClass) {
-                                List<Meeting> possibleSchedule = new List<Meeting>();
-                                foreach (Meeting j in temp) {
-                                    possibleSchedule.Add(j);
-                                }
-                                possibleSchedules.Add(possibleSchedule);
+                        if (temp.Count() == numClasses)
+                        {
+                            List<Meeting> possibleSchedule = new List<Meeting>();
+                            foreach (Meeting j in temp)
+                            {
+                                possibleSchedule.Add(j);
                             }
+                            possibleSchedules.Add(possibleSchedule);
                         }
                     }
                 }
-                foreach (Node i in GraphNodes) {
-                    i.visited = false;
-                }
             }
+        }
 
+        /// <summary>
+        /// Checks for time conflicts.
+        /// </summary>
+        /// <param name="meeting1">First meeting to check conflicts for</param>
+        /// <param name="meeting2"></param>
+        /// <returns>True if conflict is found.</returns>
+        private bool Conflict(Meeting meeting1, Meeting meeting2)
+        {
+            return (meeting1.EndTime > meeting2.StartTime) || (meeting1.StartTime > meeting2.EndTime);
         }
     }
 }
