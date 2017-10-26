@@ -15,7 +15,8 @@ namespace ucsdscheduleme.Models
         Wednesday = 8,
         Thursday = 16,
         Friday = 32,
-        Saturday = 64
+        Saturday = 64,
+        TBA = 128
     }
     public enum MeetingType
     {
