@@ -14,7 +14,7 @@ namespace ucsdscheduleme.Repo
         }
 
         public Course Course { get; set; }
-        public Meeting Meeting { get; set; }
+        public Section Section { get; set; }
 
         public readonly int Index;
         public bool IsFirstClass { get; set; }
@@ -29,10 +29,10 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="coursesToSchedule">Which courses to schedule.</param>
         /// <returns>List of possible schedules for course list.</returns>
-        public List<List<Meeting>> FindScheduleForClasses(Course[] coursesToSchedule)
+        public List<List<Section>> FindScheduleForClasses(Course[] coursesToSchedule)
         {
-            List<Node> AllMeetings = new List<Node>();
-            List<List<Meeting>> possibleSchedules = new List<List<Meeting>>();
+            List<Node> AllSections = new List<Node>();
+            List<List<Section>> possibleSchedules = new List<List<Section>>();
 
             Course firstCourse = coursesToSchedule[0];
             int numClasses = coursesToSchedule.Length;
@@ -43,29 +43,26 @@ namespace ucsdscheduleme.Repo
             {
                 foreach (Section section in course.Sections)
                 {
-                    foreach (Meeting meeting in section.Meetings)
+                    Node thisSection = new Node(numNodes++)
                     {
-                        Node thisMeeting = new Node(numNodes++)
-                        {
-                            Course = course,
-                            Meeting = meeting
-                        };
-                        AllMeetings.Add(thisMeeting);
-                        thisMeeting.IsFirstClass = thisMeeting.Course == firstCourse;
-                    }
+                        Course = course,
+                        Section = section
+                    };
+                    AllSections.Add(thisSection);
+                    thisSection.IsFirstClass = thisSection.Course == firstCourse;
                 }
             }
 
             // Create all the edges between meetings
-            for (int i = 0; i < AllMeetings.Count(); i++)
+            for (int i = 0; i < AllSections.Count(); i++)
             {
-                for (int j = i + 1; j < AllMeetings.Count(); j++)
+                for (int j = i + 1; j < AllSections.Count(); j++)
                 {
-                    Node node1 = AllMeetings[i];
-                    Node node2 = AllMeetings[j];
+                    Node node1 = AllSections[i];
+                    Node node2 = AllSections[j];
                     if (node1.Course != node2.Course)
                     {
-                        if (!Conflict(node1.Meeting, node2.Meeting))
+                        if (!Conflict(node1.Section, node2.Section))
                         {
                             node1.Edges.Add(node2);
                         }
@@ -74,11 +71,11 @@ namespace ucsdscheduleme.Repo
             }
 
             // dfs on graph to find possible schedules
-            foreach (Node meeting in AllMeetings)
+            foreach (Node section in AllSections)
             {
-                if (meeting.IsFirstClass)
+                if (section.IsFirstClass)
                 {
-                    DFS(meeting, numClasses, numNodes, ref possibleSchedules);
+                    DFS(section, numClasses, numNodes, ref possibleSchedules);
                 }
             }
 
@@ -91,14 +88,15 @@ namespace ucsdscheduleme.Repo
         /// <param name="root">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
-        private void DFS(Node root, int numClasses, int numNodes, ref List<List<Meeting>> possibleSchedules)
+        private void DFS(Node root, int numClasses, int numNodes, ref List<List<Section>> possibleSchedules)
         {
             Node curr;
             Stack<Node> stack = new Stack<Node>();
             bool[] isNodeVisited = new bool[numNodes];
-            List<Meeting> temp = new List<Meeting>();
-            temp.Add(root.Meeting);
-
+            List<Section> temp = new List<Section>
+            {
+                root.Section
+            };
             stack.Push(root);
             isNodeVisited[0] = true;
 
@@ -106,20 +104,20 @@ namespace ucsdscheduleme.Repo
             {
                 curr = stack.Peek();
                 stack.Pop();
-                temp.Remove(curr.Meeting);
+                temp.Remove(curr.Section);
 
                 foreach (Node i in curr.Edges)
                 {
-                    if (!isNodeVisited[i.Index])
+                    if (!isNodeVisited[i.Index] && !Conflict(i.Section, temp))
                     {
                         stack.Push(i);
-                        temp.Add(i.Meeting);
+                        temp.Add(i.Section);
                         isNodeVisited[i.Index] = true;
 
                         if (temp.Count() == numClasses)
                         {
-                            List<Meeting> possibleSchedule = new List<Meeting>();
-                            foreach (Meeting j in temp)
+                            List<Section> possibleSchedule = new List<Section>();
+                            foreach (Section j in temp)
                             {
                                 possibleSchedule.Add(j);
                             }
@@ -131,14 +129,42 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
-        /// Checks for time conflicts.
+        /// Checks for time conflicts between two nodes.
         /// </summary>
-        /// <param name="meeting1">First meeting to check conflicts for</param>
-        /// <param name="meeting2"></param>
+        /// <param name="section1">First section to check conflicts for</param>
+        /// <param name="section2">Second section to check conflicts for</param>
         /// <returns>True if conflict is found.</returns>
-        private bool Conflict(Meeting meeting1, Meeting meeting2)
+        private bool Conflict(Section section1, Section section2)
         {
-            return (meeting1.EndTime > meeting2.StartTime) || (meeting1.StartTime > meeting2.EndTime);
+            foreach (Meeting i in section1.Meetings)
+            {
+                foreach (Meeting j in section2.Meetings)
+                {
+                    if (i.EndTime <= j.StartTime || i.StartTime <= j.EndTime)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Checks for time conflicts between a node and the existing schedule.
+        /// </summary>
+        /// <returns>The conflict.</returns>
+        /// <param name="section1">First node to check conflicts for</param>
+        /// <param name="temp">Current existing schedule</param>
+        private bool Conflict(Section section1, List<Section> temp)
+        {
+            foreach (Section i in temp)
+            {
+                if (Conflict(section1, i))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
