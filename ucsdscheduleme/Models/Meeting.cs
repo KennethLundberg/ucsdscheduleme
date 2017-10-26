@@ -19,7 +19,7 @@ namespace ucsdscheduleme.Models
     }
     public enum MeetingType
     {
-        Lecture, Discussion, Lab, Review, Final
+        Lecture, Discussion, Lab, Review, Final, Midterm
     }
     public class Meeting
     {
@@ -29,32 +29,7 @@ namespace ucsdscheduleme.Models
         public Days Days { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
-        private DateTime? _startDate;
-        public DateTime? StartDate
-        {
-            get
-            {
-                if(MeetingType == MeetingType.Final)
-                {
-                    return _startDate;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-            set
-            {
-                if(MeetingType == MeetingType.Final)
-                {
-                    _startDate = value;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-        }
+        public DateTime? StartDate { get; set; }
 
         public Section Section { get; set; }
         public MeetingType MeetingType { get; set; }

@@ -12,7 +12,8 @@ namespace ucsdscheduleme.Models
         [StringLength(50)]
         public string Name { get; set; }
 
-        public ICollection<Section> Sections { get; set; }
-        public ICollection<Evaluation> Evaluations { get; set; }
+        public ICollection<Section> Sections { get; set; } = new List<Section>();
+        public ICollection<Cape> Cape { get; set; } = new List<Cape>();
+        public ICollection<RateMyProfessor> RateMyProfessor { get; set; } = new List<RateMyProfessor>();
     }
 }

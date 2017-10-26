@@ -11,6 +11,6 @@ namespace ucsdscheduleme.Models
 
         public Course Course { get; set; }
         public Professor Professor { get; set; }
-        public ICollection<Meeting> Meetings { get; set; }
+        public ICollection<Meeting> Meetings { get; set; } = new List<Meeting>();
     }
 }
