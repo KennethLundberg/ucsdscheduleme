@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
 
@@ -42,15 +37,12 @@ namespace ucsdscheduleme.Controllers
                     new Section
                     {
                         Id = 10,
-                        CourseId = 1,
-                        ProfessorId = 100,
                         Meetings = new List<Meeting>
                         {
                             new Meeting
                             {
                                 Id = 101,
                                 MeetingType = MeetingType.Lecture,
-                                SectionId = 10,
                                 StartTime = 10,
                                 EndTime = 11
                             },
@@ -58,7 +50,6 @@ namespace ucsdscheduleme.Controllers
                             {
                                 Id = 102,
                                 MeetingType = MeetingType.Discussion,
-                                SectionId = 10,
                                 StartTime = 20,
                                 EndTime = 21
                             }
@@ -67,15 +58,12 @@ namespace ucsdscheduleme.Controllers
                     new Section
                     {
                         Id = 10,
-                        CourseId = 1,
-                        ProfessorId = 100,
                         Meetings = new List<Meeting>
                         {
                             new Meeting
                             {
                                 Id = 101,
                                 MeetingType = MeetingType.Lecture,
-                                SectionId = 10,
                                 StartTime = 10,
                                 EndTime = 11
                             },
@@ -83,7 +71,6 @@ namespace ucsdscheduleme.Controllers
                             {
                                 Id = 102,
                                 MeetingType = MeetingType.Discussion,
-                                SectionId = 10,
                                 StartTime = 20,
                                 EndTime = 21
                             }
@@ -101,15 +88,12 @@ namespace ucsdscheduleme.Controllers
                     new Section
                     {
                         Id = 10,
-                        CourseId = 2,
-                        ProfessorId = 100,
                         Meetings = new List<Meeting>
                         {
                             new Meeting
                             {
                                 Id = 102,
                                 MeetingType = MeetingType.Discussion,
-                                SectionId = 10,
                                 StartTime = 9,
                                 EndTime = 11
                             }
