@@ -14,32 +14,32 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureCreated();
 
             // Making Location objects
-            Location centr115 = new Location()
+            Location CENTR115 = new Location()
             {
                 RoomNumber = 115, 
                 Building = "Center"
             };
-            Location pcynh120 = new Location()
+            Location PCYNH120 = new Location()
             {
                 RoomNumber = 120, 
                 Building = "Pepper Canyon Hall"
             };
-            Location centr101 = new Location()
+            Location CENTR101 = new Location()
             {
                 RoomNumber = 101, 
                 Building = "Center"
             };
-            Location centr105 = new Location()
+            Location CENTR105 = new Location()
             {
                 RoomNumber = 105, 
                 Building = "Center"
             };
-            Location wlh2207 = new Location()
+            Location WLH2207 = new Location()
             {
                 RoomNumber = 2207, 
                 Building = "Warren Lecture Hall"
             };
-            Location tba = new Location()
+            Location TBA = new Location()
             {
                 RoomNumber = 0,
                 Building = "TBA"
@@ -52,7 +52,7 @@ namespace ucsdscheduleme.Data
                 Days = (Days.Tuesday | Days.Thursday),
                 StartTime = 1400,
                 EndTime = 1520,
-                Location = centr115,
+                Location = CENTR115,
                 Code = "A00"
             };
             Meeting CSE20Discussion1 = new Meeting()
@@ -61,7 +61,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1000,
                 EndTime = 1050, 
-                Location = pcynh120,
+                Location = PCYNH120,
                 Code = "A02"
             };
             Meeting CSE20Discussion2 = new Meeting()
@@ -70,7 +70,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1100,
                 EndTime = 1150, 
-                Location = pcynh120,
+                Location = PCYNH120,
                 Code = "A03"
             };
             Meeting CSE20Discussion3 = new Meeting()
@@ -79,7 +79,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1200,
                 EndTime = 1250, 
-                Location = pcynh120,
+                Location = PCYNH120,
                 Code = "A04"
             };
             Meeting CSE20Review1 = new Meeting()
@@ -88,7 +88,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Sunday,
                 StartTime = 1000,
                 EndTime = 1150, 
-                Location = centr101,
+                Location = CENTR101,
                 StartDate = new DateTime(2017, 10, 29)
             };
             Meeting CSE20Final = new Meeting()
@@ -97,7 +97,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Saturday,
                 StartTime = 1130,
                 EndTime = 1429,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 16)
             };
 
@@ -147,9 +147,6 @@ namespace ucsdscheduleme.Data
                 CourseName = "Intro / Discrete Mathematics",
                 Units = 4,
                 Description = ""
-
-                // Pre-Requisite
-                // Co- Requisite
             };
 
             // Adding different sections to the course object
@@ -198,12 +195,12 @@ namespace ucsdscheduleme.Data
             MinnesKemp.Sections.Add(CSE20Section3);
 
             // Adding Location Objects to the DB
-            context.Locations.Add(centr115);
-            context.Locations.Add(pcynh120);
-            context.Locations.Add(centr101);
-            context.Locations.Add(centr105);
-            context.Locations.Add(wlh2207);
-            context.Locations.Add(tba);
+            context.Locations.Add(CENTR115);
+            context.Locations.Add(PCYNH120);
+            context.Locations.Add(CENTR101);
+            context.Locations.Add(CENTR105);
+            context.Locations.Add(WLH2207);
+            context.Locations.Add(TBA);
             // Adding Meeting Objects to the DB
             context.Meetings.Add(CSE20Lecture);
             context.Meetings.Add(CSE20Discussion1);
@@ -233,7 +230,7 @@ namespace ucsdscheduleme.Data
                 Days = (Days.Tuesday | Days.Thursday),
                 StartTime = 1100,
                 EndTime = 1220,
-                Location = centr105,
+                Location = CENTR105,
                 Code = "B00"
             };
             CSE20Discussion1 = new Meeting()
@@ -242,7 +239,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1600,
                 EndTime = 1650,
-                Location = wlh2207,
+                Location = WLH2207,
                 Code = "B01"
             };
             CSE20Discussion2 = new Meeting()
@@ -251,7 +248,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1700,
                 EndTime = 1750,
-                Location = wlh2207,
+                Location = WLH2207,
                 Code = "B02"
             };
             CSE20Discussion3 = new Meeting()
@@ -260,7 +257,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Wednesday,
                 StartTime = 1800,
                 EndTime = 1850,
-                Location = wlh2207,
+                Location = WLH2207,
                 Code = "B03"
             };
             CSE20Review1 = new Meeting()
@@ -269,7 +266,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Sunday,
                 StartTime = 1000,
                 EndTime = 1150,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 10, 29)
             };
             CSE20Final = new Meeting()
@@ -278,7 +275,7 @@ namespace ucsdscheduleme.Data
                 Days = Days.Saturday,
                 StartTime = 1130,
                 EndTime = 1429,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 16)
             };
 
@@ -364,7 +361,10 @@ namespace ucsdscheduleme.Data
 
             context.SaveChanges();
 
+            // 
             // Adding CSE 11
+            //
+
             // Making Location objects
             Location WLH2001 = new Location()
             {
@@ -419,7 +419,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0,
                 EndTime = 0,
                 MeetingType = MeetingType.Lab,
-                Location = tba
+                Location = TBA
             };
             Meeting CSE11Review1 = new Meeting()
             {
@@ -508,7 +508,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 1059,
                 MeetingType = MeetingType.Final,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 12)
             };
 
@@ -645,7 +645,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0,
                 EndTime = 0,
                 MeetingType = MeetingType.Lab,
-                Location = tba
+                Location = TBA
             };
             CSE11Discussion = new Meeting()
             {
@@ -662,7 +662,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 10, 09)
             };
             CSE11Review2 = new Meeting()
@@ -671,7 +671,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 10, 23)
             };
             CSE11Review3 = new Meeting()
@@ -680,7 +680,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 11, 01)
             };
             CSE11Review4 = new Meeting()
@@ -689,7 +689,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1600,
                 EndTime = 1650,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 11, 05)
             };
             CSE11Review5 = new Meeting()
@@ -698,7 +698,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 11, 09)
             };
             CSE11Review6 = new Meeting()
@@ -707,7 +707,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 11, 20)
             };
             CSE11Review7 = new Meeting()
@@ -716,7 +716,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0830,
                 EndTime = 0920,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 11, 21)
             };
             CSE11Review8 = new Meeting()
@@ -725,7 +725,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 0850,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 06)
             };
             CSE11Review9 = new Meeting()
@@ -734,7 +734,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 1600,
                 EndTime = 1650,
                 MeetingType = MeetingType.Review,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 10)
             };
             CSE11Final = new Meeting()
@@ -743,7 +743,7 @@ namespace ucsdscheduleme.Data
                 StartTime = 0800,
                 EndTime = 1059,
                 MeetingType = MeetingType.Final,
-                Location = tba,
+                Location = TBA,
                 StartDate = new DateTime(2017, 12, 13)
             };
 
@@ -818,6 +818,336 @@ namespace ucsdscheduleme.Data
             context.Sections.Add(CSE11B);
             // Adding Cape Object to the DB
             context.Cape.Add(CSE11Cape);
+
+            context.SaveChanges();
+
+            
+            ////CSE 101
+            ////
+
+            // Making location objects
+            Location CENTR214 = new Location()
+            {
+                Building = "Center",
+                RoomNumber = 214
+            };
+            Location WLH2113 = new Location()
+            {
+                Building = "Warren Lecture Hall",
+                RoomNumber = 2113
+            };
+
+            Location CENTR222 = new Location()
+            {
+                Building = "Center",
+                RoomNumber = 222
+            };
+
+            //Making meeting objects
+            Meeting CSE101Lecture1 = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Code = "A00",
+                Days = Days.Monday | Days.Wednesday,
+                StartTime = 1700,
+                EndTime = 1820,
+                Location = CENTR214
+            };
+            Meeting CSE101Lecture2 = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Code = "B00",
+                Days = Days.Tuesday | Days.Thursday,
+                StartTime = 0800,
+                EndTime = 0920,
+                Location = CENTR115
+            };
+            Meeting CSE101Discussion1 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "A02",
+                Days = Days.Wednesday,
+                StartTime = 0900,
+                EndTime = 0950,
+                Location = WLH2113
+
+            };
+            Meeting CSE101Discussion2 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "A03",
+                Days = Days.Wednesday,
+                StartTime = 1000,
+                EndTime = 1050,
+                Location = WLH2113
+            };
+            Meeting CSE101Discussion3 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "A04",
+                Days = Days.Wednesday,
+                StartTime = 1100,
+                EndTime = 1150,
+                Location = WLH2113
+            };
+            Meeting CSE101Discussion4 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "B01",
+                Days = Days.Friday,
+                StartTime = 0800,
+                EndTime = 0850,
+                Location = CENTR222
+            };
+            Meeting CSE101Discussion5 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "B02",
+                Days = Days.Friday,
+                StartTime = 0900,
+                EndTime = 0950,
+                Location = CENTR222
+            };
+            Meeting CSE101Discussion6 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Code = "B03",
+                Days = Days.Friday,
+                StartTime = 1000,
+                EndTime = 1050,
+                Location = CENTR222
+            };
+            Meeting CSE101Final1 = new Meeting()
+            {
+                MeetingType = MeetingType.Final,
+                StartDate = new DateTime(2017, 12, 14),
+                Days = Days.Thursday,
+                StartTime = 1900,
+                EndTime = 2159,
+                Location = TBA
+            };
+            Meeting CSE101Final2 = new Meeting()
+            {
+                MeetingType = MeetingType.Final,
+                StartDate = new DateTime(2017, 12, 12),
+                Days = Days.Tuesday,
+                StartTime = 0800,
+                EndTime = 1059,
+                Location = TBA
+            };
+
+            //Making new rate my professor ratings
+            RateMyProfessor ImpagliazzoRMP = new RateMyProfessor()
+            {
+                OverallQuality = 2.8M,
+                WouldTakeAgain = 0,
+                LevelOfDifficulty = 3.6M,
+                URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=563826"
+            };
+            RateMyProfessor JonesRMP = new RateMyProfessor()
+            {
+                OverallQuality = 3.0M,
+                WouldTakeAgain = 0,
+                LevelOfDifficulty = 3.0M, 
+                URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=2110462"
+            };
+
+            //Making new capes
+            Cape CSE101ImpagliazzoCAPE = new Cape()
+            {
+                Term = "SP17",
+                StudentsEnrolled = 77,
+                NumberOfEvaluation = 31,
+                RecommendedClass = 90.3M,
+                RecommendedProfessor = 54.8M,
+                StudyHoursPerWeek = 7.63M,
+                AverageGradeExpected = "B+ (3.38)",
+                AverageGradeReceived = "B (3.21)", 
+                URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=903696"
+            };
+            Cape CSE101JonesCAPE = new Cape()
+            {
+                Term = "SP17",
+                StudentsEnrolled = 229,
+                NumberOfEvaluation = 102,
+                RecommendedClass = 84.2M,
+                RecommendedProfessor = 89.5M,
+                StudyHoursPerWeek = 8.76M,
+                AverageGradeExpected = "B (3.10)",
+                AverageGradeReceived = "B (3.20)",
+                URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=903688"
+            };
+
+            //Making professor objects
+            Professor Impagliazzo = new Professor()
+            {
+                Name = "Impagliazzo, Russell",
+                RateMyProfessor = ImpagliazzoRMP
+            };
+            Professor Jones = new Professor()
+            {
+                Name = "Jones, Miles E",
+                RateMyProfessor = JonesRMP, 
+            };
+
+            // Adding cape and rate my professor to the professor object
+            Impagliazzo.RateMyProfessor = ImpagliazzoRMP;
+            Jones.RateMyProfessor = JonesRMP;
+            Impagliazzo.Cape.Add(CSE101ImpagliazzoCAPE);
+            Jones.Cape.Add(CSE101JonesCAPE);
+
+            // Making section1 objects
+            Section CSE101Section1 = new Section()
+            {
+                Ticket = 915137,
+                Professor = Impagliazzo
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section1.Meetings.Add(CSE101Lecture1);
+            CSE101Section1.Meetings.Add(CSE101Discussion1);
+            CSE101Section1.Meetings.Add(CSE101Final1);
+
+            // Adding section to the professor object
+            Impagliazzo.Sections.Add(CSE101Section1);
+
+            // Making section2 objects
+            Section CSE101Section2 = new Section()
+            {
+                Ticket = 915138,
+                Professor = Jones
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section2.Meetings.Add(CSE101Lecture1);
+            CSE101Section2.Meetings.Add(CSE101Discussion2);
+            CSE101Section2.Meetings.Add(CSE101Final1);
+
+            // Adding section to the professor object
+            Impagliazzo.Sections.Add(CSE101Section2);
+
+            // Making section3 objects
+            Section CSE101Section3 = new Section()
+            {
+                Ticket = 915139,
+                Professor = Jones
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section3.Meetings.Add(CSE101Lecture1);
+            CSE101Section3.Meetings.Add(CSE101Discussion3);
+            CSE101Section3.Meetings.Add(CSE101Final1);
+
+            // Adding section to the professor object
+            Impagliazzo.Sections.Add(CSE101Section3);
+
+            // Making section4 objects
+            Section CSE101Section4 = new Section()
+            {
+                Ticket = 915141,
+                Professor = Jones
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section4.Meetings.Add(CSE101Lecture2);
+            CSE101Section4.Meetings.Add(CSE101Discussion4);
+            CSE101Section4.Meetings.Add(CSE101Final2);
+
+            // Adding section to the professor object
+            Jones.Sections.Add(CSE101Section4);
+
+            // Making section5 objects
+            Section CSE101Section5 = new Section()
+            {
+                Ticket = 915142,
+                Professor = Jones
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section5.Meetings.Add(CSE101Lecture2);
+            CSE101Section5.Meetings.Add(CSE101Discussion5);
+            CSE101Section5.Meetings.Add(CSE101Final2);
+
+            // Adding section to the professor object
+            Jones.Sections.Add(CSE101Section5);
+
+            // Making section6 objects
+            Section CSE101Section6 = new Section()
+            {
+                Ticket = 915143,
+                Professor = Jones
+            };
+
+            // Adding Meetings to the sections
+            CSE101Section6.Meetings.Add(CSE101Lecture2);
+            CSE101Section6.Meetings.Add(CSE101Discussion6);
+            CSE101Section6.Meetings.Add(CSE101Final2);
+
+            // Adding section to the professor object
+            Jones.Sections.Add(CSE101Section6);
+
+            //Making new Course
+            Course CSE101 = new Course()
+            {
+                CourseAbbreviation = "CSE 101",
+                CourseName = "Design & Analysis of Algorithm",
+                Description = "",
+                Units = 4
+            };
+
+            // Adding different sections to the course object
+            CSE101.Sections.Add(CSE101Section1);
+            CSE101.Sections.Add(CSE101Section2);
+            CSE101.Sections.Add(CSE101Section3);
+            CSE101.Sections.Add(CSE101Section4);
+            CSE101.Sections.Add(CSE101Section5);
+            CSE101.Sections.Add(CSE101Section6);
+
+            // Adding course name in the section object
+            CSE101Section1.Course = CSE101;
+            CSE101Section2.Course = CSE101;
+            CSE101Section3.Course = CSE101;
+            CSE101Section4.Course = CSE101;
+            CSE101Section5.Course = CSE101;
+            CSE101Section6.Course = CSE101;
+
+            // Adding Cape to the course object
+            CSE101.Cape.Add(CSE101ImpagliazzoCAPE);
+            CSE101.Cape.Add(CSE101JonesCAPE);
+
+            // Adding Location Objects to the DB
+            context.Locations.Add(CENTR214);
+            context.Locations.Add(WLH2113);
+            context.Locations.Add(CENTR222);
+            // Adding Meeting Objects to the DB
+            context.Meetings.Add(CSE101Lecture1);
+            context.Meetings.Add(CSE101Lecture2);
+            context.Meetings.Add(CSE101Discussion1);
+            context.Meetings.Add(CSE101Discussion2);
+            context.Meetings.Add(CSE101Discussion3);
+            context.Meetings.Add(CSE101Discussion4);
+            context.Meetings.Add(CSE101Discussion5);
+            context.Meetings.Add(CSE101Discussion6);
+            context.Meetings.Add(CSE101Final1);
+            context.Meetings.Add(CSE101Final2);
+            // Adding RateMyProfessor Object to DB
+            context.RateMyProfessor.Add(JonesRMP);
+            context.RateMyProfessor.Add(ImpagliazzoRMP);
+            // Adding Cape Object to the DB
+            context.Cape.Add(CSE101JonesCAPE);
+            context.Cape.Add(CSE101ImpagliazzoCAPE);
+            // Adding Professor Object to the DB
+            context.Professor.Add(Impagliazzo);
+            context.Professor.Add(Jones);
+            // Adding Section Object to the DB
+            context.Sections.Add(CSE101Section1);
+            context.Sections.Add(CSE101Section2);
+            context.Sections.Add(CSE101Section3);
+            context.Sections.Add(CSE101Section4);
+            context.Sections.Add(CSE101Section5);
+            context.Sections.Add(CSE101Section6);
+            // Adding Course Object to the DB
+            context.Courses.Add(CSE101);
 
             context.SaveChanges();
 
