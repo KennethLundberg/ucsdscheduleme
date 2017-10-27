@@ -59,7 +59,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1000, EndTime = 1050, 
+                StartTime = 1000,
+                EndTime = 1050, 
                 Location = pcynh120,
                 Code = "A02"
             };
@@ -107,17 +108,37 @@ namespace ucsdscheduleme.Data
             };
 
             // Making Section Object
-            Section CSE20Section = new Section()
+            Section CSE20Section1 = new Section()
             {
+                Ticket = 915105,
+                Professor = MinnesKemp,
+            };
+            Section CSE20Section2 = new Section()
+            {
+                Ticket = 915106,
+                Professor = MinnesKemp,
+            };
+            Section CSE20Section3 = new Section()
+            {
+                Ticket = 915107,
                 Professor = MinnesKemp,
             };
 
-            CSE20Section.Meetings.Add(CSE20Lecture);
-            CSE20Section.Meetings.Add(CSE20Discussion1);
-            CSE20Section.Meetings.Add(CSE20Discussion2);
-            CSE20Section.Meetings.Add(CSE20Discussion3);
-            CSE20Section.Meetings.Add(CSE20Review1);
-            CSE20Section.Meetings.Add(CSE20Final);
+            // Adding Meetings to the sections
+            CSE20Section1.Meetings.Add(CSE20Lecture);
+            CSE20Section1.Meetings.Add(CSE20Discussion1);
+            CSE20Section1.Meetings.Add(CSE20Final);
+            CSE20Section1.Meetings.Add(CSE20Review1);
+
+            CSE20Section2.Meetings.Add(CSE20Lecture);
+            CSE20Section2.Meetings.Add(CSE20Discussion2);
+            CSE20Section2.Meetings.Add(CSE20Final);
+            CSE20Section2.Meetings.Add(CSE20Review1);
+
+            CSE20Section3.Meetings.Add(CSE20Lecture);
+            CSE20Section3.Meetings.Add(CSE20Discussion3);
+            CSE20Section3.Meetings.Add(CSE20Final);
+            CSE20Section3.Meetings.Add(CSE20Review1);
 
             // Making Course Object
             Course CSE20 = new Course()
@@ -125,13 +146,16 @@ namespace ucsdscheduleme.Data
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
                 Units = 4,
-                Description = "",
+                Description = ""
 
                 // Pre-Requisite
                 // Co- Requisite
             };
 
-            CSE20.Sections.Add(CSE20Section);
+            // Adding different sections to the course object
+            CSE20.Sections.Add(CSE20Section1);
+            CSE20.Sections.Add(CSE20Section2);
+            CSE20.Sections.Add(CSE20Section3);
 
             // Making Cape Object
             Cape CSE20Cape = new Cape()
@@ -156,18 +180,22 @@ namespace ucsdscheduleme.Data
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=1516842"
             };
 
-            // Filling out the remaining data
-            CSE20Lecture.Section = CSE20Discussion1.Section = CSE20Discussion2.Section 
-                = CSE20Discussion3.Section = CSE20Review1.Section = CSE20Final.Section = CSE20Section;
+            // Adding course name in the section object
+            CSE20Section1.Course = CSE20;
+            CSE20Section2.Course = CSE20;
+            CSE20Section3.Course = CSE20;
 
-            CSE20Section.Course = CSE20;
-
+            // Adding Cape to the course object
             CSE20.Cape.Add(CSE20Cape);
 
-            MinnesKemp.Sections.Add(CSE20Section);
-
+            // Adding cape and rate my professor to the professor object
             MinnesKemp.Cape.Add(CSE20Cape);
-            MinnesKemp.RateMyProfessor.Add(MinnesKempRateMyProfessor);
+            MinnesKemp.RateMyProfessor = MinnesKempRateMyProfessor;
+
+            // Adding section to the professor object
+            MinnesKemp.Sections.Add(CSE20Section1);
+            MinnesKemp.Sections.Add(CSE20Section2);
+            MinnesKemp.Sections.Add(CSE20Section3);
 
             // Adding Location Objects to the DB
             context.Locations.Add(centr115);
@@ -186,7 +214,9 @@ namespace ucsdscheduleme.Data
             // Adding Professor Object to the DB
             context.Professor.Add(MinnesKemp);
             // Adding Section Object to the DB
-            context.Sections.Add(CSE20Section);
+            context.Sections.Add(CSE20Section1);
+            context.Sections.Add(CSE20Section2);
+            context.Sections.Add(CSE20Section3);
             // Adding Course Object to the DB
             context.Courses.Add(CSE20);
             // Adding Cape Object to the DB
@@ -253,19 +283,42 @@ namespace ucsdscheduleme.Data
             };
 
             // Adding data into the Section Table
-            CSE20Section = new Section()
+            CSE20Section1 = new Section()
             {
+                Ticket = 915110,
+                Professor = MinnesKemp,
+            };
+            CSE20Section2 = new Section()
+            {
+                Ticket = 915111,
+                Professor = MinnesKemp,
+            };
+            CSE20Section3 = new Section()
+            {
+                Ticket = 915112,
                 Professor = MinnesKemp,
             };
 
-            CSE20Section.Meetings.Add(CSE20Lecture);
-            CSE20Section.Meetings.Add(CSE20Discussion1);
-            CSE20Section.Meetings.Add(CSE20Discussion2);
-            CSE20Section.Meetings.Add(CSE20Discussion3);
-            CSE20Section.Meetings.Add(CSE20Review1);
-            CSE20Section.Meetings.Add(CSE20Final);
+            // Adding Meeting times to the sections
+            CSE20Section1.Meetings.Add(CSE20Lecture);
+            CSE20Section1.Meetings.Add(CSE20Discussion1);
+            CSE20Section1.Meetings.Add(CSE20Final);
+            CSE20Section1.Meetings.Add(CSE20Review1);
 
-            CSE20.Sections.Add(CSE20Section);
+            CSE20Section2.Meetings.Add(CSE20Lecture);
+            CSE20Section2.Meetings.Add(CSE20Discussion2);
+            CSE20Section2.Meetings.Add(CSE20Final);
+            CSE20Section2.Meetings.Add(CSE20Review1);
+
+            CSE20Section3.Meetings.Add(CSE20Lecture);
+            CSE20Section3.Meetings.Add(CSE20Discussion3);
+            CSE20Section3.Meetings.Add(CSE20Final);
+            CSE20Section3.Meetings.Add(CSE20Review1);
+
+            // Adding different sections to the course object
+            CSE20.Sections.Add(CSE20Section1);
+            CSE20.Sections.Add(CSE20Section2);
+            CSE20.Sections.Add(CSE20Section3);
 
             // Adding data into the Cape Table
             CSE20Cape = new Cape()
@@ -281,15 +334,19 @@ namespace ucsdscheduleme.Data
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=895690"
             };
 
-            // Filling out the remaining data
-            CSE20Lecture.Section = CSE20Discussion1.Section = CSE20Discussion2.Section
-                = CSE20Discussion3.Section = CSE20Review1.Section = CSE20Final.Section = CSE20Section;
-
-            CSE20Section.Course = CSE20;
+            // Adding course name in the section object
+            CSE20Section1.Course = CSE20;
+            CSE20Section2.Course = CSE20;
+            CSE20Section3.Course = CSE20;
 
             CSE20.Cape.Add(CSE20Cape);
 
             MinnesKemp.Cape.Add(CSE20Cape);
+
+            // Adding section to the professor object
+            MinnesKemp.Sections.Add(CSE20Section1);
+            MinnesKemp.Sections.Add(CSE20Section2);
+            MinnesKemp.Sections.Add(CSE20Section3);
 
             // Adding Meeting Objects to DB
             context.Meetings.Add(CSE20Lecture);
@@ -299,13 +356,16 @@ namespace ucsdscheduleme.Data
             context.Meetings.Add(CSE20Review1);
             context.Meetings.Add(CSE20Final);
             // Adding Section Object to the DB
-            context.Sections.Add(CSE20Section);
+            context.Sections.Add(CSE20Section1);
+            context.Sections.Add(CSE20Section2);
+            context.Sections.Add(CSE20Section3);
             // Adding Cape Object to the DB
             context.Cape.Add(CSE20Cape);
 
             context.SaveChanges();
 
             // Adding CSE 11
+            // Making Location objects
             Location WLH2001 = new Location()
             {
                 Building = "Warren Lecture Hall",
@@ -333,6 +393,7 @@ namespace ucsdscheduleme.Data
                 RoomNumber = 110
             };
 
+            // Making Meeting Objects
             Meeting CSE11Lecture = new Meeting()
             {
                 Code = "A00",
@@ -451,16 +512,20 @@ namespace ucsdscheduleme.Data
                 StartDate = new DateTime(2017, 12, 12)
             };
 
+            // Making Professor Object
             Professor RickOrd = new Professor()
             {
                 Name = "Rick Ord",
             };
 
+            // Making Section Object
             Section CSE11A = new Section()
             {
                 Professor = RickOrd,
+                Ticket = 915077
             };
 
+            // Adding Meetings to the sections
             CSE11A.Meetings.Add(CSE11Discussion);
             CSE11A.Meetings.Add(CSE11Final);
             CSE11A.Meetings.Add(CSE11Lab);
@@ -475,6 +540,7 @@ namespace ucsdscheduleme.Data
             CSE11A.Meetings.Add(CSE11Review8);
             CSE11A.Meetings.Add(CSE11Review9);
 
+            // Making Course Object
             Course CSE11 = new Course()
             {
                 CourseAbbreviation = "CSE11",
@@ -484,8 +550,10 @@ namespace ucsdscheduleme.Data
                 // Cape
             };
 
+            // Adding sections to the course object
             CSE11.Sections.Add(CSE11A);
 
+            // Making Cape Object
             Cape CSE11Cape = new Cape()
             {
                 Term = "FA16",
@@ -499,6 +567,7 @@ namespace ucsdscheduleme.Data
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=882255"
             };
 
+            // Making RateMyProfessor Object
             RateMyProfessor RickOrdRateMyProfessor = new RateMyProfessor()
             {
                 OverallQuality = 4.3M,
@@ -507,27 +576,26 @@ namespace ucsdscheduleme.Data
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=63529"
             };
 
-            CSE11Lecture.Section = CSE11Discussion.Section = CSE11Final.Section
-                = CSE11Lab.Section = CSE11Review1.Section = CSE11Review2.Section 
-                = CSE11Review3.Section = CSE11Review4.Section = CSE11Review5.Section
-                = CSE11Review6.Section = CSE11Review7.Section = CSE11Review8.Section
-                = CSE11Review9.Section = CSE11A;
-
+            // Adding course name in the section object
             CSE11A.Course = CSE11;
 
+            // Adding Cape to the course object
             CSE11.Cape.Add(CSE11Cape);
 
+            // Adding cape and rate my professor to the professor object
+            RickOrd.Cape.Add(CSE11Cape);
+            RickOrd.RateMyProfessor = RickOrdRateMyProfessor;
+
+            // Adding section to the professor object
             RickOrd.Sections.Add(CSE11A);
 
-            RickOrd.Cape.Add(CSE11Cape);
-            RickOrd.RateMyProfessor.Add(RickOrdRateMyProfessor);
-
+            // Adding Location Objects to the DB
             context.Locations.Add(WLH2001);
             context.Locations.Add(SOLIS107);
             context.Locations.Add(PETER108);
             context.Locations.Add(CENTR119);
             context.Locations.Add(PETER110);
-
+            // Adding Meeting Objects to the DB
             context.Meetings.Add(CSE11Lecture);
             context.Meetings.Add(CSE11Discussion);
             context.Meetings.Add(CSE11Final);
@@ -541,21 +609,20 @@ namespace ucsdscheduleme.Data
             context.Meetings.Add(CSE11Review7);
             context.Meetings.Add(CSE11Review8);
             context.Meetings.Add(CSE11Review9);
-
+            // Adding Professor Object to the DB
             context.Professor.Add(RickOrd);
-
+            // Adding Section Object to the DB
             context.Sections.Add(CSE11A);
-
+            // Adding Course Object to the DB
             context.Courses.Add(CSE11);
-
+            // Adding Cape Object to the DB
             context.Cape.Add(CSE11Cape);
-
+            // Adding RateMyProfessor Object to DB
             context.RateMyProfessor.Add(RickOrdRateMyProfessor);
 
             context.SaveChanges();
 
             // Adding a New CSE11 Section
-
             Location WLH2005 = new Location()
             {
                 Building = "Warren Lecture Hall",
@@ -579,7 +646,6 @@ namespace ucsdscheduleme.Data
                 EndTime = 0,
                 MeetingType = MeetingType.Lab,
                 Location = tba
-                // Section
             };
             CSE11Discussion = new Meeting()
             {
@@ -598,7 +664,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 10, 09)
-                // Section
             };
             CSE11Review2 = new Meeting()
             {
@@ -608,7 +673,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 10, 23)
-                // Section
             };
             CSE11Review3 = new Meeting()
             {
@@ -618,7 +682,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 11, 01)
-                // Section
             };
             CSE11Review4 = new Meeting()
             {
@@ -628,7 +691,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 11, 05)
-                // Section
             };
             CSE11Review5 = new Meeting()
             {
@@ -638,7 +700,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 11, 09)
-                // Section
             };
             CSE11Review6 = new Meeting()
             {
@@ -648,7 +709,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 11, 20)
-                // Section
             };
             CSE11Review7 = new Meeting()
             {
@@ -658,7 +718,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 11, 21)
-                // Section
             };
             CSE11Review8 = new Meeting()
             {
@@ -668,7 +727,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 12, 06)
-                // Section
             };
             CSE11Review9 = new Meeting()
             {
@@ -678,7 +736,6 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Review,
                 Location = tba,
                 StartDate = new DateTime(2017, 12, 10)
-                // Section
             };
             CSE11Final = new Meeting()
             {
@@ -690,11 +747,14 @@ namespace ucsdscheduleme.Data
                 StartDate = new DateTime(2017, 12, 13)
             };
 
+            // Making Section Object
             Section CSE11B = new Section()
             {
+                Ticket = 915080,
                 Professor = RickOrd
             };
-            CSE11B.Course = CSE11;
+
+            // Adding Meetings to the sections
             CSE11B.Meetings.Add(CSE11Discussion);
             CSE11B.Meetings.Add(CSE11Lecture);
             CSE11B.Meetings.Add(CSE11Lab);
@@ -709,8 +769,7 @@ namespace ucsdscheduleme.Data
             CSE11B.Meetings.Add(CSE11Review9);
             CSE11B.Meetings.Add(CSE11Final);
 
-            CSE11.Sections.Add(CSE11B);
-
+            // Adding sections to the course object
             CSE11Cape = new Cape()
             {
                 Term = "FA16",
@@ -724,22 +783,24 @@ namespace ucsdscheduleme.Data
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=885069"
             };
 
-            CSE11Lecture.Section = CSE11Discussion.Section = CSE11Final.Section
-                = CSE11Lab.Section = CSE11Review1.Section = CSE11Review2.Section
-                = CSE11Review3.Section = CSE11Review4.Section = CSE11Review5.Section
-                = CSE11Review6.Section = CSE11Review7.Section = CSE11Review8.Section
-                = CSE11Review9.Section = CSE11B;
+            // Adding sections to the course object
+            CSE11.Sections.Add(CSE11B);
 
+            // Adding course name in the section object
             CSE11B.Course = CSE11;
 
+            // Adding Cape to the course object
             CSE11.Cape.Add(CSE11Cape);
 
+            // Adding section to the professor object
             RickOrd.Sections.Add(CSE11B);
 
+            // Adding cape to the professor object
             RickOrd.Cape.Add(CSE11Cape);
 
+            // Adding Location Objects to the DB
             context.Locations.Add(WLH2005);
-
+            // Adding Meeting Objects to the DB
             context.Meetings.Add(CSE11Lecture);
             context.Meetings.Add(CSE11Discussion);
             context.Meetings.Add(CSE11Final);
@@ -753,9 +814,9 @@ namespace ucsdscheduleme.Data
             context.Meetings.Add(CSE11Review7);
             context.Meetings.Add(CSE11Review8);
             context.Meetings.Add(CSE11Review9);
-
+            // Adding Section Object to the DB
             context.Sections.Add(CSE11B);
-
+            // Adding Cape Object to the DB
             context.Cape.Add(CSE11Cape);
 
             context.SaveChanges();

@@ -8,6 +8,7 @@ namespace ucsdscheduleme.Models
     public class Section
     {
         public int Id { get; set; }
+        public int Ticket { get; set; }
 
         public Course Course { get; set; }
         public Professor Professor { get; set; }

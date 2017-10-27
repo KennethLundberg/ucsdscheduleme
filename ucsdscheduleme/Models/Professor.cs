@@ -11,9 +11,9 @@ namespace ucsdscheduleme.Models
         public int Id { get; set; }
         [StringLength(50)]
         public string Name { get; set; }
+        public RateMyProfessor RateMyProfessor { get; set; }
 
         public ICollection<Section> Sections { get; set; } = new List<Section>();
         public ICollection<Cape> Cape { get; set; } = new List<Cape>();
-        public ICollection<RateMyProfessor> RateMyProfessor { get; set; } = new List<RateMyProfessor>();
     }
 }

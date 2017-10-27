@@ -32,8 +32,8 @@ namespace ucsdscheduleme.Models
         public int EndTime { get; set; }
         public DateTime? StartDate { get; set; }
 
-        public Section Section { get; set; }
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
+        //public ICollection<Section> Section { get; set; } = new List<Section>();
     }
 }
