@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Choose classes";
+}
+
+<h1>Schedule Generator</h1>
+<div class="container">
+    <div class="col-md-4">
+    	<h3>Choose the classes</h3>   
+        <form asp-action="GenerateSchedule">
+        	<label for="course1" class="control-label">Course 1</label>
+            <input type="text" name="course1" class="form-control"/>
+            <br />
+        	<label for="course2" class="control-label">Course 2</label>
+        	<input type="text" name="course2" class="form-control"/>
+            <br />
+        	<label for="course3" class="control-label">Course 3</label>
+        	<input type="text" name="course3" class="form-control"/>
+        	<br />
+            <label for="course4" class="control-label">Course 4</label>
+            <input type="text" name="course4" class="form-control"/>
+        	<br />
+        	<p><input type="submit" value="Generate" class="btn btn-default"/></p>
+        	<br />
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <h3>Schedule</h3>
+        <ul>
+            <li> @ViewData["course1"] </li>
+			<li> @ViewData["course2"] </li>
+			<li> @ViewData["course3"] </li>
+			<li> @ViewData["course4"] </li>
+
+		</ul>
+		
+    </div>
+</div>
