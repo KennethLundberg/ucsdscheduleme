@@ -1,12 +1,12 @@
-﻿
+﻿@model ucsdscheduleme.Models.ScheduleViewModel
 @{
-    ViewData["Title"] = "Choose classes";
+    ViewData["Title"] = "Schedule";
 }
 
 <h1>Schedule Generator</h1>
 <div class="container">
     <div class="col-md-4">
-    	<h3>Choose the classes</h3>   
+    	<h3>Choose Your classes</h3>   
         <form asp-action="GenerateSchedule">
         	<label for="course1" class="control-label">Course 1</label>
             <input type="text" name="course1" class="form-control"/>
@@ -27,13 +27,25 @@
 
     <div class="col-md-4">
         <h3>Schedule</h3>
-        <ul>
-            <li> @ViewData["course1"] </li>
-			<li> @ViewData["course2"] </li>
-			<li> @ViewData["course3"] </li>
-			<li> @ViewData["course4"] </li>
-
-		</ul>
-		
+        <table class="table table-bordered table-hover">
+            <thead>
+    			<tr>
+    				<th scope="col">ID</th>
+    				<th scope="col">Name</th>
+    				<th scope="col">Units</th>
+    			</tr>
+			</thead>
+			@if (Model != null)
+			{
+			    foreach (var course in @Model.CourseList)
+			    {
+			        <tr>
+				        <td scope="row">@course.Id</td>
+                        <td>@course.CourseName</td>
+				        <td>@course.Units</td>
+			        </tr>
+			    }
+			}
+		</table>
     </div>
 </div>
