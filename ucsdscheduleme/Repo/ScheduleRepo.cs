@@ -140,9 +140,13 @@ namespace ucsdscheduleme.Repo
             {
                 foreach (Meeting j in section2.Meetings)
                 {
-                    if (i.EndTime <= j.StartTime || i.StartTime <= j.EndTime)
+                    if ((i.Days & j.Days) != 0)
                     {
-                        return false;
+
+                        if (i.EndTime <= j.StartTime || i.StartTime <= j.EndTime)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -162,6 +166,52 @@ namespace ucsdscheduleme.Repo
                 if (Conflict(section1, i))
                 {
                     return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Finds possible schedules given time constraints, earliest/latest times.
+        /// </summary>
+        /// <returns>The schedule for classes with time constraints.</returns>
+        /// <param name="possibleSchedules">Courses to schedule.</param>
+        /// <param name="Earliest">Earliest time desired.</param>
+        /// <param name="Latest">Latest time desired.</param>
+        private List<List<Section>> FindWithTime(List<List<Section>> possibleSchedules, int Earliest, int Latest)
+        {
+            List<List<Section>> constraintSchedules = new List<List<Section>>();
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                if (IsWithinTime(schedule, Earliest, Latest))
+                {
+                    constraintSchedules.Add(schedule);
+                }
+            }
+            return constraintSchedules;
+        }
+
+        /// <summary>
+        /// Checks if a single schedule is within the time constraints.
+        /// </summary>
+        /// <returns><c>true</c>, if within time was ised, <c>false</c> otherwise.</returns>
+        /// <param name="schedule">Schedule to check.</param>
+        /// <param name="Earliest">Earliest time desired.</param>
+        /// <param name="Latest">Latest time desired.</param>
+        private bool IsWithinTime(List<Section> schedule, int Earliest, int Latest)
+        {
+            foreach (Section section in schedule)
+            {
+                foreach (Meeting meeting in section.Meetings)
+                {
+                    if (meeting.StartTime < Earliest)
+                    {
+                        return false;
+                    }
+                    if (meeting.EndTime > Latest)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
