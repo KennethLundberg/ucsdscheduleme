@@ -33,8 +33,8 @@ namespace ucsdscheduleme.Controllers
             };
             list.Sort();
 
-            var c1 = new Course 
-            { 
+            var c1 = new Course
+            {
                 Id = 1,
                 CourseName = list[0],
                 Units = 4,
@@ -49,9 +49,43 @@ namespace ucsdscheduleme.Controllers
                             new Meeting
                             {
                                 Id = 101,
+                                MeetingType = MeetingType.Lecture,
                                 SectionId = 10,
                                 StartTime = 10,
                                 EndTime = 11
+                            },
+                            new Meeting
+                            {
+                                Id = 102,
+                                MeetingType = MeetingType.Discussion,
+                                SectionId = 10,
+                                StartTime = 20,
+                                EndTime = 21
+                            }
+                        }
+                    },
+                    new Section
+                    {
+                        Id = 10,
+                        CourseId = 1,
+                        ProfessorId = 100,
+                        Meetings = new List<Meeting>
+                        {
+                            new Meeting
+                            {
+                                Id = 101,
+                                MeetingType = MeetingType.Lecture,
+                                SectionId = 10,
+                                StartTime = 10,
+                                EndTime = 11
+                            },
+                            new Meeting
+                            {
+                                Id = 102,
+                                MeetingType = MeetingType.Discussion,
+                                SectionId = 10,
+                                StartTime = 20,
+                                EndTime = 21
                             }
                         }
                     }
@@ -74,6 +108,7 @@ namespace ucsdscheduleme.Controllers
                             new Meeting
                             {
                                 Id = 102,
+                                MeetingType = MeetingType.Discussion,
                                 SectionId = 10,
                                 StartTime = 9,
                                 EndTime = 11

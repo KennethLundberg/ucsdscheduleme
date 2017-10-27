@@ -33,6 +33,9 @@
     				<th scope="col">ID</th>
     				<th scope="col">Name</th>
     				<th scope="col">Units</th>
+					<th scope="col">Meeting Type</th>
+					<th scope="col">Start Time</th>
+					<th scope="col">End Time</th>
     			</tr>
 			</thead>
 			@if (Model != null)
@@ -43,6 +46,20 @@
 				        <td scope="row">@course.Id</td>
                         <td>@course.CourseName</td>
 				        <td>@course.Units</td>
+				        @if (course.Sections != null) {
+                            foreach(var section in @course.Sections)
+    				        {
+    				            if (section.Meetings != null)
+                                {
+				                    foreach(var meeting in @section.Meetings)
+                                    {
+                                        <td>@meeting.MeetingType</td>
+                                        <td>@meeting.StartTime</td>
+                                        <td>@meeting.EndTime</td>
+                                    }
+				                }
+    				        }
+				        }
 			        </tr>
 			    }
 			}
