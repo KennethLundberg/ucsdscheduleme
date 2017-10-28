@@ -1,0 +1,59 @@
+﻿@model ucsdscheduleme.Models.SearchViewModel;
+
+@{
+    ViewData["Title"] = "Search";
+}
+<!--jquery-->
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script>
+	
+<!--Enable tooltips-->
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+	$('.save-item').on('click', function () {
+        var ul = document.getElementById("courseList");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(this.id));
+        ul.appendChild(li);
+	})
+});
+</script>
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+    <div class="col-md-4">
+        <h3>Search</h3>   
+        <form asp-action="SearchClasses">
+            <label for="courseSearched" class="control-label">Course</label>
+            <input type="text" name="courseQuery" class="form-control"/>
+            <input type="submit" value="Search" class="btn btn-default"/>
+        </form>
+        <br />
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                </tr>
+            </thead>
+            @if (Model != null)
+            {
+                foreach (var course in @Model.Results)
+                {
+                    <tr>
+                        <td data-toggle="tooltip" title="@course.Description" data-placement="right">
+				            @course.CourseName
+                            <button class="btn btn-default save-item edit-mode" id="@course.CourseName">Save</button>
+				        </td>
+                    </tr>
+                }
+            }
+        </table>
+		<h3>Course List</h3>
+		<ul id="courseList">
+		</ul>
+	</div>
+</div>
