@@ -12,6 +12,14 @@ namespace ucsdscheduleme.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Form postback that generates the schedule based on four strings passed.
+        /// </summary>
+        /// <returns>The four courses in sorted order</returns>
+        /// <param name="course1">Course1.</param>
+        /// <param name="course2">Course2.</param>
+        /// <param name="course3">Course3.</param>
+        /// <param name="course4">Course4.</param>
         public IActionResult GenerateSchedule(string course1, string course2, 
                                               string course3, string course4) {
 
