@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,20 +15,25 @@ namespace ucsdscheduleme.Models
         Wednesday = 8,
         Thursday = 16,
         Friday = 32,
-        Saturday = 64
+        Saturday = 64,
+        TBA = 128
     }
     public enum MeetingType
     {
-        Lecture, Discussion, Lab, Final
+        Lecture, Discussion, Lab, Review, Final, Midterm
     }
     public class Meeting
     {
         public int Id { get; set; }
-        public int SectionId { get; set; }
+        [StringLength(3)]
+        public string Code { get; set; }
         public Days Days { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
+        public DateTime? StartDate { get; set; }
+
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
+        //public ICollection<Section> Section { get; set; } = new List<Section>();
     }
 }

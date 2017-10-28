@@ -16,9 +16,9 @@ namespace ucsdscheduleme.Models
         public byte Units { get; set; }
         public string Description { get; set; }
 
-        public ICollection<Section> Sections { get; set; }
-        public ICollection<Course> PreRequisites { get; set; }
-        public ICollection<Course> CoRequisites { get; set; }
-        public ICollection<Evaluation> Evaluations { get; set; }
+        public ICollection<Section> Sections { get; set; } = new List<Section>();
+        public ICollection<Course> PreRequisites { get; set; } = new List<Course>();
+        public ICollection<Course> CoRequisites { get; set; } = new List<Course>();
+        public ICollection<Cape> Cape { get; set; } = new List<Cape>();
     }
 }
