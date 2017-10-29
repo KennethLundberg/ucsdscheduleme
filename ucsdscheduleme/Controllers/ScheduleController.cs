@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
+using ucsdscheduleme.Data;
 
 namespace ucsdscheduleme.Controllers
 {
