@@ -6,6 +6,13 @@ namespace ucsdscheduleme.Controllers
 {
     public class ScheduleController : Controller
     {
+        private readonly ScheduleContext _context;
+
+        public ScheduleController(ScheduleContext context)
+        {
+            _context = context;
+        }
+    
         // GET: /<controller>/
         public IActionResult Index()
         {
