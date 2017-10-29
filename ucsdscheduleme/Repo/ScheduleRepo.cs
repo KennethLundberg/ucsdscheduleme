@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ucsdscheduleme.Models;
 
@@ -31,8 +32,15 @@ namespace ucsdscheduleme.Repo
         /// <returns>List of possible schedules for course list.</returns>
         public List<List<Section>> FindScheduleForClasses(Course[] coursesToSchedule)
         {
+            
             List<Node> AllSections = new List<Node>();
             List<List<Section>> possibleSchedules = new List<List<Section>>();
+
+            if (coursesToSchedule.Count() == 1) 
+            { 
+                possibleSchedules.Add((System.Collections.Generic.List<ucsdscheduleme.Models.Section>)coursesToSchedule[0].Sections);
+                return possibleSchedules;    
+            }
 
             Course firstCourse = coursesToSchedule[0];
             int numClasses = coursesToSchedule.Length;
@@ -78,7 +86,6 @@ namespace ucsdscheduleme.Repo
                     DFS(section, numClasses, numNodes, ref possibleSchedules);
                 }
             }
-
             return possibleSchedules;
         }
 
@@ -97,6 +104,7 @@ namespace ucsdscheduleme.Repo
             {
                 root.Section
             };
+
             stack.Push(root);
             isNodeVisited[0] = true;
 
@@ -104,8 +112,10 @@ namespace ucsdscheduleme.Repo
             {
                 curr = stack.Peek();
                 stack.Pop();
-                temp.Remove(curr.Section);
-
+                if (curr != root)
+                {
+                    temp.Remove(curr.Section);
+                }
                 foreach (Node i in curr.Edges)
                 {
                     if (!isNodeVisited[i.Index] && !Conflict(i.Section, temp))
@@ -142,21 +152,20 @@ namespace ucsdscheduleme.Repo
                 {
                     if ((i.Days & j.Days) != 0)
                     {
-
-                        if (i.EndTime <= j.StartTime || i.StartTime <= j.EndTime)
+                        if ((i.StartTime <= j.EndTime) && (i.EndTime >= j.StartTime))
                         {
-                            return false;
+                            return true;
                         }
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         /// <summary>
         /// Checks for time conflicts between a node and the existing schedule.
         /// </summary>
-        /// <returns>The conflict.</returns>
+        /// <returns>True if there is a conflict, else false.</returns>
         /// <param name="section1">First node to check conflicts for</param>
         /// <param name="temp">Current existing schedule</param>
         private bool Conflict(Section section1, List<Section> temp)
@@ -165,10 +174,10 @@ namespace ucsdscheduleme.Repo
             {
                 if (Conflict(section1, i))
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
         /// <summary>
