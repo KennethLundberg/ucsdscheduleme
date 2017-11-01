@@ -14,7 +14,10 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         struct CapeXPaths
         {
-            public static string InstrTermEnrollEvals = "//div[contains(@class, 'col_1_of_2 col')]";
+            public static string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
+            public static string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
+            public static string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
+            public static string EvalsSubmittedPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEvaluationsSubmitted')]";
             public static string RecommendClassTblRow = "//span[contains(., 'Do you recommend this course overall?')]/../.. " +
                                                      "| //span[contains(., 'Do you recommend this seminar overall?')]/../.." +
                                                      "| //span[contains(., 'Do you recommend this lab overall?')]/../..";
@@ -43,66 +46,74 @@ namespace ucsdscheduleme.Repo
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(Url);
 
-            // List to hold results as strings before converting datatypes
-            Queue<string> scrapeResultsQ = new Queue<string>();
+            // Gather professor and check for null return
+            HtmlNode instrNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.InstrNamePath);
+            string instructorName = (instrNameNode != null) ? instrNameNode.InnerText : "N/A";
 
-            // Gather prof name, term, students enrolled, num of evals. First 3 nodes must be skipped (trust me it's cleaner)
-            var genInfoNodes = htmlDoc.DocumentNode.SelectNodes(CapeXPaths.InstrTermEnrollEvals).Descendants("span").Skip(3);
-            foreach (HtmlNode node in genInfoNodes)
-            {
-                scrapeResultsQ.Enqueue(node.InnerText);
-            }
+            // Gather term and check for null return
+            HtmlNode termNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.TermPath);
+            string term = (termNode != null) ? termNode.InnerText : "N/A";
 
-            // Gather percentage of enrolled students that recommend course
+            // Gather enrollment and check for null return
+            HtmlNode enrollmentNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.EnrollmentPath);
+            string enrollment = (enrollmentNode != null) ? enrollmentNode.InnerText : "0";
+
+            // Gather number of evalulations and check for null return
+            HtmlNode evalsSubmittedNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.EvalsSubmittedPath);
+            string evalsSubmitted = (enrollmentNode != null) ? evalsSubmittedNode.InnerText : "0";
+
+            // Gather percentage of enrolled students that recommend course and check for null return
             HtmlNode recCourseRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.RecommendClassTblRow);
-            string recCourseMean = recCourseRow.SelectSingleNode(CapeXPaths.TblRowToMean).InnerText;
-            scrapeResultsQ.Enqueue(recCourseMean);
+            HtmlNode recCourseNode = recCourseRow.SelectSingleNode(CapeXPaths.TblRowToMean);
+            string recCourseMean = (recCourseNode != null) ? recCourseNode.InnerText : "0";
 
-            // Gather percentage of enrolled students that recommend professor
+            // Gather percentage of enrolled students that recommend professor and check for null return
             HtmlNode recProfRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.RecommendProfTblRow);
-            string recProfMean = recProfRow.SelectSingleNode(CapeXPaths.TblRowToMean).InnerText;
-            scrapeResultsQ.Enqueue(recProfMean);
+            HtmlNode recProfNode = recProfRow.SelectSingleNode(CapeXPaths.TblRowToMean);
+            string recProfMean = (recProfNode != null) ? recProfNode.InnerText : "0";
 
-            // Gather average hours of studying per week
-            HtmlNode avgStudyHoursRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.HoursPerWeekTblRow);
-            string avgStudyHoursMean = avgStudyHoursRow.SelectSingleNode(CapeXPaths.TblRowToMean).InnerText;
-            scrapeResultsQ.Enqueue(avgStudyHoursMean);
+            // Gather average hours of studying per week and check for null return
+            HtmlNode studyHoursRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.HoursPerWeekTblRow);
+            HtmlNode studyHoursNode = studyHoursRow.SelectSingleNode(CapeXPaths.TblRowToMean);
+            string studyHoursMean = (studyHoursNode != null) ? studyHoursNode.InnerText : "0";
 
-            // Gather average grade expected and push to queue after error checking
-            string avgGradeExpected = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeExpectedNode)?.InnerText;
-            if (String.IsNullOrEmpty(avgGradeExpected))
+            // Gather average grade expected, if valid only grabs letter grade portion of string
+            string avgGradeExpected = "";
+            string avgGradeExpectedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeExpectedNode)?.InnerText;
+            if (String.IsNullOrEmpty(avgGradeExpectedCheck))
             {
-                scrapeResultsQ.Enqueue("N/A");
+                avgGradeExpected = "N/A";
             }
             else
             {
-                scrapeResultsQ.Enqueue(avgGradeExpected.Substring(0, avgGradeExpected.IndexOf(' ')));
+                avgGradeExpected = (avgGradeExpectedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
             }
 
-            // Gather average grade received and push to queue after error checking
-            string avgGradeReceived = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeReceivedNode)?.InnerText;
-            if (String.IsNullOrEmpty(avgGradeReceived))
+            // Gather average grade received, if valid only grabs letter grade portion of string
+            string avgGradeReceived = "";
+            string avgGradeReceivedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeReceivedNode)?.InnerText;
+            if (String.IsNullOrEmpty(avgGradeReceivedCheck))
             {
-                scrapeResultsQ.Enqueue("N/A");
+                avgGradeReceived = ("N/A");
             }
             else
             {
-                scrapeResultsQ.Enqueue(avgGradeReceived.Substring(0, avgGradeExpected.IndexOf(' ')));
+                avgGradeReceived = (avgGradeReceivedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
             }
 
-            // Convert the results in the queue to their proper values and return
+            // Insert the results into their proper member and return
             List<ScrapeResult> retList = new List<ScrapeResult>()
             {
                 new ScrapeResult
-                    { InstructorName = scrapeResultsQ.Dequeue(),
-                      Term = scrapeResultsQ.Dequeue(),
-                      StudentsEnrolled = Convert.ToInt32(scrapeResultsQ.Dequeue()),
-                      NumberOfEvaluation = Convert.ToInt32(scrapeResultsQ.Dequeue()),
-                      RecommendedClass = Convert.ToDecimal(scrapeResultsQ.Dequeue()),
-                      RecommendedProfessor = Convert.ToDecimal(scrapeResultsQ.Dequeue()),
-                      StudyHoursPerWeek = Convert.ToDecimal(scrapeResultsQ.Dequeue()),
-                      AverageGradeExpected = scrapeResultsQ.Dequeue(),
-                      AverageGradeReceived = scrapeResultsQ.Dequeue() }
+                    { InstructorName = instructorName,
+                      Term = term,
+                      StudentsEnrolled = Convert.ToInt32(enrollment),
+                      NumberOfEvaluation = Convert.ToInt32(evalsSubmitted),
+                      RecommendedClass = Convert.ToDecimal(recCourseMean),
+                      RecommendedProfessor = Convert.ToDecimal(recProfMean),
+                      StudyHoursPerWeek = Convert.ToDecimal(studyHoursMean),
+                      AverageGradeExpected = avgGradeExpected,
+                      AverageGradeReceived = avgGradeReceived }
             };
             return retList;
         }
