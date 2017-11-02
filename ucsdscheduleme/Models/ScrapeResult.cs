@@ -7,9 +7,15 @@ namespace ucsdscheduleme.Models
 {
     public class ScrapeResult
     {
-        // Fake data here to test view, change to actual data
-        public string Fake1 { get; set; }
-        public string Fake2 { get; set; }
-        public string Fake3 { get; set; }
+        //Specifically Cape data
+        public string InstructorName { get; set; }
+        public string Term { get; set; }
+        public int StudentsEnrolled { get; set; }
+        public int NumberOfEvaluation { get; set; }
+        public decimal RecommendedClass { get; set; }
+        public decimal RecommendedProfessor { get; set; }
+        public decimal StudyHoursPerWeek { get; set; }
+        public string AverageGradeExpected { get; set; }
+        public string AverageGradeReceived { get; set; }
     }
 }

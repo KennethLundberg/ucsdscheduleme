@@ -33,9 +33,15 @@
             {
                 var scrapeResult = Model.ScrapeResults.First();
                 <ul class="list-group">
-                    <li class="list-group-item">Fake1: @scrapeResult.Fake1</li>
-                    <li class="list-group-item">Fake2: @scrapeResult.Fake2</li>
-                    <li class="list-group-item">Fake3: @scrapeResult.Fake3</li>
+                    <li class="list-group-item">Instructor: @scrapeResult.InstructorName</li>
+                    <li class="list-group-item">Qtr/Yr: @scrapeResult.Term</li>
+                    <li class="list-group-item">Enrollment: @scrapeResult.StudentsEnrolled</li>
+                    <li class="list-group-item">CAPEs Returned: @scrapeResult.NumberOfEvaluation</li>
+                    <li class="list-group-item">Recommend the course: @scrapeResult.RecommendedClass</li>
+                    <li class="list-group-item">Recommend the instructor: @scrapeResult.RecommendedProfessor</li>
+                    <li class="list-group-item">Average study hours per week: @scrapeResult.StudyHoursPerWeek</li>
+                    <li class="list-group-item">Average grades students expected: @scrapeResult.AverageGradeExpected</li>
+                    <li class="list-group-item">Average grades students received: @scrapeResult.AverageGradeReceived</li>
                 </ul>
             }
             @* Else if will eventually go here, showing metadata from list of returned scrapes*@

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ucsdscheduleme.Models;
+using ucsdscheduleme.Repo;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -22,15 +23,13 @@ namespace ucsdscheduleme.Controllers
         {
 
             // Scrape a single cape at specified URL by calling code in repo folder
-
-            // Add result to ScrapeViewModel, and return.
-            // For now, fake data!
-            scrape.ScrapeResults = new List<ScrapeResult>()
+            ScrapeRepo scrapeRepo = new ScrapeRepo();
+            if (scrape.ScrapeSite == ScrapeSite.Cape)
             {
-                new ScrapeResult { Fake1 = "\uD83C\uDFBA \uD83C\uDFBA John Cena \uD83C\uDFBA \uD83C\uDFBA", Fake2 = "Some other data stuff", Fake3 = "And another one"}
-            };
+                scrape.ScrapeResults = scrapeRepo.ScrapeCape(scrape.Url);
+            }
 
-            return View(nameof(Index),scrape);
+            return View(nameof(Index), scrape);
         }
 
         /// <summary>
