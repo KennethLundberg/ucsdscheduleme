@@ -15,4 +15,7 @@
   <ItemGroup>
     <Compile Remove="Controllers\ScheduleController.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\TestSchedule\" />
+  </ItemGroup>
 </Project>

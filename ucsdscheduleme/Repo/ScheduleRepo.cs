@@ -78,7 +78,7 @@ namespace ucsdscheduleme.Repo
                         numEdges = 0,
                         currEdges = 0
                     };
-                    Console.WriteLine(thisSection.Course.CourseAbbreviation);
+                    //Console.WriteLine(thisSection.Course.CourseAbbreviation);
                     thisCourse.Add(thisSection);
                 }
                 AllSections.Add(thisCourse);
@@ -141,19 +141,20 @@ namespace ucsdscheduleme.Repo
                        }
                        return possibleSchedules;
                    } */
+
             foreach (Node i in AllSections[0])
             { 
                 List<Section> schedule = new List<Section>();
-            DFS(i, numClasses, ref schedule, ref possibleSchedules);
+                DFS(i, numClasses, ref schedule, ref possibleSchedules);
                 Console.WriteLine("NUM OF SCH AFTER DFS CALL: " + possibleSchedules.Count());
-                for (int j = 0; j < AllSections.Count; j++)
-                {
-                    List<Node> course = AllSections[j];
-                    for (int k = 0; k < course.Count(); k++) 
-                    {
-                        AllSections[j][k].currEdges = AllSections[j][k].numEdges;
-                    }
-                } 
+                //for (int j = 0; j < AllSections.Count; j++)
+                //{
+                //    List<Node> course = AllSections[j];
+                //    for (int k = 0; k < course.Count(); k++) 
+                //    {
+                //        AllSections[j][k].currEdges = AllSections[j][k].numEdges;
+                //    }
+                //} 
             }
             return possibleSchedules;
         }
@@ -166,11 +167,17 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
         private void DFS(Node section, int numClasses, ref List<Section> currSchedule, ref List<List<Section>> possibleSchedules)
         {
-            Console.WriteLine("DFSCALL: " + section.Course.CourseAbbreviation);
+            Console.WriteLine("DFSCALL(" + section.Index + ") " + section.Course.CourseAbbreviation);
             currSchedule.Add(section.Section);
+
+            //Console.WriteLine("curredges for " + section.Index + " was " + section.currEdges);
+            section.currEdges--;
+            //Console.WriteLine("curredges for " + section.Index + " is now " + section.currEdges);
+            Console.WriteLine("curredges for " + section.Index + " is " + section.currEdges + " edges");
             foreach (Section z in currSchedule) {
                 Console.WriteLine(z.Course.CourseAbbreviation);
             }
+
             if (section.Edges.Count() == 0) 
             {
                 if (currSchedule.Count() == numClasses) {
@@ -187,75 +194,29 @@ namespace ucsdscheduleme.Repo
  
                 return;
             }
-            //if (section.numEdges == 0) 
-            //{
-            //    Console.WriteLine("last = " + currSchedule.Last());
-            //    currSchedule.Remove(currSchedule.Last());
-            //}
+
             foreach (Node i in section.Edges) 
             {
+                //Console.WriteLine("curredges for " + i.Index + " was " + i.currEdges);
+                //i.currEdges--;
+                //Console.WriteLine("curredges for " + i.Index + " is now " + i.currEdges);
                 DFS(i, numClasses, ref currSchedule, ref possibleSchedules);
                 i.currEdges--;
+
                 if (i.currEdges == 0)
                 {
                     Console.WriteLine("last = " + currSchedule.Last().Course.CourseAbbreviation);
                     currSchedule.Remove(currSchedule.Last());
-   //                 i.currEdges = i.numEdges;
+                    i.currEdges = i.Edges.Count();
+                }
+                if (i.currEdges < 0)
+                {
+                    i.currEdges = i.Edges.Count();
                 }
                 //section.Edges.Remove(i);
             }
         }
-        /// <summary>
-        /// Performs DFS on schedule graph.
-        /// </summary>
-        /// <param name="root">Node to do DFS from</param>
-        /// <param name="numClasses">Total number of classes to schedule</param>
-        /// <param name="possibleSchedules">Modified list of possible schedules</param>
-/*        private void DFS(Node root, int numClasses, int numNodes, ref List<List<Section>> possibleSchedules)
-        {
-//            Console.WriteLine("DFS CALL");
-            Node curr;
-            Stack<Node> stack = new Stack<Node>();
-  //          bool[] isNodeVisited = new bool[numNodes];
-            List<Section> temp = new List<Section>
-            {
-                root.Section
-            };
 
-            stack.Push(root);
-//            isNodeVisited[0] = true;
-
-            while (stack.Count != 0)
-            {
-                curr = stack.Peek();
-                stack.Pop();
- 
-//                    temp.Remove(temp.Last());
- //               }
-                foreach (Node i in curr.Edges)
-                {
-                    Console.WriteLine("NUM CLASSES IN TEMP RN: " + temp.Count());
-/*                    if (/*!isNodeVisited[i.Index] && !Conflict(i.Section, temp)) */
-/*                    {
-                        stack.Push(i);
-                        temp.Add(i.Section);
-                        //                        isNodeVisited[i.Index] = true;
-                        if (temp.Last(). != root)
-                        if (temp.Count() == numClasses)
-                        {
-                            List<Section> possibleSchedule = new List<Section>();
-                            foreach (Section j in temp)
-                            {
-                                possibleSchedule.Add(j);
-                            }
-                            possibleSchedules.Add(possibleSchedule);
-                            Console.Write("NUM OF POSS: " + possibleSchedule.Count());
-                            temp.Remove(temp.Last());
-                        }
-                    }
-                }
-            }
-        } */
 
         /// <summary>
         /// Checks for time conflicts between two nodes.

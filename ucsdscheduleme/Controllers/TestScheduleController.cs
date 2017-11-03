@@ -46,12 +46,12 @@ namespace ucsdscheduleme.Controllers
                 };
                 Section CSE20Section1 = new Section()
                 {
-                    Ticket = 915105,
+                    Ticket = 201,
                     Course = CSE20
                 };
                 Section CSE20Section2 = new Section()
                 {
-                    Ticket = 915105,
+                    Ticket = 202,
                     Course = CSE20
                 };
                 // Adding different sections to the course object
@@ -96,12 +96,12 @@ namespace ucsdscheduleme.Controllers
 
                 Section CSE21Section1 = new Section()
                 {
-                    Ticket = 915105,
+                    Ticket = 211,
                     Course = CSE21
                 };
                 Section CSE21Section2 = new Section()
                 {
-                    Ticket = 915105,
+                    Ticket = 212,
                     Course = CSE21
                 }; 
                 // Adding different sections to the course object
@@ -145,12 +145,12 @@ namespace ucsdscheduleme.Controllers
                 };
                 Section CSE101Section1 = new Section()
                 {
-                    Ticket = 915104,
+                    Ticket = 1011,
                     Course = CSE101
                 };
                 Section CSE101Section2 = new Section()
                 {
-                    Ticket = 915103,
+                    Ticket = 1012,
                     Course = CSE101
                 };
                 // Adding different sections to the course object
@@ -161,15 +161,68 @@ namespace ucsdscheduleme.Controllers
                 CSE101Section2.Meetings.Add(CSE101Discussion2);
                 CSE101.Sections.Add(CSE101Section2);
 
+
+                ////////
+                Meeting CSE110Lecture = new Meeting()
+                {
+                    MeetingType = MeetingType.Lecture,
+                    Days = (Days.Tuesday | Days.Thursday),
+                    StartTime = 2100,
+                    EndTime = 2101,
+                    Code = "A00"
+                };
+                Meeting CSE110Discussion1 = new Meeting()
+                {
+                    MeetingType = MeetingType.Discussion,
+                    Days = Days.Wednesday,
+                    StartTime = 2102,
+                    EndTime = 2103,
+                    Code = "A02"
+                };
+                Meeting CSE110Discussion2 = new Meeting()
+                {
+                    MeetingType = MeetingType.Discussion,
+                    Days = (Days.Tuesday | Days.Thursday),
+                    StartTime = 2104,
+                    EndTime = 2105,
+                    Code = "B02"
+                };
+                Course CSE110 = new Course()
+                {
+                    CourseAbbreviation = "CSE110",
+                    CourseName = "SOFTWARE ENGINEERING",
+                    Units = 4,
+                    Description = ""
+                };
+                Section CSE110Section1 = new Section()
+                {
+                    Ticket = 1101,
+                    Course = CSE110
+                };
+                Section CSE110Section2 = new Section()
+                {
+                    Ticket = 1102,
+                    Course = CSE110
+                };
+                // Adding different sections to the course object
+                CSE110.Sections.Add(CSE110Section1);
+                CSE110Section1.Meetings.Add(CSE110Lecture);
+                CSE110Section1.Meetings.Add(CSE110Discussion1);
+                CSE110Section2.Meetings.Add(CSE110Lecture);
+                CSE110Section2.Meetings.Add(CSE110Discussion2);
+                CSE110.Sections.Add(CSE110Section2);
+
+
                 ScheduleRepo repo = new ScheduleRepo();
-                Course[] courses = { CSE20, CSE21, CSE101 };
+                Course[] courses = { CSE20, CSE21, CSE101, CSE110 };
                 List<List<Section>> returned;
                 returned = repo.FindScheduleForClasses(courses);
                 Console.WriteLine("RETURNED SCHEDULE NUM: " + returned.Count);
                 foreach(List<Section> l in returned) {
                     foreach(Section s in l) 
                     {
-                        Console.Write(s.Course.CourseAbbreviation + " ");    
+                        //Console.Write(s.Course.CourseAbbreviation + " (" + s.Ticket + ") ");
+                        Console.Write(s.Ticket + "\t");
                     }
                     Console.WriteLine(" ");
                 }
