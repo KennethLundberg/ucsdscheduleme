@@ -117,5 +117,105 @@ namespace ucsdscheduleme.Repo
             };
             return retList;
         }
+
+        // ++++++++++++++++++++++++  Scrape data from Rate My Professor +++++++++++++++++++++++++++++++++++
+
+
+        /// <summary>
+        /// Contains XPaths used in scraping data from RateMyProfessor
+        /// </summary>
+        struct RateMyProfXPaths
+        {
+            public static string ProfFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
+            public static string ProfMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
+            public static string ProfLastNamePath = "//div[@class='result-name']//span[@class='plname']";
+            public static string ProfNotRatedNamePath = "//div[@class='name']";
+
+            public static string OverallQualityPath = "//div[contains(.,'Overall Quality')]/div[@class='grade']";
+            public static string WouldTakeAgainPath = "//div[contains(.,'Would Take Again')]/div[@class='grade']";
+            public static string DifficultyLevelPath = "//div[contains(.,'Level of Difficulty')]/div[@class='grade']";
+
+        }
+
+        /// <summary>
+        /// Scrapes a single RateMyProf page specified by the URL input parameter.
+        /// </summary>
+        /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
+        /// <param name="Url">URL of single RateMyProf page to scrape</param>
+        public List<ScrapeResultRateMyProf> ScrapeRateMyProf(string Url)
+        {
+            // Check for null or empty URL
+            if (String.IsNullOrEmpty(Url))
+            {
+                throw new ArgumentNullException(Url);
+            }
+
+            // HTML read from url and assign into var htmlDoc
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(Url);
+
+            // Rating Availabilty Indicator
+            bool isRated = true;
+
+            // Get Overall Quality Info
+            HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Overall Quality')]/div[@class='grade']");
+            string qualityRate = (quality != null) ? quality.InnerText : "N/A";
+
+            // Get Would Take Again Info
+            HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Would Take Again')]/div[@class='grade']");
+            string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
+
+            // Get Difficulty Level Info
+            HtmlNode diffLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Level of Difficulty')]/div[@class='grade']");
+            string diffLevelRate = (diffLevel != null) ? diffLevel.InnerText.Trim() : "N/A";
+
+
+            // Check if professor was rated at all
+            if (quality == null && wouldTakeAgain == null && diffLevel == null)
+            {
+                isRated = false;
+            }
+
+            // Professor's Full Name
+            string profFullName;
+            if (isRated == true)
+            {
+                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='pfname'][1]");
+                string profFName = (prof != null) ? prof.InnerText.Trim() : "N/A";
+                prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='pfname'][2]");
+                string profMName = (prof != null) ? prof.InnerText.Trim() : "N/A";
+                prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='plname']");
+                string profLName = (prof != null) ? prof.InnerText.Trim() : "N/A";
+
+                if (profMName == "")
+                {
+                    profFullName = profFName + " " + profLName;
+                }
+                else
+                {
+                    profFullName = profFName + " " + profMName + " " + profLName;
+                }
+
+            }
+            else
+            {
+                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='name']");
+                profFullName = (prof != null) ? prof.InnerText : "Professor Not Found";
+            }
+
+            // Insert the results into their proper member and return
+            List<ScrapeResultRateMyProf> retList = new List<ScrapeResultRateMyProf>()
+            {
+                new ScrapeResultRateMyProf
+                {
+                    InstructorName = profFullName,
+                    OverallQuality = qualityRate,
+                    WouldTakeAgain = wouldTakeAgainRate,
+                    LevelofDifficulty = diffLevelRate
+                }
+            };
+            return retList;
+        }
+
     }
 }
