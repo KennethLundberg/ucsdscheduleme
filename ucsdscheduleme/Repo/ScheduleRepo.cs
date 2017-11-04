@@ -150,8 +150,7 @@ namespace ucsdscheduleme.Repo
                    } */
             foreach (Node i in AllSections[0])
             {
-                List<Section> schedule = new List<Section>();
-                DFS(i, numClasses, schedule, ref possibleSchedules);
+                DFS(i, numClasses, ref possibleSchedules);
                 Console.WriteLine("NUM OF SCH AFTER DFS CALL: " + possibleSchedules.Count());
                 for (int j = 0; j < AllSections.Count; j++)
                 {
@@ -171,8 +170,9 @@ namespace ucsdscheduleme.Repo
         /// <param name="root">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
-        private void DFS(Node section, int numClasses, List<Section> currSchedule, ref List<List<Section>> possibleSchedules)
+        private void DFS(Node section, int numClasses, ref List<List<Section>> possibleSchedules)
         {
+
             // start stack with the root
             Stack<Node> s = new Stack<Node>();
             s.Push(section);
@@ -187,8 +187,10 @@ namespace ucsdscheduleme.Repo
 
                 if (curr.level == (numClasses - 1))
                 {
-                    if (!Conflict(currSchedule))
+                    if (!Conflict(tempSchedule))
                     {
+                        List<Section> currSchedule = new List<Section>();
+
                         for (int i = 0; i < tempSchedule.Count(); i++)
                         {
                             currSchedule.Add(tempSchedule[i]);
@@ -328,11 +330,11 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <returns>True if there is a conflict, else false.</returns>
         /// <param name="currSchedule">First node to check conflicts for</param>
-        private bool Conflict(List<Section> currSchedule)
+        private bool Conflict(Section[] tempSchedule)
         {
-            for (int i = 0; i < currSchedule.Count() - 1; i++)
+            for (int i = 0; i < tempSchedule.Count() - 1; i++)
             {
-                if (Conflict(currSchedule.ElementAt(i), currSchedule.ElementAt(i + 1)))
+                if (Conflict(tempSchedule[i], tempSchedule[i + 1]))
                 {
                     return true;
                 }
