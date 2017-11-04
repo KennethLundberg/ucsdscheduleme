@@ -84,6 +84,7 @@ namespace ucsdscheduleme.Repo
                         level = i
                     };
                     Console.WriteLine(thisSection.Course.CourseAbbreviation);
+                    Console.WriteLine("I: " + i);
                     thisCourse.Add(thisSection);
                 }
                 AllSections.Add(thisCourse);
@@ -149,7 +150,7 @@ namespace ucsdscheduleme.Repo
             foreach (Node i in AllSections[0])
             { 
                 List<Section> schedule = new List<Section>();
-            DFS(i, numClasses, schedule, ref possibleSchedules);
+                DFS(i, numClasses, schedule, ref possibleSchedules);
                 Console.WriteLine("NUM OF SCH AFTER DFS CALL: " + possibleSchedules.Count());
                 for (int j = 0; j < AllSections.Count; j++)
                 {
@@ -175,16 +176,22 @@ namespace ucsdscheduleme.Repo
             Stack<Node> s = new Stack<Node>();
             s.Push(section);
 
+            Section[] tempSchedule = new Section[numClasses];
             // adds the first class in the correct order on the temp schedule, then push children
             while (s.Count != 0)
             {
                 Node curr = s.Pop();
-                currSchedule[curr.level] = curr.Section;
+                Console.WriteLine("LEVEL: " + curr.level);
+                tempSchedule[curr.level] = curr.Section;
 
                 if (curr.level == numClasses)
                 {
                     if (!Conflict(currSchedule))
                     {
+                        for (int i = 0; i < tempSchedule.Count(); i++) 
+                        {
+                            currSchedule.Add(tempSchedule[i]);
+                        }
                         possibleSchedules.Add(currSchedule);
                     }
                     else
