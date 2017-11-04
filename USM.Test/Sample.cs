@@ -5,7 +5,7 @@ using Xunit;
 
 namespace USM.Test
 {
-    public class Tests
+    public class Sample
     {
         [Fact]
         public void myTest()
