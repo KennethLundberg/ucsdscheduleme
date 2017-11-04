@@ -158,15 +158,15 @@ namespace ucsdscheduleme.Repo
             bool isRated = true;
 
             // Get Overall Quality Info
-            HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Overall Quality')]/div[@class='grade']");
+            HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.OverallQualityPath);
             string qualityRate = (quality != null) ? quality.InnerText : "N/A";
 
             // Get Would Take Again Info
-            HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Would Take Again')]/div[@class='grade']");
+            HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.WouldTakeAgainPath);
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
 
             // Get Difficulty Level Info
-            HtmlNode diffLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(.,'Level of Difficulty')]/div[@class='grade']");
+            HtmlNode diffLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
             string diffLevelRate = (diffLevel != null) ? diffLevel.InnerText.Trim() : "N/A";
 
 
@@ -180,11 +180,11 @@ namespace ucsdscheduleme.Repo
             string profFullName;
             if (isRated == true)
             {
-                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='pfname'][1]");
+                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfFirstNamePath);
                 string profFName = (prof != null) ? prof.InnerText.Trim() : "N/A";
-                prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='pfname'][2]");
+                prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfMidNamePath);
                 string profMName = (prof != null) ? prof.InnerText.Trim() : "N/A";
-                prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='result-name']//span[@class='plname']");
+                prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfLastNamePath);
                 string profLName = (prof != null) ? prof.InnerText.Trim() : "N/A";
 
                 if (profMName == "")
@@ -199,7 +199,7 @@ namespace ucsdscheduleme.Repo
             }
             else
             {
-                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='name']");
+                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfNotRatedNamePath);
                 profFullName = (prof != null) ? prof.InnerText : "Professor Not Found";
             }
 
