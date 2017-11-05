@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using ucsdscheduleme.Models;
 
@@ -8,17 +10,11 @@ namespace ucsdscheduleme.Repo
     // The class for each node of the graph.
     public class Node
     {
-        public Node(int index)
-        {
-            Index = index;
-        }
-
         public Course Course { get; set; }
         public Section Section { get; set; }
 
-        public readonly int Index;
-        public bool IsFirstClass { get; set; }
-
+        public int Index { get; set; }
+        public int Level { get; set; }
         public List<Node> Edges { get; set; } = new List<Node>();
     }
 
@@ -31,98 +27,105 @@ namespace ucsdscheduleme.Repo
         /// <returns>List of possible schedules for course list.</returns>
         public List<List<Section>> FindScheduleForClasses(Course[] coursesToSchedule)
         {
-            List<Node> AllSections = new List<Node>();
-            List<List<Section>> possibleSchedules = new List<List<Section>>();
+        List<List<Section>> possibleSchedules = new List<List<Section>>();
+
+            // If there is only one class to schedule.
+            if (coursesToSchedule.Count() == 1)
+            {
+                possibleSchedules.Add((System.Collections.Generic.List<ucsdscheduleme.Models.Section>)coursesToSchedule[0].Sections);
+                return possibleSchedules;
+            }
 
             Course firstCourse = coursesToSchedule[0];
             int numClasses = coursesToSchedule.Length;
 
-            // Create a node for each meeting.
-            int numNodes = 0;
-            foreach (Course course in coursesToSchedule)
+            // Create a node for each Section.
+            List<List<Node>> AllSections = new List<List<Node>>();
+
+            for (int i = 0; i < coursesToSchedule.Count(); i++)
             {
-                foreach (Section section in course.Sections)
+                List<Node> thisCourse = new List<Node>();
+                foreach (Section j in coursesToSchedule[i].Sections)
                 {
-                    Node thisSection = new Node(numNodes++)
+                    Node thisSection = new Node()
                     {
-                        Course = course,
-                        Section = section
+                        Course = coursesToSchedule[i],
+                        Section = j,
+                        Level = i
                     };
-                    AllSections.Add(thisSection);
-                    thisSection.IsFirstClass = thisSection.Course == firstCourse;
+
+                    thisCourse.Add(thisSection);
                 }
+                AllSections.Add(thisCourse);
             }
 
-            // Create all the edges between meetings
-            for (int i = 0; i < AllSections.Count(); i++)
+            // Create all the edges between meetings.
+            for (int i = 0; i < coursesToSchedule.Count() - 1; i++)
             {
-                for (int j = i + 1; j < AllSections.Count(); j++)
+                foreach (Node j in AllSections[i])
                 {
-                    Node node1 = AllSections[i];
-                    Node node2 = AllSections[j];
-                    if (node1.Course != node2.Course)
+                    foreach (Node k in AllSections[i + 1])
                     {
-                        if (!Conflict(node1.Section, node2.Section))
-                        {
-                            node1.Edges.Add(node2);
-                        }
+                        j.Edges.Add(k);
                     }
                 }
             }
 
-            // dfs on graph to find possible schedules
-            foreach (Node section in AllSections)
+            // Call DFS on each subgraph, starting with the first class sections
+            // being the root
+            foreach (Node i in AllSections[0])
             {
-                if (section.IsFirstClass)
-                {
-                    DFS(section, numClasses, numNodes, ref possibleSchedules);
-                }
+                DFS(i, numClasses, ref possibleSchedules);
             }
-
             return possibleSchedules;
         }
 
         /// <summary>
-        /// Performs DFS on schedule graph.
+        /// Performs DFS on schedule graph. Begins with pushing the root onto the stack. Then
+        /// continuously pops and adds the popped section onto the schedule. When a node
+        /// is popped, it will push all its children onto the stack. Once a node from the last
+        /// layer is popped, then this is a unique schedule. This schedule is checked
+        /// for conflicts and then added if there are no time conflicts.
         /// </summary>
         /// <param name="root">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
-        private void DFS(Node root, int numClasses, int numNodes, ref List<List<Section>> possibleSchedules)
+        private void DFS(Node section, int numClasses, ref List<List<Section>> possibleSchedules)
         {
-            Node curr;
-            Stack<Node> stack = new Stack<Node>();
-            bool[] isNodeVisited = new bool[numNodes];
-            List<Section> temp = new List<Section>
-            {
-                root.Section
-            };
-            stack.Push(root);
-            isNodeVisited[0] = true;
+            // start stack with the root
+            Stack<Node> s = new Stack<Node>();
+            s.Push(section);
 
-            while (stack.Count != 0)
-            {
-                curr = stack.Peek();
-                stack.Pop();
-                temp.Remove(curr.Section);
+            Section[] tempSchedule = new Section[numClasses];
 
-                foreach (Node i in curr.Edges)
+            // Adds the first class in the correct order on the temp schedule, then push children.
+            while (s.Count != 0)
+            {
+                Node curr = s.Pop();
+                tempSchedule[curr.Level] = curr.Section;
+
+                // The popped node was part of the last layer.
+                if (curr.Level == (numClasses - 1))
                 {
-                    if (!isNodeVisited[i.Index] && !Conflict(i.Section, temp))
+                    // If there are no conflicts, copy into list and add to possible.
+                    if (!Conflict(tempSchedule))
                     {
-                        stack.Push(i);
-                        temp.Add(i.Section);
-                        isNodeVisited[i.Index] = true;
+                        List<Section> currSchedule = new List<Section>();
 
-                        if (temp.Count() == numClasses)
+                        for (int i = 0; i < tempSchedule.Count(); i++)
                         {
-                            List<Section> possibleSchedule = new List<Section>();
-                            foreach (Section j in temp)
-                            {
-                                possibleSchedule.Add(j);
-                            }
-                            possibleSchedules.Add(possibleSchedule);
+                            currSchedule.Add(tempSchedule[i]);
                         }
+                        possibleSchedules.Add(currSchedule);
+                    }
+                }
+
+                // Not the last layer of the tree, push children onto stack.
+                else
+                {
+                    foreach (Node i in curr.Edges)
+                    {
+                        s.Push(i);
                     }
                 }
             }
@@ -142,33 +145,31 @@ namespace ucsdscheduleme.Repo
                 {
                     if ((i.Days & j.Days) != 0)
                     {
-
-                        if (i.EndTime <= j.StartTime || i.StartTime <= j.EndTime)
+                        if ((i.StartTime <= j.EndTime) && (i.EndTime >= j.StartTime))
                         {
-                            return false;
+                            return true;
                         }
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         /// <summary>
         /// Checks for time conflicts between a node and the existing schedule.
         /// </summary>
-        /// <returns>The conflict.</returns>
-        /// <param name="section1">First node to check conflicts for</param>
-        /// <param name="temp">Current existing schedule</param>
-        private bool Conflict(Section section1, List<Section> temp)
+        /// <returns>True if there is a conflict, else false.</returns>
+        /// <param name="currSchedule">First node to check conflicts for</param>
+        private bool Conflict(Section[] tempSchedule)
         {
-            foreach (Section i in temp)
+            for (int i = 0; i < tempSchedule.Count() - 1; i++)
             {
-                if (Conflict(section1, i))
+                if (Conflict(tempSchedule[i], tempSchedule[i + 1]))
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
         /// <summary>
