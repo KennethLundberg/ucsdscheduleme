@@ -24,9 +24,14 @@ namespace ucsdscheduleme.Controllers
 
             // Scrape a single cape at specified URL by calling code in repo folder
             ScrapeRepo scrapeRepo = new ScrapeRepo();
-            if (scrape.ScrapeSite == ScrapeSite.Cape)
+            switch (scrape.ScrapeSite)
             {
-                scrape.ScrapeResults = scrapeRepo.ScrapeCape(scrape.Url);
+                case ScrapeSite.Cape:
+                    scrape.ScrapeResults = scrapeRepo.ScrapeCape(scrape.Url);
+                    break;
+                case ScrapeSite.RateMyProfessor:
+                    scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
+                    break;
             }
 
             return View(nameof(Index), scrape);

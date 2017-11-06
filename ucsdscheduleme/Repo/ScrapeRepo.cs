@@ -9,23 +9,25 @@ namespace ucsdscheduleme.Repo
 {
     public class ScrapeRepo
     {
+        #region Cape
+
         /// <summary>
         /// Contains XPaths used in scraping data from Cape
         /// </summary>
         struct CapeXPaths
         {
-            public static string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
-            public static string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
-            public static string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
-            public static string EvalsSubmittedPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEvaluationsSubmitted')]";
-            public static string RecommendClassTblRow = "//span[contains(., 'Do you recommend this course overall?')]/../.. " +
+            public static readonly string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
+            public static readonly string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
+            public static readonly string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
+            public static readonly string EvalsSubmittedPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEvaluationsSubmitted')]";
+            public static readonly string RecommendClassTblRow = "//span[contains(., 'Do you recommend this course overall?')]/../.. " +
                                                      "| //span[contains(., 'Do you recommend this seminar overall?')]/../.." +
                                                      "| //span[contains(., 'Do you recommend this lab overall?')]/../..";
-            public static string RecommendProfTblRow = "//span[contains(., 'Do you recommend this professor overall?')]/../..";
-            public static string HoursPerWeekTblRow = "//span[contains(., 'How many hours a week do you spend studying outside of class on average?')]/../..";
-            public static string TblRowToMean = ".//span[contains(@id, 'Mean')]";
-            public static string AvgGradeExpectedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeExpected']";
-            public static string AvgGradeReceivedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeReceived']";
+            public static readonly string RecommendProfTblRow = "//span[contains(., 'Do you recommend this professor overall?')]/../..";
+            public static readonly string HoursPerWeekTblRow = "//span[contains(., 'How many hours a week do you spend studying outside of class on average?')]/../..";
+            public static readonly string TblRowToMean = ".//span[contains(@id, 'Mean')]";
+            public static readonly string AvgGradeExpectedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeExpected']";
+            public static readonly string AvgGradeReceivedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeReceived']";
         }
 
         /// <summary>
@@ -118,11 +120,12 @@ namespace ucsdscheduleme.Repo
             return retList;
         }
 
-        // ++++++++++++++++++++++++  Scrape data from Rate My Professor +++++++++++++++++++++++++++++++++++
+        #endregion
 
+        #region Ratemyprofessors
 
         /// <summary>
-        /// Contains XPaths used in scraping data from RateMyProfessor
+        /// Contains XPaths used in scraping data from RateMyProfessors
         /// </summary>
         struct RateMyProfXPaths
         {
@@ -142,7 +145,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
         /// <param name="Url">URL of single RateMyProf page to scrape</param>
-        public List<ScrapeResultRateMyProf> ScrapeRateMyProf(string Url)
+        public List<ScrapeResult> ScrapeRateMyProf(string Url)
         {
             // Check for null or empty URL
             if (String.IsNullOrEmpty(Url))
@@ -204,18 +207,19 @@ namespace ucsdscheduleme.Repo
             }
 
             // Insert the results into their proper member and return
-            List<ScrapeResultRateMyProf> retList = new List<ScrapeResultRateMyProf>()
+            List<ScrapeResult> retList = new List<ScrapeResult>()
             {
-                new ScrapeResultRateMyProf
+                new ScrapeResult
                 {
                     InstructorName = profFullName,
                     OverallQuality = qualityRate,
                     WouldTakeAgain = wouldTakeAgainRate,
-                    LevelofDifficulty = diffLevelRate
+                    LevelOfDifficulty = diffLevelRate
                 }
             };
             return retList;
         }
 
+        #endregion
     }
 }
