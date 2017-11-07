@@ -10,8 +10,9 @@ namespace ucsdscheduleme.Data
     {
         public static void Initialize(ScheduleContext context)
         {
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            // TODO put back before commiting
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
 
             // Making Location objects
             Location CENTR115 = new Location()
