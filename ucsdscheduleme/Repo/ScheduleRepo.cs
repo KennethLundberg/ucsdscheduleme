@@ -14,7 +14,7 @@ namespace ucsdscheduleme.Repo
         public Section Section { get; set; }
 
         public int Index { get; set; }
-        public int Level { get; set; }
+        public int Layer { get; set; }
         public List<Node> Edges { get; set; } = new List<Node>();
     }
 
@@ -27,14 +27,7 @@ namespace ucsdscheduleme.Repo
         /// <returns>List of possible schedules for course list.</returns>
         public List<List<Section>> FindScheduleForClasses(Course[] coursesToSchedule)
         {
-        List<List<Section>> possibleSchedules = new List<List<Section>>();
-
-            // If there is only one class to schedule.
-            if (coursesToSchedule.Count() == 1)
-            {
-                possibleSchedules.Add((System.Collections.Generic.List<ucsdscheduleme.Models.Section>)coursesToSchedule[0].Sections);
-                return possibleSchedules;
-            }
+            List<List<Section>> possibleSchedules = new List<List<Section>>();
 
             Course firstCourse = coursesToSchedule[0];
             int numClasses = coursesToSchedule.Length;
@@ -51,7 +44,7 @@ namespace ucsdscheduleme.Repo
                     {
                         Course = coursesToSchedule[i],
                         Section = j,
-                        Level = i
+                        Layer = i
                     };
 
                     thisCourse.Add(thisSection);
@@ -73,9 +66,9 @@ namespace ucsdscheduleme.Repo
 
             // Call DFS on each subgraph, starting with the first class sections
             // being the root
-            foreach (Node i in AllSections[0])
+            foreach (Node node in AllSections[0])
             {
-                DFS(i, numClasses, ref possibleSchedules);
+                DFS(node, numClasses, ref possibleSchedules);
             }
             return possibleSchedules;
         }
@@ -102,10 +95,10 @@ namespace ucsdscheduleme.Repo
             while (s.Count != 0)
             {
                 Node curr = s.Pop();
-                tempSchedule[curr.Level] = curr.Section;
+                tempSchedule[curr.Layer] = curr.Section;
 
                 // The popped node was part of the last layer.
-                if (curr.Level == (numClasses - 1))
+                if (curr.Layer == (numClasses - 1))
                 {
                     // If there are no conflicts, copy into list and add to possible.
                     if (!Conflict(tempSchedule))
@@ -139,13 +132,13 @@ namespace ucsdscheduleme.Repo
         /// <returns>True if conflict is found.</returns>
         private bool Conflict(Section section1, Section section2)
         {
-            foreach (Meeting i in section1.Meetings)
+            foreach (Meeting meeting1 in section1.Meetings)
             {
-                foreach (Meeting j in section2.Meetings)
+                foreach (Meeting meeting2 in section2.Meetings)
                 {
-                    if ((i.Days & j.Days) != 0)
+                    if ((meeting1.Days & meeting2.Days) != 0)
                     {
-                        if ((i.StartTime <= j.EndTime) && (i.EndTime >= j.StartTime))
+                        if ((meeting1.StartTime <= meeting2.EndTime) && (meeting1.EndTime >= meeting2.StartTime))
                         {
                             return true;
                         }
