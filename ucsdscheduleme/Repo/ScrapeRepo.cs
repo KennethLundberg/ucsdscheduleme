@@ -129,10 +129,10 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         struct RateMyProfXPaths
         {
-            public static readonly string ProfFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
-            public static readonly string ProfMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
-            public static readonly string ProfLastNamePath = "//div[@class='result-name']//span[@class='plname']";
-            public static readonly string ProfNotRatedNamePath = "//div[@class='name']";
+            public static readonly string ProfessorFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
+            public static readonly string ProfessorMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
+            public static readonly string ProfessorLastNamePath = "//div[@class='result-name']//span[@class='plname']";
+            public static readonly string ProfessorNotRatedNamePath = "//div[@class='name']";
 
             public static readonly string OverallQualityPath = "//div[contains(.,'Overall Quality')]/div[@class='grade']";
             public static readonly string WouldTakeAgainPath = "//div[contains(.,'Would Take Again')]/div[@class='grade']";
@@ -158,7 +158,7 @@ namespace ucsdscheduleme.Repo
             var htmlDoc = web.Load(Url);
 
             // Rating Availabilty Indicator
-            bool isRated = true;
+            bool professorIsRated = true;
 
             // Get Overall Quality Info
             HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.OverallQualityPath);
@@ -176,48 +176,48 @@ namespace ucsdscheduleme.Repo
             // Check if professor was rated at all
             if (quality == null && wouldTakeAgain == null && difficultyLevel == null)
             {
-                isRated = false;
+                professorIsRated = false;
             }
 
             // Professor's Full Name
-            string profFullName;
-            if (isRated == true)
+            string professorFullName;
+            if (professorIsRated)
             {
-                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfFirstNamePath);
-                string profFName = (prof != null) ? prof.InnerText.Trim() : "N/A";
-                prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfMidNamePath);
-                string profMName = (prof != null) ? prof.InnerText.Trim() : "N/A";
-                prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfLastNamePath);
-                string profLName = (prof != null) ? prof.InnerText.Trim() : "N/A";
+                HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorFirstNamePath);
+                string professorFirstName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
+                professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorMidNamePath);
+                string professorMiddleName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
+                professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorLastNamePath);
+                string professorLastName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
 
-                if (profMName == "")
+                if (string.IsNullOrEmpty(professorMiddleName))
                 {
-                    profFullName = profFName + " " + profLName;
+                    professorFullName = professorFirstName + " " + professorLastName;
                 }
                 else
                 {
-                    profFullName = profFName + " " + profMName + " " + profLName;
+                    professorFullName = professorFirstName + " " + professorMiddleName + " " + professorLastName;
                 }
 
             }
             else
             {
-                HtmlNode prof = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfNotRatedNamePath);
-                profFullName = (prof != null) ? prof.InnerText : "Professor Not Found";
+                HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorNotRatedNamePath);
+                professorFullName = (professorNode != null) ? professorNode.InnerText : "Professor Not Found";
             }
 
             // Insert the results into their proper member and return
-            List<ScrapeResult> retList = new List<ScrapeResult>()
+            List<ScrapeResult> rateMyProfessorResult = new List<ScrapeResult>()
             {
                 new ScrapeResult
                 {
-                    InstructorName = profFullName,
+                    InstructorName = professorFullName,
                     OverallQuality = qualityRate,
                     WouldTakeAgain = wouldTakeAgainRate,
-                    LevelOfDifficulty = diffLevelRate
+                    LevelOfDifficulty = difficultyLevelRate
                 }
             };
-            return retList;
+            return rateMyProfessorResult;
         }
 
         #endregion
