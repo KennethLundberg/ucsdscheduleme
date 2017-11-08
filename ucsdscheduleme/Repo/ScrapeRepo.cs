@@ -129,14 +129,14 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         struct RateMyProfXPaths
         {
-            public static string ProfFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
-            public static string ProfMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
-            public static string ProfLastNamePath = "//div[@class='result-name']//span[@class='plname']";
-            public static string ProfNotRatedNamePath = "//div[@class='name']";
+            public static readonly string ProfFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
+            public static readonly string ProfMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
+            public static readonly string ProfLastNamePath = "//div[@class='result-name']//span[@class='plname']";
+            public static readonly string ProfNotRatedNamePath = "//div[@class='name']";
 
-            public static string OverallQualityPath = "//div[contains(.,'Overall Quality')]/div[@class='grade']";
-            public static string WouldTakeAgainPath = "//div[contains(.,'Would Take Again')]/div[@class='grade']";
-            public static string DifficultyLevelPath = "//div[contains(.,'Level of Difficulty')]/div[@class='grade']";
+            public static readonly string OverallQualityPath = "//div[contains(.,'Overall Quality')]/div[@class='grade']";
+            public static readonly string WouldTakeAgainPath = "//div[contains(.,'Would Take Again')]/div[@class='grade']";
+            public static readonly string DifficultyLevelPath = "//div[contains(.,'Level of Difficulty')]/div[@class='grade']";
 
         }
 
@@ -169,12 +169,12 @@ namespace ucsdscheduleme.Repo
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
 
             // Get Difficulty Level Info
-            HtmlNode diffLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
-            string diffLevelRate = (diffLevel != null) ? diffLevel.InnerText.Trim() : "N/A";
+            HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
+            string difficultyLevelRate = (difficultyLevel != null) ? difficultyLevel.InnerText.Trim() : "N/A";
 
 
             // Check if professor was rated at all
-            if (quality == null && wouldTakeAgain == null && diffLevel == null)
+            if (quality == null && wouldTakeAgain == null && difficultyLevel == null)
             {
                 isRated = false;
             }
