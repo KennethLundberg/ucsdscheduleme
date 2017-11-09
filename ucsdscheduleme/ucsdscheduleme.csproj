@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ScheduleController.cs" />
+    <Compile Remove="Models\ScrapeResultRateMyProf.cs" />
     <Folder Include="Views\Schedule\" />
   </ItemGroup>
 </Project>
