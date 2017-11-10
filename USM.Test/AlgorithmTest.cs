@@ -256,10 +256,6 @@ namespace USM.Test
             //adding for cse 20
             CSE20.Sections.Add(CSE20Section1);
             CSE20Section1.Meetings.Add(CSE20Lecture);
-            //CSE20Section1.Meetings.Add(CSE20Discussion1);
-            //CSE20Section2.Meetings.Add(CSE20Lecture);
-            //CSE20Section2.Meetings.Add(CSE20Discussion2);
-            //CSE20.Sections.Add(CSE20Section2);
             //adding for cse 21
             CSE21.Sections.Add(CSE21Section1);
             CSE21Section1.Meetings.Add(CSE21Lecture);
@@ -283,12 +279,12 @@ namespace USM.Test
             CSE26Section2.Meetings.Add(CSE26Discussion2);
             CSE26.Sections.Add(CSE26Section2);
             //adding for cse 27
-            CSE26.Sections.Add(CSE27Section1);
-            CSE26Section1.Meetings.Add(CSE27Lecture);
-            CSE26Section1.Meetings.Add(CSE27Discussion1);
-            CSE26Section2.Meetings.Add(CSE27Lecture);
-            CSE26Section2.Meetings.Add(CSE27Discussion2);
-            CSE26.Sections.Add(CSE27Section2);
+            CSE27.Sections.Add(CSE27Section1);
+            CSE27Section1.Meetings.Add(CSE27Lecture);
+            CSE27Section1.Meetings.Add(CSE27Discussion1);
+            CSE27Section2.Meetings.Add(CSE27Lecture);
+            CSE27Section2.Meetings.Add(CSE27Discussion2);
+            CSE27.Sections.Add(CSE27Section2);
 
             Course[] courses = { CSE20, CSE21, CSE22, CSE23, CSE24, CSE25, CSE26, CSE27 };
             return courses;
@@ -434,8 +430,8 @@ namespace USM.Test
             Course[] AllCourses = Classes();
 
             // choose the courses to be tested
-            Course CSE20 = AllCourses[0];
-            Course CSE26 = AllCourses[6];
+            Course CSE20 = AllCourses.First(c => c.CourseAbbreviation == "CSE20");
+            Course CSE26 = AllCourses.First(c => c.CourseAbbreviation == "CSE26");
             Course[] courses = { CSE20, CSE26 };
 
             //call the algorithm
@@ -444,6 +440,15 @@ namespace USM.Test
             int actualNum = returned.Count;
 
             //two schedules
+            List<Section> ls0 = returned[0];
+            Section dis1 = ls0[1];
+            List<Section> ls1 = returned[1];
+            Section dis2 = ls1[1];
+            Debug.WriteLine("first dis is "+dis1.Course.CourseAbbreviation);
+            Debug.WriteLine("second dis is " + dis2.Course.CourseAbbreviation);
+
+
+            
             Assert.Equal(expectedNum, actualNum);
         }
 
@@ -486,13 +491,13 @@ namespace USM.Test
             Course[] AllCourses = Classes();
 
             // choose the courses to be tested
-            Course CSE20 = AllCourses[0];
+            Course CSE26 = AllCourses[6];
             Course CSE27 = AllCourses[7];
-            Course[] courses = { CSE20, CSE27 };
+            Course[] courses = { CSE26, CSE27 };
 
             //call the algorithm
             List<List<Section>> returned = sch.FindScheduleForClasses(courses);
-            int expectedNum = 0;
+            int expectedNum = 1;
             int actualNum = returned.Count;
 
             //two schedules
