@@ -3,6 +3,7 @@ using Xunit;
 using ucsdscheduleme.Repo;
 using ucsdscheduleme.Models;
 using System.Diagnostics;
+using System.Linq;
 
 namespace USM.Test
 {
@@ -126,8 +127,8 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Monday | Days.Wednesday | Days.Friday),
-                StartTime = 0000,
-                EndTime = 0001,
+                StartTime = 1000,
+                EndTime = 1050,
                 Code = "F00"
             };
             Course CSE24 = new Course()
@@ -165,6 +166,92 @@ namespace USM.Test
                 Course = CSE25
             };
 
+            Meeting CSE26Lecture = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Days = (Days.Tuesday | Days.Thursday),
+                StartTime = 1530,
+                EndTime = 1700,
+                Code = "A00"
+            };
+
+            Meeting CSE26Discussion1 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1000,
+                EndTime = 1050,
+                Code = "A02"
+            };
+            Meeting CSE26Discussion2 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = (Days.Tuesday | Days.Thursday),
+                StartTime = 1700,
+                EndTime = 1750,
+                Code = "B02"
+            };
+            Course CSE26 = new Course()
+            {
+                CourseAbbreviation = "CSE26",
+                CourseName = "Intro / Discrete Mathematics",
+                Units = 4,
+                Description = ""
+            };
+            Section CSE26Section1 = new Section()
+            {
+                Ticket = 261,
+                Course = CSE26
+            };
+            Section CSE26Section2 = new Section()
+            {
+                Ticket = 262,
+                Course = CSE26
+            };
+
+            Meeting CSE27Lecture = new Meeting()
+            {
+                MeetingType = MeetingType.Lecture,
+                Days = (Days.Monday | Days.Wednesday),
+                StartTime = 1530,
+                EndTime = 1700,
+                Code = "A00"
+            };
+
+            Meeting CSE27Discussion1 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = Days.Wednesday,
+                StartTime = 1000,
+                EndTime = 1050,
+                Code = "A02"
+            };
+            Meeting CSE27Discussion2 = new Meeting()
+            {
+                MeetingType = MeetingType.Discussion,
+                Days = (Days.Tuesday | Days.Thursday),
+                StartTime = 1530,
+                EndTime = 1700,
+                Code = "B02"
+            };
+            Course CSE27 = new Course()
+            {
+                CourseAbbreviation = "CSE27",
+                CourseName = "Intro / Discrete Mathematics",
+                Units = 4,
+                Description = ""
+            };
+            Section CSE27Section1 = new Section()
+            {
+                Ticket = 271,
+                Course = CSE27
+            };
+            Section CSE27Section2 = new Section()
+            {
+                Ticket = 272,
+                Course = CSE27
+            };
+
             // Adding different sections to the course object
             //adding for cse 20
             CSE20.Sections.Add(CSE20Section1);
@@ -188,8 +275,22 @@ namespace USM.Test
             //adding for cse 25
             CSE25.Sections.Add(CSE25Section1);
             CSE25Section1.Meetings.Add(CSE25Lecture);
+            //adding for cse 26
+            CSE26.Sections.Add(CSE26Section1);
+            CSE26Section1.Meetings.Add(CSE26Lecture);
+            CSE26Section1.Meetings.Add(CSE26Discussion1);
+            CSE26Section2.Meetings.Add(CSE26Lecture);
+            CSE26Section2.Meetings.Add(CSE26Discussion2);
+            CSE26.Sections.Add(CSE26Section2);
+            //adding for cse 27
+            CSE26.Sections.Add(CSE27Section1);
+            CSE26Section1.Meetings.Add(CSE27Lecture);
+            CSE26Section1.Meetings.Add(CSE27Discussion1);
+            CSE26Section2.Meetings.Add(CSE27Lecture);
+            CSE26Section2.Meetings.Add(CSE27Discussion2);
+            CSE26.Sections.Add(CSE27Section2);
 
-            Course[] courses = { CSE20, CSE21, CSE22, CSE23, CSE24, CSE25 };
+            Course[] courses = { CSE20, CSE21, CSE22, CSE23, CSE24, CSE25, CSE26, CSE27 };
             return courses;
         }
 
@@ -215,7 +316,7 @@ namespace USM.Test
         }
 
         /* conflict on the same day and same time */
-        /*[Fact]
+        [Fact]
         public void TestConflictSameDay()
         {
             //use the course above
@@ -256,7 +357,7 @@ namespace USM.Test
 
             //no available schedules
             Assert.Equal(expectedNum, actualNum);
-        }*/
+        }
 
         //no conflict on same day different time
         [Fact]
@@ -324,9 +425,79 @@ namespace USM.Test
             Assert.Equal(expectedNum, actualNum);
         }
 
+        // no conflict with two discussions in one class
+        [Fact]
+        public void TestNoConflictWithDis1()
+        {
+            //use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
 
+            // choose the courses to be tested
+            Course CSE20 = AllCourses[0];
+            Course CSE26 = AllCourses[6];
+            Course[] courses = { CSE20, CSE26 };
 
+            //call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            int expectedNum = 2;
+            int actualNum = returned.Count;
 
+            //two schedules
+            Assert.Equal(expectedNum, actualNum);
+        }
+
+        //one discussion pass but one discussion conflicts
+        [Fact]
+        public void TestNoConflictWithDis2()
+        {
+            //use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
+
+            // choose the courses to be tested
+            Course CSE24 = AllCourses[4];
+            Course CSE26 = AllCourses[6];
+            Course[] courses = { CSE24, CSE26 };
+
+            //call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            int expectedNum = 1;
+            int actualNum = returned.Count;
+
+            //two schedules
+            Assert.Equal(expectedNum, actualNum);
+            //test whether the right list 
+            List<List<Section>> possibleSchedule = returned;
+            List<Section> rightSchedule = new List<Section>();
+            rightSchedule.Add(CSE24.Sections.ElementAt(0));
+            rightSchedule.Add(CSE26.Sections.ElementAt(1));
+            Assert.Contains(rightSchedule, returned);
+        }
+
+        // one confliction between discussion and discussion
+        // another confliction between discussion and lecture
+        // no possible schedule
+        [Fact]
+        public void TestNoConflictWithDis3()
+        {
+            //use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
+
+            // choose the courses to be tested
+            Course CSE20 = AllCourses[0];
+            Course CSE27 = AllCourses[7];
+            Course[] courses = { CSE20, CSE27 };
+
+            //call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            int expectedNum = 0;
+            int actualNum = returned.Count;
+
+            //two schedules
+            Assert.Equal(expectedNum, actualNum);
+        }
 
     }
 }
