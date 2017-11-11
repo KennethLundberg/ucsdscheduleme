@@ -1,8 +1,10 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ucsdscheduleme.Data;
 using ucsdscheduleme.Models;
@@ -56,13 +58,48 @@ namespace ucsdscheduleme.Repo
         /// <returns></returns>
         private string GetRateMyProfessorUrl(string ProfName)
         {
+            string[] names = ProfName.Split(",");
 
+            string[] firstName = names[1].Split(" ");
+            string[] lastName = names[0].Split(" ");
 
             string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
-                name + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacherfullname_t%5E2000+teacherfullname_autosuggest" +
-                "&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&siteName=rmp&rows=20&group=off&group.field=" +
-                "content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%22University+of+California+San+Diego%22";
+                firstName[0].ToLower() + "+" + lastName[0].ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
+                "fullname_t%5E2000+teacherfullname_autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&" +
+                "siteName=rmp&rows=20&group=off&group.field=content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%" +
+                "22University+of+California+San+Diego%22";
+
+            GetRequest(urlString);
+
+
             return "";
+        }
+
+        async static string GetRequest(string Url)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpResponseMessage response = await client.GetAsync(Url);
+
+            HttpContent content = response.Content;
+
+            string myContent = await content.ReadAsStringAsync();
+
+            myContent = myContent.Replace("noCB(", "");
+            myContent = myContent.Replace(")", "");
+
+            JObject responseObj = JObject.Parse(myContent);
+
+            JObject respondNode = (JObject)responseObj["response"];
+            JArray docsNode = (JArray)respondNode["docs"];
+            JValue pk_id = (JValue)docsNode[0]["pk_id"];
+
+            string id = pk_id.ToString();
+
+            // change the id to int and return it
+
+            return (pk_id.ToString);
+
         }
 
         /// <summary>
