@@ -1,14 +1,18 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ucsdscheduleme.Data;
 using ucsdscheduleme.Models;
 
 namespace ucsdscheduleme.Repo
 {
     public class ScrapeRateMyProfessor
     {
+        private readonly ScheduleContext _context;
+
         /// <summary>
         /// Contains XPaths used in scraping data from RateMyProfessors
         /// </summary>
@@ -26,11 +30,47 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
+        /// Gets all the professor from the Database, and using the name of the professor
+        /// stores the review of the professor from the ratemyprofessors.
+        /// </summary>
+        public void Update()
+        {
+            var professors = _context.Professor.ToList();
+
+            foreach(var professor in professors)
+            {
+                if (professor.RateMyProfessor != null)
+                {
+                    professor.RateMyProfessor = new RateMyProfessor();
+                }
+                GetRateMyProfessorUrl(professor.Name);
+                // Call ScrapeRateMyProf
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ProfName"></param>
+        /// <returns></returns>
+        private string GetRateMyProfessorUrl(string ProfName)
+        {
+
+
+            string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
+                name + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacherfullname_t%5E2000+teacherfullname_autosuggest" +
+                "&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&siteName=rmp&rows=20&group=off&group.field=" +
+                "content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%22University+of+California+San+Diego%22";
+            return "";
+        }
+
+        /// <summary>
         /// Scrapes a single RateMyProf page specified by the URL input parameter.
         /// </summary>
         /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
         /// <param name="Url">URL of single RateMyProf page to scrape</param>
-        public ScrapeResult ScrapeRateMyProf(string Url)
+        private ScrapeResult ScrapeRateMyProf(string Url)
         {
             // Check for null or empty URL
             if (String.IsNullOrEmpty(Url))
