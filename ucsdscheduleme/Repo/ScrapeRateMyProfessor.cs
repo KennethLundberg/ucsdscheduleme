@@ -35,19 +35,33 @@ namespace ucsdscheduleme.Repo
         /// Gets all the professor from the Database, and using the name of the professor
         /// stores the review of the professor from the ratemyprofessors.
         /// </summary>
-        public void Update()
+        public List<ScrapeResult> Update()
         {
+            // Get professors list from database
             var professors = _context.Professor.ToList();
+            
+            // Create empty list of ScrapeResult
+            List<ScrapeResult> scrapeRMP = new List<ScrapeResult>();
 
-            foreach(var professor in professors)
+            // For each professor in the list from database
+            foreach (var professor in professors)
             {
+                // Check if the professor has RateMyProfessor object
                 if (professor.RateMyProfessor != null)
                 {
                     professor.RateMyProfessor = new RateMyProfessor();
                 }
-                GetRateMyProfessorUrl(professor.Name);
-                // Call ScrapeRateMyProf
+
+                // Get the URL needed to scrape that Professors page at RMP 
+                string rateMyProfURL = GetRateMyProfessorUrl(professor.Name);
+
+                // Scrape the page and add the resultant to the ScrapeResult list
+                scrapeRMP.Add(ScrapeRateMyProf(rateMyProfURL));
+
+
             }
+
+            return scrapeRMP;
 
         }
 
@@ -60,45 +74,48 @@ namespace ucsdscheduleme.Repo
         {
             string[] names = ProfName.Split(",");
 
+            // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
 
+            // Generate the URL with the first and last name
             string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
                 firstName[0].ToLower() + "+" + lastName[0].ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
                 "fullname_t%5E2000+teacherfullname_autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&" +
                 "siteName=rmp&rows=20&group=off&group.field=content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%" +
                 "22University+of+California+San+Diego%22";
 
-            GetRequest(urlString);
+            // Use urlString to extract the pk_id
+            string pk_id = (GetRequest(urlString)).Result;
 
-
-            return "";
+            // Return the final url containing pk_id
+            return ("http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + pk_id);
         }
 
-        async static string GetRequest(string Url)
+        async static Task<string> GetRequest(string Url)
         {
             HttpClient client = new HttpClient();
 
+            // Make a request using the given Url
             HttpResponseMessage response = await client.GetAsync(Url);
-
-            HttpContent content = response.Content;
-
+            // Get the content returned by the request
+            HttpContent content = response.Content; 
+            // Get as string the content of the request made
             string myContent = await content.ReadAsStringAsync();
 
+            // Get rid of extra chars in the JSON returned from the request
             myContent = myContent.Replace("noCB(", "");
             myContent = myContent.Replace(")", "");
 
+            // Parse the JSON to get pk_id of the professor 
             JObject responseObj = JObject.Parse(myContent);
-
             JObject respondNode = (JObject)responseObj["response"];
             JArray docsNode = (JArray)respondNode["docs"];
             JValue pk_id = (JValue)docsNode[0]["pk_id"];
 
             string id = pk_id.ToString();
-
-            // change the id to int and return it
-
-            return (pk_id.ToString);
+  
+            return (id);
 
         }
 
@@ -175,7 +192,7 @@ namespace ucsdscheduleme.Repo
                 OverallQuality = qualityRate,
                 WouldTakeAgain = wouldTakeAgainRate,
                 LevelOfDifficulty = difficultyLevelRate
-            
+
             };
             return rateMyProfessorResult;
         }
