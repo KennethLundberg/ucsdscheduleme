@@ -80,7 +80,7 @@ namespace ucsdscheduleme.Repo
         /// layer is popped, then this is a unique schedule. This schedule is checked
         /// for conflicts and then added if there are no time conflicts.
         /// </summary>
-        /// <param name="root">Node to do DFS from</param>
+        /// <param name="section">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
         private void DFS(Node section, int numClasses, ref List<List<Section>> possibleSchedules)
@@ -404,6 +404,42 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
+        /// Calculates the days that the schedule has classes on and stores it in currDays.
+        /// </summary>
+        /// <param name="section">Section that we're calculating the days for.</param>
+        /// <param name="currDays">An array that holds the number of classes each day.</param>
+        public void DaysCalculations(Section section, ref int[] currDays)
+        {
+            foreach (Meeting meeting in section.Meetings)
+            {
+                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
+                    || meeting.MeetingType != MeetingType.Review)
+                {
+                    if (meeting.Days.HasFlag(Days.Monday))
+                    {
+                        currDays[0]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Tuesday))
+                    {
+                        currDays[1]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Wednesday))
+                    {
+                        currDays[2]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Thursday))
+                    {
+                        currDays[3]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Friday))
+                    {
+                        currDays[4]++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the schedule with the least days scheduled.
         /// </summary>
         /// <returns>The schedule with the least days.</returns>
@@ -415,39 +451,13 @@ namespace ucsdscheduleme.Repo
 
             // Iterate through the possible schedules and counting the number of days
             // per schedule
-            foreach (List<Section> schedule in possibleSchedules) 
+            foreach (List<Section> schedule in possibleSchedules)
             {
                 int numDays = 0;
                 int[] currDays = { 0, 0, 0, 0, 0 };
                 foreach (Section section in schedule)
                 {
-                    foreach (Meeting meeting in section.Meetings)
-                    {
-                        if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                            || meeting.MeetingType != MeetingType.Review)
-                        {
-                            if (meeting.Days.HasFlag(Days.Monday))
-                            {
-                                currDays[0]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Tuesday))
-                            {
-                                currDays[1]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Wednesday))
-                            {
-                                currDays[2]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Thursday))
-                            {
-                                currDays[3]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Friday))
-                            {
-                                currDays[4]++;
-                            }
-                        }
-                    }
+                    DaysCalculations(section, ref currDays);
                 }
 
                 // Counts the number of days scheduled.
@@ -467,7 +477,7 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return leastDaySchedule;
-        } 
+        }
 
         /// <summary>
         /// Returns the schedule with the most days scheduled.
@@ -480,7 +490,7 @@ namespace ucsdscheduleme.Repo
             List<Section> mostDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counts how many days are scheduled.
-            foreach (List<Section> schedule in possibleSchedules) 
+            foreach (List<Section> schedule in possibleSchedules)
             {
                 int numDays = 0;
                 int[] currDays = { 0, 0, 0, 0, 0 };
@@ -488,30 +498,7 @@ namespace ucsdscheduleme.Repo
                 {
                     foreach (Meeting meeting in section.Meetings)
                     {
-                        if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                            || meeting.MeetingType != MeetingType.Review)
-                        {
-                            if (meeting.Days.HasFlag(Days.Monday))
-                            {
-                                currDays[0]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Tuesday))
-                            {
-                                currDays[1]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Wednesday))
-                            {
-                                currDays[2]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Thursday))
-                            {
-                                currDays[3]++;
-                            }
-                            if (meeting.Days.HasFlag(Days.Friday))
-                            {
-                                currDays[4]++;
-                            }
-                        }
+                        DaysCalculations(section, ref currDays);
                     }
                 }
 
@@ -532,8 +519,45 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return mostDaySchedule;
-        } 
+        }
 
+        /// <summary>
+        /// Adds the time of each meeting to the corresponding day.
+        /// </summary>
+        /// <param name="section">Section whose time is going to be added.</param>
+        /// <param name="week">Week holds the times.</param>
+        public void GapsCalculations(Section section, ref List<List<Tuple<int, int>>> week)
+        {
+            foreach (Meeting meeting in section.Meetings)
+            {
+                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
+                                           || meeting.MeetingType != MeetingType.Review)
+                {
+                    Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
+
+                    if (meeting.Days.HasFlag(Days.Monday))
+                    {
+                        week.ElementAt(0).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Tuesday))
+                    {
+                        week.ElementAt(1).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Wednesday))
+                    {
+                        week.ElementAt(2).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Thursday))
+                    {
+                        week.ElementAt(3).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Friday))
+                    {
+                        week.ElementAt(4).Add(time);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Returns the schedule with the least gaps in between classes.
         /// </summary>
@@ -553,31 +577,7 @@ namespace ucsdscheduleme.Repo
                 {
                     foreach (Meeting meeting in section.Meetings)
                     {
-                        if (meeting.Days.HasFlag(Days.Monday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(0).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Tuesday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(1).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Wednesday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(2).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Thursday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(3).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Friday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(4).Add(time);
-                        }
+                        GapsCalculations(section, ref week);
                     }
                 }
 
@@ -599,14 +599,14 @@ namespace ucsdscheduleme.Repo
                 }
 
                 // Checks to see if current schedule has less gaps than current least.
-                if (currGap < leastGap) 
+                if (currGap < leastGap)
                 {
                     leastGapsSchedule = schedule;
                     leastGap = currGap;
                 }
             }
             return leastGapsSchedule;
-        } 
+        }
 
         /// <summary>
         /// Returns the schedule with the most gaps in between classes.
@@ -625,34 +625,7 @@ namespace ucsdscheduleme.Repo
 
                 foreach (Section section in schedule)
                 {
-                    foreach (Meeting meeting in section.Meetings)
-                    {
-                        if (meeting.Days.HasFlag(Days.Monday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(0).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Tuesday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(1).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Wednesday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(2).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Thursday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(3).Add(time);
-                        }
-                        if (meeting.Days.HasFlag(Days.Friday))
-                        {
-                            Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-                            week.ElementAt(4).Add(time);
-                        }
-                    }
+                    GapsCalculations(section, ref week);
                 }
 
                 // Sort the class times in each schedule by start time.
@@ -673,13 +646,13 @@ namespace ucsdscheduleme.Repo
                 }
 
                 // Checks to see if current schedule has less gaps than current least.
-                if (currGap > mostGap) 
+                if (currGap > mostGap)
                 {
                     mostGapsSchedule = schedule;
                     mostGap = currGap;
                 }
             }
             return mostGapsSchedule;
-        } 
+        }
     }
 }
