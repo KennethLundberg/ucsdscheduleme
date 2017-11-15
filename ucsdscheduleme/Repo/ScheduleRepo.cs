@@ -457,7 +457,7 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
-        /// Finds the number of days the schedule has classes
+        /// Calculates the number of days the schedule has classes on
         /// </summary>
         /// <param name="schedule">A schedule of classes</param>
         /// <returns> the number of days in the schedule</returns>
