@@ -80,7 +80,7 @@ namespace ucsdscheduleme.Repo
         /// layer is popped, then this is a unique schedule. This schedule is checked
         /// for conflicts and then added if there are no time conflicts.
         /// </summary>
-        /// <param name="root">Node to do DFS from</param>
+        /// <param name="section">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
         private void DFS(Node section, int numClasses, ref List<List<Section>> possibleSchedules)
@@ -267,12 +267,11 @@ namespace ucsdscheduleme.Repo
             return result;
         }
 
-        //convert the GPA strings in Cape as floats
         /// <summary>
-        /// 
+        /// Converts the GPA strings in Cape as floats
         /// </summary>
-        /// <param name="capeGrade"></param>
-        /// <returns></returns>
+        /// <param name="capeGrade">String from CAPES data</param>
+        /// <returns>Integer GPA</returns>
         private float GetGPA(string capeGrade)
         {
             string[] tokens = capeGrade.Split('(', ')');
@@ -393,7 +392,6 @@ namespace ucsdscheduleme.Repo
                 {
                     decimal classRate = section.Professor.RateMyProfessor.OverallQuality;
                     scheduleRate += classRate;
-
                 }
 
                 //compare GPA of this schedule to the highest schedule GPA
@@ -402,7 +400,6 @@ namespace ucsdscheduleme.Repo
                     highestRate = scheduleRate;
                     result = schedule;
                 }
-
             }
 
             return result;
@@ -420,7 +417,7 @@ namespace ucsdscheduleme.Repo
 
             // Iterate through the possible schedules and counting the number of days
             // per schedule
-            foreach (List<Section> schedule in possibleSchedules) 
+            foreach (List<Section> schedule in possibleSchedules)
             {
                 int numDays = NumDays(schedule);
 
@@ -432,7 +429,7 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return leastDaySchedule;
-        } 
+        }
 
         /// <summary>
         /// Returns the schedule with the most days scheduled.
@@ -445,7 +442,7 @@ namespace ucsdscheduleme.Repo
             List<Section> mostDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counts how many days are scheduled.
-            foreach (List<Section> schedule in possibleSchedules) 
+            foreach (List<Section> schedule in possibleSchedules)
             {
                 int numDays = NumDays(schedule);
 
@@ -457,13 +454,13 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return mostDaySchedule;
-        } 
+        }
 
         /// <summary>
-        /// 
+        /// Finds the number of days the schedule has classes
         /// </summary>
-        /// <param name="schedule"></param>
-        /// <returns></returns>
+        /// <param name="schedule">A schedule of classes</param>
+        /// <returns> the number of days in the schedule</returns>
         private int NumDays(List<Section> schedule)
         {
             int numDays = 0;
@@ -527,14 +524,14 @@ namespace ucsdscheduleme.Repo
                 int currGap = AvgGap(schedule);
 
                 // Checks to see if current schedule has less gaps than current least.
-                if (currGap < leastGap) 
+                if (currGap < leastGap)
                 {
                     leastGapsSchedule = schedule;
                     leastGap = currGap;
                 }
             }
             return leastGapsSchedule;
-        } 
+        }
 
         /// <summary>
         /// Returns the schedule with the most gaps in between classes.
@@ -564,8 +561,8 @@ namespace ucsdscheduleme.Repo
         /// <summary>
         /// Calculates the average gap size between sections
         /// </summary>
-        /// <param name="schedule"></param>
-        /// <returns></returns>
+        /// <param name="schedule">Schedule of classes</param>
+        /// <returns>The average hours of gaps in the schedule between classes</returns>
         private int AvgGap(List<Section> schedule)
         {
             int gap = 0;
@@ -610,7 +607,7 @@ namespace ucsdscheduleme.Repo
             {
                 day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
             }
-
+           
             // Calculate the gaps in the schedule.
             foreach (List<Tuple<int, int>> day in week)
             {
