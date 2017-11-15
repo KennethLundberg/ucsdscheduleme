@@ -80,7 +80,7 @@ namespace ucsdscheduleme.Repo
         /// layer is popped, then this is a unique schedule. This schedule is checked
         /// for conflicts and then added if there are no time conflicts.
         /// </summary>
-        /// <param name="root">Node to do DFS from</param>
+        /// <param name="section">Node to do DFS from</param>
         /// <param name="numClasses">Total number of classes to schedule</param>
         /// <param name="possibleSchedules">Modified list of possible schedules</param>
         private void DFS(Node section, int numClasses, ref List<List<Section>> possibleSchedules)
@@ -152,7 +152,7 @@ namespace ucsdscheduleme.Repo
         /// Checks for time conflicts between a node and the existing schedule.
         /// </summary>
         /// <returns>True if there is a conflict, else false.</returns>
-        /// <param name="currSchedule">First node to check conflicts for</param>
+        /// <param name="tempSchedule">Schedule to check conflicts for</param>
         private bool Conflict(Section[] tempSchedule)
         {
             for (int i = 0; i < tempSchedule.Count() - 1; i++)
@@ -209,6 +209,451 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the highest received GPAs from CAPEs.
+        /// </summary>
+        /// <returns>The schedule with highest CAPEs GPA</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> HighestGPA(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            float highestGPA = 0;
+
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                float scheduleGPA = 0;
+                float totalGPA = 0;
+
+                foreach (Section section in schedule)
+                {
+                    var courseCapes = section.Course.Cape;
+                    var professorCapes = section.Professor.Cape;
+
+                    //find the cape for different profs for this course by 
+                    //finding a common cape id between courseCape and ProfCape 
+                    //var cape = _context.Cape.Single(c => c.courseCapes.Contains(professorCapes));
+
+                    totalGPA = 0;
+                    int num = 0;
+                    foreach (var cCape in courseCapes)
+                    {
+                        foreach (var pCape in professorCapes)
+                        {
+                            if (cCape.Id == pCape.Id)
+                            {
+                                totalGPA += GetGPA(cCape.AverageGradeReceived);
+                                num++;
+                            }
+                        }
+                    }
+
+                    //after find the cape, find average cape for this class
+                    totalGPA /= num;
+                }
+                //total GPA for this schedule
+                scheduleGPA += totalGPA;
+
+                //compare GPA of this schedule to the highest schedule GPA
+                if (scheduleGPA > highestGPA)
+                {
+                    highestGPA = scheduleGPA;
+                    result = schedule;
+                }
+
+            }
+
+            return result;
+        }
+
+        //convert the GPA strings in Cape as floats
+        private float GetGPA(string capeGrade)
+        {
+            string[] tokens = capeGrade.Split('(', ')');
+            string num = tokens[1];
+            if (num.Contains("."))
+                num = num.Replace(".", ",");
+            float result = System.Convert.ToSingle(num);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the earliest ending time.
+        /// </summary>
+        /// <returns>The schedule with earliest ending time.</returns>
+        /// <param name="possibleSchedules">Possible schedules without time conflicts.</param>
+        public List<Section> EarliestEnd(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            int earliestEnd = 2359;
+            //get the lastest time for a schedule
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                int lastestScheduleTime = 0000;
+                int lastestClassTime = 0;
+
+                //get the lastest time for a class
+                foreach (Section section in schedule)
+                {
+                    lastestClassTime = 0000;
+                    foreach (Meeting meeting in section.Meetings)
+                    {
+                        if (meeting.MeetingType != MeetingType.Review &&
+                            meeting.MeetingType != MeetingType.Final &&
+                            meeting.MeetingType != MeetingType.Midterm)
+                        {
+                            if (meeting.EndTime > lastestClassTime)
+                            {
+                                lastestClassTime = meeting.EndTime;
+                            }
+                        }
+                    }
+                }
+                if (lastestClassTime > lastestScheduleTime)
+                {
+                    lastestScheduleTime = lastestClassTime;
+                }
+                //compare
+                if (earliestEnd > lastestScheduleTime)
+                {
+                    earliestEnd = lastestScheduleTime;
+                    result = schedule;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the latest start time.
+        /// </summary>
+        /// <returns>The schedule with the latest start time.</returns>
+        /// <param name="possibleSchedules">Possible schedules.</param>
+        public List<Section> LatestStart(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            int latestStart = 0000;
+
+            //get the lastest time for a schedule
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                int earliestScheduleTime = 0000;
+                int earliestClassTime = 0000;
+
+                //get the lastest time for a class
+                foreach (Section section in schedule)
+                {
+                    earliestClassTime = 0000;
+                    foreach (Meeting meeting in section.Meetings)
+                    {
+                        if (meeting.MeetingType != MeetingType.Review &&
+                            meeting.MeetingType != MeetingType.Final &&
+                            meeting.MeetingType != MeetingType.Midterm)
+                        {
+                            if (meeting.StartTime < earliestClassTime)
+                            {
+                                earliestClassTime = meeting.EndTime;
+                            }
+                        }
+                    }
+                }
+                if (earliestClassTime < earliestScheduleTime)
+                {
+                    earliestScheduleTime = earliestClassTime;
+                }
+                //compare
+                if (latestStart > earliestScheduleTime)
+                {
+                    latestStart = earliestScheduleTime;
+                    result = schedule;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the highest overall quality from RateMyProfessor.
+        /// </summary>
+        /// <returns>The schedule with the hightest overall quality from RateMyProfessor.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> RMPRating(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            decimal highestRate = 0;
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                decimal scheduleRate = 0;
+
+                foreach (Section section in schedule)
+                {
+                    decimal classRate = section.Professor.RateMyProfessor.OverallQuality;
+                    scheduleRate += classRate;
+
+                }
+
+                //compare GPA of this schedule to the highest schedule GPA
+                if (scheduleRate > highestRate)
+                {
+                    highestRate = scheduleRate;
+                    result = schedule;
+                }
+
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the days that the schedule has classes on and stores it in currDays.
+        /// </summary>
+        /// <param name="section">Section that we're calculating the days for.</param>
+        /// <param name="currDays">An array that holds the number of classes each day.</param>
+        public void DaysCalculations(Section section, ref int[] currDays)
+        {
+            foreach (Meeting meeting in section.Meetings)
+            {
+                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
+                    || meeting.MeetingType != MeetingType.Review)
+                {
+                    if (meeting.Days.HasFlag(Days.Monday))
+                    {
+                        currDays[0]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Tuesday))
+                    {
+                        currDays[1]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Wednesday))
+                    {
+                        currDays[2]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Thursday))
+                    {
+                        currDays[3]++;
+                    }
+                    if (meeting.Days.HasFlag(Days.Friday))
+                    {
+                        currDays[4]++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the schedule with the least days scheduled.
+        /// </summary>
+        /// <returns>The schedule with the least days.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> LeastDays(List<List<Section>> possibleSchedules)
+        {
+            int leastDay = 5;
+            List<Section> leastDaySchedule = possibleSchedules[0];
+
+            // Iterate through the possible schedules and counting the number of days
+            // per schedule
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                int numDays = 0;
+                int[] currDays = { 0, 0, 0, 0, 0 };
+                foreach (Section section in schedule)
+                {
+                    DaysCalculations(section, ref currDays);
+                }
+
+                // Counts the number of days scheduled.
+                foreach (int day in currDays)
+                {
+                    if (day != 0)
+                    {
+                        numDays++;
+                    }
+                }
+
+                // Checks to see if the current schedule has less days than the current least.
+                if (numDays < leastDay)
+                {
+                    leastDay = numDays;
+                    leastDaySchedule = schedule;
+                }
+            }
+            return leastDaySchedule;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the most days scheduled.
+        /// </summary>
+        /// <returns>The schedule with the most days.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> MostDays(List<List<Section>> possibleSchedules)
+        {
+            int mostDay = 0;
+            List<Section> mostDaySchedule = possibleSchedules[0];
+
+            // Iterate through the possible schedules and counts how many days are scheduled.
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                int numDays = 0;
+                int[] currDays = { 0, 0, 0, 0, 0 };
+                foreach (Section section in schedule)
+                {
+                    foreach (Meeting meeting in section.Meetings)
+                    {
+                        DaysCalculations(section, ref currDays);
+                    }
+                }
+
+                // Totals the days scheduled.
+                foreach (int day in currDays)
+                {
+                    if (day != 0)
+                    {
+                        numDays++;
+                    }
+                }
+
+                // Compares the current schedule days to the current max days.
+                if (numDays > mostDay)
+                {
+                    mostDay = numDays;
+                    mostDaySchedule = schedule;
+                }
+            }
+            return mostDaySchedule;
+        }
+
+        /// <summary>
+        /// Adds the time of each meeting to the corresponding day.
+        /// </summary>
+        /// <param name="section">Section whose time is going to be added.</param>
+        /// <param name="week">Week holds the times.</param>
+        public void GapsCalculations(Section section, ref List<List<Tuple<int, int>>> week)
+        {
+            foreach (Meeting meeting in section.Meetings)
+            {
+                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
+                                           || meeting.MeetingType != MeetingType.Review)
+                {
+                    Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
+
+                    if (meeting.Days.HasFlag(Days.Monday))
+                    {
+                        week.ElementAt(0).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Tuesday))
+                    {
+                        week.ElementAt(1).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Wednesday))
+                    {
+                        week.ElementAt(2).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Thursday))
+                    {
+                        week.ElementAt(3).Add(time);
+                    }
+                    if (meeting.Days.HasFlag(Days.Friday))
+                    {
+                        week.ElementAt(4).Add(time);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the schedule with the least gaps in between classes.
+        /// </summary>
+        /// <returns>The schedule with the least gaps.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> LeastGaps(List<List<Section>> possibleSchedules)
+        {
+            List<Section> leastGapsSchedule = possibleSchedules[0];
+            int leastGap = 99999;
+
+            // Iterate through the possible schedules and separate the times into respective days.
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
+
+                foreach (Section section in schedule)
+                {
+                    foreach (Meeting meeting in section.Meetings)
+                    {
+                        GapsCalculations(section, ref week);
+                    }
+                }
+
+                // Sort the class times in each schedule by start time.
+                foreach (List<Tuple<int, int>> day in week)
+                {
+                    day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
+                }
+
+                int currGap = 0;
+
+                // Calculate the gaps in the schedule.
+                foreach (List<Tuple<int, int>> day in week)
+                {
+                    for (int i = 0; i < day.Count() - 1; i++)
+                    {
+                        currGap = currGap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
+                    }
+                }
+
+                // Checks to see if current schedule has less gaps than current least.
+                if (currGap < leastGap)
+                {
+                    leastGapsSchedule = schedule;
+                    leastGap = currGap;
+                }
+            }
+            return leastGapsSchedule;
+        }
+
+        /// <summary>
+        /// Returns the schedule with the most gaps in between classes.
+        /// </summary>
+        /// <returns>The schedule with the most gaps.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> MostGaps(List<List<Section>> possibleSchedules)
+        {
+            List<Section> mostGapsSchedule = possibleSchedules[0];
+            int mostGap = 0;
+
+            // Iterate through the possible schedules and separate the times into respective days.
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
+
+                foreach (Section section in schedule)
+                {
+                    GapsCalculations(section, ref week);
+                }
+
+                // Sort the class times in each schedule by start time.
+                foreach (List<Tuple<int, int>> day in week)
+                {
+                    day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
+                }
+
+                int currGap = 0;
+
+                // Calculate the gaps in the schedule.
+                foreach (List<Tuple<int, int>> day in week)
+                {
+                    for (int i = 0; i < day.Count() - 1; i++)
+                    {
+                        currGap = currGap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
+                    }
+                }
+
+                // Checks to see if current schedule has less gaps than current least.
+                if (currGap > mostGap)
+                {
+                    mostGapsSchedule = schedule;
+                    mostGap = currGap;
+                }
+            }
+            return mostGapsSchedule;
         }
     }
 }
