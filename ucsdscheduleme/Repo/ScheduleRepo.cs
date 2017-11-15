@@ -401,6 +401,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             int leastDay = 5;
             List<Section> leastDaySchedule = possibleSchedules[0];
 
@@ -427,6 +431,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> MostDays(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             int mostDay = 0;
             List<Section> mostDaySchedule = possibleSchedules[0];
 
@@ -450,7 +458,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="schedule">A schedule of classes</param>
         /// <returns> the number of days in the schedule</returns>
-        private int NumDays(List<Section> schedule)
+        public int NumDays(List<Section> schedule)
         {
             int numDays = 0;
             int[] currDays = { 0, 0, 0, 0, 0 };
@@ -505,6 +513,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastGaps(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null) 
+            {
+                return null;
+            }
             List<Section> leastGapsSchedule = possibleSchedules[0];
             int leastGap = 99999;
 
@@ -530,6 +542,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> MostGaps(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             List<Section> mostGapsSchedule = possibleSchedules[0];
             int mostGap = 0;
 
