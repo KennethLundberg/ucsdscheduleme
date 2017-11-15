@@ -219,11 +219,11 @@ namespace ucsdscheduleme.Repo
         public List<Section> HighestGPA(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            float highestGPA = 0;
+            decimal highestGPA = 0;
 
             foreach (List<Section> schedule in possibleSchedules)
             {
-                float currentGPA = 0;
+                decimal currentGPA = 0;
 
                 foreach (Section section in schedule)
                 {
@@ -232,7 +232,7 @@ namespace ucsdscheduleme.Repo
 
                     if (cape != null)
                     {
-                        currentGPA += GetGPA(cape.AverageGradeReceived);
+                        currentGPA += cape.AverageGradeReceived;
                     }
                 }
 
@@ -245,24 +245,6 @@ namespace ucsdscheduleme.Repo
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Converts the GPA strings in Cape as floats
-        /// </summary>
-        /// <param name="capeGrade">String from CAPES data</param>
-        /// <returns>Integer GPA</returns>
-        private float GetGPA(string capeGrade)
-        {
-            string[] tokens = capeGrade.Split('(', ')');
-            string num = tokens[1];
-
-            if (num.Contains("."))
-            {
-                num = num.Replace(".", ",");
-            }
-
-            return System.Convert.ToSingle(num);
         }
 
         /// <summary>
