@@ -146,7 +146,7 @@ namespace ucsdscheduleme.Data
             {
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
 
@@ -546,7 +546,7 @@ namespace ucsdscheduleme.Data
             {
                 CourseAbbreviation = "CSE11",
                 CourseName = "Intr/Computer Sci&Obj-Ori: Java",
-                Units = 4,
+                Units = "4",
                 Description = ""
                 // Cape
             };
@@ -1093,7 +1093,7 @@ namespace ucsdscheduleme.Data
                 CourseAbbreviation = "CSE 101",
                 CourseName = "Design & Analysis of Algorithm",
                 Description = "",
-                Units = 4
+                Units = "4"
             };
 
             // Adding different sections to the course object

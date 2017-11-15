@@ -34,6 +34,5 @@ namespace ucsdscheduleme.Models
 
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
-        //public ICollection<Section> Section { get; set; } = new List<Section>();
     }
 }
