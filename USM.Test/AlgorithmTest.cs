@@ -504,6 +504,26 @@ namespace USM.Test
             Assert.Equal(expectedNum, actualNum);
         }
 
+        // test least day optimization
+        [Fact]
+        public void TestLeastDayWithDis1()
+        {
+            // use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
+
+            // choose the courses to be tested
+            Course CSE26 = AllCourses[6];
+            Course[] courses = { CSE26 };
+
+            // call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            int expectedNum = 1;
+            int actualNum = returned.Count();
+
+            // two schedules
+            Assert.Equal(expectedNum, actualNum);
+        }
     }
 }
 
