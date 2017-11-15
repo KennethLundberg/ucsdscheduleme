@@ -504,7 +504,28 @@ namespace USM.Test
             Assert.Equal(expectedNum, actualNum);
         }
 
-        // test least day optimization
+        // test least day optimization, no possible schedule
+        [Fact]
+        public void TestLeastDayWithDis0()
+        {
+            // use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
+
+            // choose the courses to be tested
+            Course CSE26 = AllCourses[6];
+            Course CSE27 = AllCourses[7];
+            Course[] courses = { CSE26, CSE27 };
+
+            // call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            List<Section> optimized = sch.LeastDays(returned);
+
+            // should be null
+            Assert.Equal(optimized, null);
+        }
+
+        // test least day optimization, one with 2 days, the other with 3
         [Fact]
         public void TestLeastDayWithDis1()
         {
@@ -518,12 +539,35 @@ namespace USM.Test
 
             // call the algorithm
             List<List<Section>> returned = sch.FindScheduleForClasses(courses);
-            int expectedNum = 1;
-            int actualNum = returned.Count();
+            List<Section> optimized = sch.LeastDays(returned);
+            int expectedNum = 2;
+            int actualNum = sch.DaysCalculations(optimized);
 
-            // two schedules
+            // two days: tuesday, thursday
+            Assert.Equal(expectedNum, actualNum);
+        }
+
+        // test least day optimization, only has one schedule with 3 days
+        [Fact]
+        public void TestLeastDayWthDis2()
+        {
+            // use the course above
+            ScheduleRepo sch = new ScheduleRepo();
+            Course[] AllCourses = Classes();
+
+            // choose the courses to be tested
+            Course CSE20 = AllCourses[0];
+            Course CSE25 = AllCourses[5];
+            Course[] courses = { CSE20, CSE25 };
+
+            // call the algorithm
+            List<List<Section>> returned = sch.FindScheduleForClasses(courses);
+            List<Section> optimized = sch.LeastDays(returned);
+            int expectedNum = 3;
+            int actualNum = sch.DaysCalculations(optimized);
+
+            // three days: monday, tuesday, thursday
             Assert.Equal(expectedNum, actualNum);
         }
     }
 }
-

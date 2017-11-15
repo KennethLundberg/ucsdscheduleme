@@ -406,37 +406,52 @@ namespace ucsdscheduleme.Repo
         /// <summary>
         /// Calculates the days that the schedule has classes on and stores it in currDays.
         /// </summary>
-        /// <param name="section">Section that we're calculating the days for.</param>
-        /// <param name="currDays">An array that holds the number of classes each day.</param>
-        public void DaysCalculations(Section section, ref int[] currDays)
+        /// <param name="schedule">Schedule that we're calculating the days for.</param>
+        public int DaysCalculations(List<Section> schedule)
         {
-            foreach (Meeting meeting in section.Meetings)
+            int numDays = 0;
+            int[] currDays = { 0, 0, 0, 0, 0 };
+            foreach (Section section in schedule)
             {
-                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                    || meeting.MeetingType != MeetingType.Review)
+                foreach (Meeting meeting in section.Meetings)
                 {
-                    if (meeting.Days.HasFlag(Days.Monday))
+                    if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
+                        || meeting.MeetingType != MeetingType.Review)
                     {
-                        currDays[0]++;
-                    }
-                    if (meeting.Days.HasFlag(Days.Tuesday))
-                    {
-                        currDays[1]++;
-                    }
-                    if (meeting.Days.HasFlag(Days.Wednesday))
-                    {
-                        currDays[2]++;
-                    }
-                    if (meeting.Days.HasFlag(Days.Thursday))
-                    {
-                        currDays[3]++;
-                    }
-                    if (meeting.Days.HasFlag(Days.Friday))
-                    {
-                        currDays[4]++;
+                        if (meeting.Days.HasFlag(Days.Monday))
+                        {
+                            currDays[0]++;
+                        }
+                        if (meeting.Days.HasFlag(Days.Tuesday))
+                        {
+                            currDays[1]++;
+                        }
+                        if (meeting.Days.HasFlag(Days.Wednesday))
+                        {
+                            currDays[2]++;
+                        }
+                        if (meeting.Days.HasFlag(Days.Thursday))
+                        {
+                            currDays[3]++;
+                        }
+                        if (meeting.Days.HasFlag(Days.Friday))
+                        {
+                            currDays[4]++;
+                        }
                     }
                 }
             }
+
+            // Counts the number of days scheduled.
+            foreach (int day in currDays)
+            {
+                if (day != 0)
+                {
+                    numDays++;
+                }
+            }
+
+            return numDays;
         }
 
         /// <summary>
@@ -447,35 +462,25 @@ namespace ucsdscheduleme.Repo
         public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
             int leastDay = 5;
+            int numDays = 0;
+            List<Section> currSchedule = new List<Section>();
             List<Section> leastDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counting the number of days
             // per schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int numDays = 0;
-                int[] currDays = { 0, 0, 0, 0, 0 };
-                foreach (Section section in schedule)
-                {
-                    DaysCalculations(section, ref currDays);
-                }
-
-                // Counts the number of days scheduled.
-                foreach (int day in currDays)
-                {
-                    if (day != 0)
-                    {
-                        numDays++;
-                    }
-                }
-
-                // Checks to see if the current schedule has less days than the current least.
-                if (numDays < leastDay)
-                {
-                    leastDay = numDays;
-                    leastDaySchedule = schedule;
-                }
+                currSchedule = schedule;
+                numDays = DaysCalculations(schedule);
             }
+
+            // Checks to see if the current schedule has less days than the current least.
+            if (numDays < leastDay)
+            {
+                leastDay = numDays;
+                leastDaySchedule = currSchedule;
+            }
+
             return leastDaySchedule;
         }
 
@@ -487,36 +492,23 @@ namespace ucsdscheduleme.Repo
         public List<Section> MostDays(List<List<Section>> possibleSchedules)
         {
             int mostDay = 0;
+            int numDays = 0;
+            List<Section> currSchedule = new List<Section>();
             List<Section> mostDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counts how many days are scheduled.
+
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int numDays = 0;
-                int[] currDays = { 0, 0, 0, 0, 0 };
-                foreach (Section section in schedule)
-                {
-                    foreach (Meeting meeting in section.Meetings)
-                    {
-                        DaysCalculations(section, ref currDays);
-                    }
-                }
+                currSchedule = schedule;
+                numDays = DaysCalculations(schedule);
+            }
 
-                // Totals the days scheduled.
-                foreach (int day in currDays)
-                {
-                    if (day != 0)
-                    {
-                        numDays++;
-                    }
-                }
-
-                // Compares the current schedule days to the current max days.
-                if (numDays > mostDay)
-                {
-                    mostDay = numDays;
-                    mostDaySchedule = schedule;
-                }
+            // Compares the current schedule days to the current max days.
+            if (numDays > mostDay)
+            {
+                mostDay = numDays;
+                mostDaySchedule = currSchedule;
             }
             return mostDaySchedule;
         }
