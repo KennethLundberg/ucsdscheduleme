@@ -223,45 +223,25 @@ namespace ucsdscheduleme.Repo
 
             foreach (List<Section> schedule in possibleSchedules)
             {
-                float scheduleGPA = 0;
-                float totalGPA = 0;
+                float currentGPA = 0;
 
                 foreach (Section section in schedule)
                 {
-                    var courseCapes = section.Course.Cape;
-                    var professorCapes = section.Professor.Cape;
+                    // Find a cape that corresponds to the course and professor
+                    var cape = section.Course.Cape.First(c => c.ProfessorId == section.Professor.Id);
 
-                    //find the cape for different profs for this course by 
-                    //finding a common cape id between courseCape and ProfCape 
-                    //var cape = _context.Cape.Single(c => c.courseCapes.Contains(professorCapes));
-
-                    totalGPA = 0;
-                    int num = 0;
-                    foreach (var cCape in courseCapes)
+                    if (cape != null)
                     {
-                        foreach (var pCape in professorCapes)
-                        {
-                            if (cCape.Id == pCape.Id)
-                            {
-                                totalGPA += GetGPA(cCape.AverageGradeReceived);
-                                num++;
-                            }
-                        }
+                        currentGPA += GetGPA(cape.AverageGradeReceived);
                     }
-
-                    //after find the cape, find average cape for this class
-                    totalGPA /= num;
                 }
-                //total GPA for this schedule
-                scheduleGPA += totalGPA;
 
-                //compare GPA of this schedule to the highest schedule GPA
-                if (scheduleGPA > highestGPA)
+                // Compare GPA of this schedule to the highest schedule GPA
+                if (currentGPA > highestGPA)
                 {
-                    highestGPA = scheduleGPA;
+                    highestGPA = currentGPA;
                     result = schedule;
                 }
-
             }
 
             return result;
@@ -276,9 +256,42 @@ namespace ucsdscheduleme.Repo
         {
             string[] tokens = capeGrade.Split('(', ')');
             string num = tokens[1];
+
             if (num.Contains("."))
+            {
                 num = num.Replace(".", ",");
-            float result = System.Convert.ToSingle(num);
+            }
+
+            return System.Convert.ToSingle(num);
+        }
+
+        /// <summary>
+        /// Returns the schedule with the highest overall quality from RateMyProfessor.
+        /// </summary>
+        /// <returns>The schedule with the hightest overall quality from RateMyProfessor.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> RMPRating(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            decimal highestRating = 0;
+
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                decimal currentRating = 0;
+
+                foreach (Section section in schedule)
+                {
+                    currentRating += section.Professor.RateMyProfessor.OverallQuality;
+                }
+
+                //compare GPA of this schedule to the highest schedule GPA
+                if (currentRating > highestRating)
+                {
+                    highestRating = currentRating;
+                    result = schedule;
+                }
+            }
+
             return result;
         }
 
@@ -372,36 +385,6 @@ namespace ucsdscheduleme.Repo
                     result = schedule;
                 }
             }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the schedule with the highest overall quality from RateMyProfessor.
-        /// </summary>
-        /// <returns>The schedule with the hightest overall quality from RateMyProfessor.</returns>
-        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
-        public List<Section> RMPRating(List<List<Section>> possibleSchedules)
-        {
-            List<Section> result = possibleSchedules[0];
-            decimal highestRate = 0;
-            foreach (List<Section> schedule in possibleSchedules)
-            {
-                decimal scheduleRate = 0;
-
-                foreach (Section section in schedule)
-                {
-                    decimal classRate = section.Professor.RateMyProfessor.OverallQuality;
-                    scheduleRate += classRate;
-                }
-
-                //compare GPA of this schedule to the highest schedule GPA
-                if (scheduleRate > highestRate)
-                {
-                    highestRate = scheduleRate;
-                    result = schedule;
-                }
-            }
-
             return result;
         }
 
