@@ -284,7 +284,7 @@ namespace ucsdscheduleme.Repo
                     currentRating += section.Professor.RateMyProfessor.OverallQuality;
                 }
 
-                //compare GPA of this schedule to the highest schedule GPA
+                // Compare GPA of this schedule to the highest schedule GPA
                 if (currentRating > highestRating)
                 {
                     highestRating = currentRating;
@@ -304,13 +304,14 @@ namespace ucsdscheduleme.Repo
         {
             List<Section> result = possibleSchedules[0];
             int earliestEnd = 2359;
-            //get the lastest time for a schedule
+            
+            // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
                 int lastestScheduleTime = 0000;
                 int lastestClassTime = 0;
 
-                //get the lastest time for a class
+                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
                     lastestClassTime = 0000;
@@ -327,11 +328,13 @@ namespace ucsdscheduleme.Repo
                         }
                     }
                 }
+
                 if (lastestClassTime > lastestScheduleTime)
                 {
                     lastestScheduleTime = lastestClassTime;
                 }
-                //compare
+                
+                //Compare
                 if (earliestEnd > lastestScheduleTime)
                 {
                     earliestEnd = lastestScheduleTime;
@@ -351,13 +354,13 @@ namespace ucsdscheduleme.Repo
             List<Section> result = possibleSchedules[0];
             int latestStart = 0000;
 
-            //get the lastest time for a schedule
+            // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
                 int earliestScheduleTime = 0000;
                 int earliestClassTime = 0000;
 
-                //get the lastest time for a class
+                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
                     earliestClassTime = 0000;
@@ -374,11 +377,13 @@ namespace ucsdscheduleme.Repo
                         }
                     }
                 }
+
                 if (earliestClassTime < earliestScheduleTime)
                 {
                     earliestScheduleTime = earliestClassTime;
                 }
-                //compare
+                
+                // Compare
                 if (latestStart > earliestScheduleTime)
                 {
                     latestStart = earliestScheduleTime;
@@ -452,6 +457,7 @@ namespace ucsdscheduleme.Repo
             {
                 foreach (Meeting meeting in section.Meetings)
                 {
+                    // Add to day array
                     if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
                         || meeting.MeetingType != MeetingType.Review)
                     {
