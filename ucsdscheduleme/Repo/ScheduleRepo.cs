@@ -223,58 +223,76 @@ namespace ucsdscheduleme.Repo
 
             foreach (List<Section> schedule in possibleSchedules)
             {
-                float scheduleGPA = 0;
-                float totalGPA = 0;
+                float currentGPA = 0;
 
                 foreach (Section section in schedule)
                 {
-                    var courseCapes = section.Course.Cape;
-                    var professorCapes = section.Professor.Cape;
+                    // Find a cape that corresponds to the course and professor
+                    var cape = section.Course.Cape.First(c => c.ProfessorId == section.Professor.Id);
 
-                    //find the cape for different profs for this course by 
-                    //finding a common cape id between courseCape and ProfCape 
-                    //var cape = _context.Cape.Single(c => c.courseCapes.Contains(professorCapes));
-
-                    totalGPA = 0;
-                    int num = 0;
-                    foreach (var cCape in courseCapes)
+                    if (cape != null)
                     {
-                        foreach (var pCape in professorCapes)
-                        {
-                            if (cCape.Id == pCape.Id)
-                            {
-                                totalGPA += GetGPA(cCape.AverageGradeReceived);
-                                num++;
-                            }
-                        }
+                        currentGPA += GetGPA(cape.AverageGradeReceived);
                     }
-
-                    //after find the cape, find average cape for this class
-                    totalGPA /= num;
                 }
-                //total GPA for this schedule
-                scheduleGPA += totalGPA;
 
-                //compare GPA of this schedule to the highest schedule GPA
-                if (scheduleGPA > highestGPA)
+                // Compare GPA of this schedule to the highest schedule GPA
+                if (currentGPA > highestGPA)
                 {
-                    highestGPA = scheduleGPA;
+                    highestGPA = currentGPA;
                     result = schedule;
                 }
-
             }
 
             return result;
         }
 
-        //convert the GPA strings in Cape as floats
+
+        /// <summary>
+        /// Converts the GPA strings in Cape as floats
+        /// </summary>
+        /// <param name="capeGrade">String from CAPES data</param>
+        /// <returns>Integer GPA</returns>
         private float GetGPA(string capeGrade)
         {
             string[] tokens = capeGrade.Split('(', ')');
             string num = tokens[1];
+
             if (num.Contains("."))
+            {
                 num = num.Replace(".", ",");
-            float result = System.Convert.ToSingle(num);
+            }
+
+            return System.Convert.ToSingle(num);
+        }
+
+        /// <summary>
+        /// Returns the schedule with the highest overall quality from RateMyProfessor.
+        /// </summary>
+        /// <returns>The schedule with the hightest overall quality from RateMyProfessor.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> RMPRating(List<List<Section>> possibleSchedules)
+        {
+            List<Section> result = possibleSchedules[0];
+            decimal highestRating = 0;
+
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                decimal currentRating = 0;
+
+                foreach (Section section in schedule)
+                {
+                    currentRating += section.Professor.RateMyProfessor.OverallQuality;
+                }
+
+                // Compare GPA of this schedule to the highest schedule GPA
+                if (currentRating > highestRating)
+                {
+                    highestRating = currentRating;
+                    result = schedule;
+                }
+            }
+
             return result;
         }
 
@@ -287,13 +305,14 @@ namespace ucsdscheduleme.Repo
         {
             List<Section> result = possibleSchedules[0];
             int earliestEnd = 2359;
-            //get the lastest time for a schedule
+            
+            // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
                 int lastestScheduleTime = 0000;
                 int lastestClassTime = 0;
 
-                //get the lastest time for a class
+                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
                     lastestClassTime = 0000;
@@ -310,11 +329,13 @@ namespace ucsdscheduleme.Repo
                         }
                     }
                 }
+
                 if (lastestClassTime > lastestScheduleTime)
                 {
                     lastestScheduleTime = lastestClassTime;
                 }
-                //compare
+
+                // Compare
                 if (earliestEnd > lastestScheduleTime)
                 {
                     earliestEnd = lastestScheduleTime;
@@ -334,13 +355,13 @@ namespace ucsdscheduleme.Repo
             List<Section> result = possibleSchedules[0];
             int latestStart = 0000;
 
-            //get the lastest time for a schedule
+            // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
                 int earliestScheduleTime = 0000;
                 int earliestClassTime = 0000;
 
-                //get the lastest time for a class
+                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
                     earliestClassTime = 0000;
@@ -357,11 +378,13 @@ namespace ucsdscheduleme.Repo
                         }
                     }
                 }
+
                 if (earliestClassTime < earliestScheduleTime)
                 {
                     earliestScheduleTime = earliestClassTime;
                 }
-                //compare
+
+                // Compare
                 if (latestStart > earliestScheduleTime)
                 {
                     latestStart = earliestScheduleTime;
@@ -372,42 +395,62 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
-        /// Returns the schedule with the highest overall quality from RateMyProfessor.
+        /// Returns the schedule with the least days scheduled.
         /// </summary>
-        /// <returns>The schedule with the hightest overall quality from RateMyProfessor.</returns>
+        /// <returns>The schedule with the least days.</returns>
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
-        public List<Section> RMPRating(List<List<Section>> possibleSchedules)
+        public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
-            List<Section> result = possibleSchedules[0];
-            decimal highestRate = 0;
+            int leastDay = 5;
+            List<Section> leastDaySchedule = possibleSchedules[0];
+
+            // Iterate through the possible schedules and counting the number of days
+            // per schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                decimal scheduleRate = 0;
+                int numDays = NumDays(schedule);
 
-                foreach (Section section in schedule)
+                // Checks to see if the current schedule has less days than the current least.
+                if (numDays < leastDay)
                 {
-                    decimal classRate = section.Professor.RateMyProfessor.OverallQuality;
-                    scheduleRate += classRate;
-
+                    leastDay = numDays;
+                    leastDaySchedule = schedule;
                 }
-
-                //compare GPA of this schedule to the highest schedule GPA
-                if (scheduleRate > highestRate)
-                {
-                    highestRate = scheduleRate;
-                    result = schedule;
-                }
-
             }
-
-            return result;
+            return leastDaySchedule;
         }
 
         /// <summary>
-        /// Calculates the days that the schedule has classes on and stores it in currDays.
+        /// Returns the schedule with the most days scheduled.
         /// </summary>
-        /// <param name="schedule">Schedule that we're calculating the days for.</param>
-        public int DaysCalculations(List<Section> schedule)
+        /// <returns>The schedule with the most days.</returns>
+        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
+        public List<Section> MostDays(List<List<Section>> possibleSchedules)
+        {
+            int mostDay = 0;
+            List<Section> mostDaySchedule = possibleSchedules[0];
+
+            // Iterate through the possible schedules and counts how many days are scheduled.
+            foreach (List<Section> schedule in possibleSchedules)
+            {
+                int numDays = NumDays(schedule);
+
+                // Compares the current schedule days to the current max days.
+                if (numDays > mostDay)
+                {
+                    mostDay = numDays;
+                    mostDaySchedule = schedule;
+                }
+            }
+            return mostDaySchedule;
+        }
+
+        /// <summary>
+        /// Calculates the number of days the schedule has classes on
+        /// </summary>
+        /// <param name="schedule">A schedule of classes</param>
+        /// <returns> the number of days in the schedule</returns>
+        private int NumDays(List<Section> schedule)
         {
             int numDays = 0;
             int[] currDays = { 0, 0, 0, 0, 0 };
@@ -415,6 +458,7 @@ namespace ucsdscheduleme.Repo
             {
                 foreach (Meeting meeting in section.Meetings)
                 {
+                    // Add to day array
                     if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
                         || meeting.MeetingType != MeetingType.Review)
                     {
@@ -442,7 +486,7 @@ namespace ucsdscheduleme.Repo
                 }
             }
 
-            // Counts the number of days scheduled.
+            // Totals the days scheduled.
             foreach (int day in currDays)
             {
                 if (day != 0)
@@ -452,103 +496,6 @@ namespace ucsdscheduleme.Repo
             }
 
             return numDays;
-        }
-
-        /// <summary>
-        /// Returns the schedule with the least days scheduled.
-        /// </summary>
-        /// <returns>The schedule with the least days.</returns>
-        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
-        public List<Section> LeastDays(List<List<Section>> possibleSchedules)
-        {
-            int leastDay = 5;
-            int numDays = 0;
-            List<Section> currSchedule = new List<Section>();
-            List<Section> leastDaySchedule = possibleSchedules[0];
-
-            // Iterate through the possible schedules and counting the number of days
-            // per schedule
-            foreach (List<Section> schedule in possibleSchedules)
-            {
-                currSchedule = schedule;
-                numDays = DaysCalculations(schedule);
-            }
-
-            // Checks to see if the current schedule has less days than the current least.
-            if (numDays < leastDay)
-            {
-                leastDay = numDays;
-                leastDaySchedule = currSchedule;
-            }
-
-            return leastDaySchedule;
-        }
-
-        /// <summary>
-        /// Returns the schedule with the most days scheduled.
-        /// </summary>
-        /// <returns>The schedule with the most days.</returns>
-        /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
-        public List<Section> MostDays(List<List<Section>> possibleSchedules)
-        {
-            int mostDay = 0;
-            int numDays = 0;
-            List<Section> currSchedule = new List<Section>();
-            List<Section> mostDaySchedule = possibleSchedules[0];
-
-            // Iterate through the possible schedules and counts how many days are scheduled.
-
-            foreach (List<Section> schedule in possibleSchedules)
-            {
-                currSchedule = schedule;
-                numDays = DaysCalculations(schedule);
-            }
-
-            // Compares the current schedule days to the current max days.
-            if (numDays > mostDay)
-            {
-                mostDay = numDays;
-                mostDaySchedule = currSchedule;
-            }
-            return mostDaySchedule;
-        }
-
-        /// <summary>
-        /// Adds the time of each meeting to the corresponding day.
-        /// </summary>
-        /// <param name="section">Section whose time is going to be added.</param>
-        /// <param name="week">Week holds the times.</param>
-        public void GapsCalculations(Section section, ref List<List<Tuple<int, int>>> week)
-        {
-            foreach (Meeting meeting in section.Meetings)
-            {
-                if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                                           || meeting.MeetingType != MeetingType.Review)
-                {
-                    Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-
-                    if (meeting.Days.HasFlag(Days.Monday))
-                    {
-                        week.ElementAt(0).Add(time);
-                    }
-                    if (meeting.Days.HasFlag(Days.Tuesday))
-                    {
-                        week.ElementAt(1).Add(time);
-                    }
-                    if (meeting.Days.HasFlag(Days.Wednesday))
-                    {
-                        week.ElementAt(2).Add(time);
-                    }
-                    if (meeting.Days.HasFlag(Days.Thursday))
-                    {
-                        week.ElementAt(3).Add(time);
-                    }
-                    if (meeting.Days.HasFlag(Days.Friday))
-                    {
-                        week.ElementAt(4).Add(time);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -564,32 +511,7 @@ namespace ucsdscheduleme.Repo
             // Iterate through the possible schedules and separate the times into respective days.
             foreach (List<Section> schedule in possibleSchedules)
             {
-                List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
-
-                foreach (Section section in schedule)
-                {
-                    foreach (Meeting meeting in section.Meetings)
-                    {
-                        GapsCalculations(section, ref week);
-                    }
-                }
-
-                // Sort the class times in each schedule by start time.
-                foreach (List<Tuple<int, int>> day in week)
-                {
-                    day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
-                }
-
-                int currGap = 0;
-
-                // Calculate the gaps in the schedule.
-                foreach (List<Tuple<int, int>> day in week)
-                {
-                    for (int i = 0; i < day.Count() - 1; i++)
-                    {
-                        currGap = currGap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
-                    }
-                }
+                int currGap = AvgGap(schedule);
 
                 // Checks to see if current schedule has less gaps than current least.
                 if (currGap < leastGap)
@@ -614,38 +536,78 @@ namespace ucsdscheduleme.Repo
             // Iterate through the possible schedules and separate the times into respective days.
             foreach (List<Section> schedule in possibleSchedules)
             {
-                List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
-
-                foreach (Section section in schedule)
-                {
-                    GapsCalculations(section, ref week);
-                }
-
-                // Sort the class times in each schedule by start time.
-                foreach (List<Tuple<int, int>> day in week)
-                {
-                    day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
-                }
-
-                int currGap = 0;
-
-                // Calculate the gaps in the schedule.
-                foreach (List<Tuple<int, int>> day in week)
-                {
-                    for (int i = 0; i < day.Count() - 1; i++)
-                    {
-                        currGap = currGap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
-                    }
-                }
+                int currGap = AvgGap(schedule);
 
                 // Checks to see if current schedule has less gaps than current least.
-                if (currGap > mostGap)
+                if (currGap > mostGap) 
                 {
                     mostGapsSchedule = schedule;
                     mostGap = currGap;
                 }
             }
             return mostGapsSchedule;
+        } 
+
+        /// <summary>
+        /// Calculates the average gap size between sections
+        /// </summary>
+        /// <param name="schedule">Schedule of classes</param>
+        /// <returns>The average hours of gaps in the schedule between classes</returns>
+        private int AvgGap(List<Section> schedule)
+        {
+            int gap = 0;
+            List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
+
+            foreach (Section section in schedule)
+            {
+                foreach (Meeting meeting in section.Meetings)
+                {
+                    if (meeting.MeetingType != MeetingType.Final || 
+                        meeting.MeetingType != MeetingType.Midterm ||
+                        meeting.MeetingType != MeetingType.Review)
+                    {
+                        Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
+
+                        if (meeting.Days.HasFlag(Days.Monday))
+                        {
+                            week.ElementAt(0).Add(time);
+                        }
+                        if (meeting.Days.HasFlag(Days.Tuesday))
+                        {
+                            week.ElementAt(1).Add(time);
+                        }
+                        if (meeting.Days.HasFlag(Days.Wednesday))
+                        {
+                            week.ElementAt(2).Add(time);
+                        }
+                        if (meeting.Days.HasFlag(Days.Thursday))
+                        {
+                            week.ElementAt(3).Add(time);
+                        }
+                        if (meeting.Days.HasFlag(Days.Friday))
+                        {
+                            week.ElementAt(4).Add(time);
+                        }
+                    }
+                }
+            }
+
+            // Sort the class times in each schedule by start time.
+            foreach (List<Tuple<int, int>> day in week)
+            {
+                day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
+            }
+           
+            // Calculate the gaps in the schedule.
+            foreach (List<Tuple<int, int>> day in week)
+            {
+                for (int i = 0; i < day.Count() - 1; i++)
+                {
+                    gap = gap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
+                }
+            }
+
+            return gap;
         }
     }
 }

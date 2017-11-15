@@ -9,6 +9,8 @@ namespace ucsdscheduleme.Models
     public class Cape
     {
         public int Id { get; set; }
+        public int ProfessorId { get; set; }
+        public int CourseId { get; set; }
         [StringLength(4)]
         public string Term { get; set; }
         public int StudentsEnrolled { get; set; }
@@ -22,5 +24,8 @@ namespace ucsdscheduleme.Models
         public string AverageGradeReceived { get; set; }
         [StringLength(256)]
         public string URL { get; set; }
+
+        public Professor Professor { get; set; }
+        public Course Course { get; set; }
     }
 }
