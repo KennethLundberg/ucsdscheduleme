@@ -4,6 +4,7 @@ using ucsdscheduleme.Models;
 using ucsdscheduleme.Data;
 using System.Linq;
 using ucsdscheduleme.Repo;
+using System;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -51,7 +52,10 @@ namespace ucsdscheduleme.Controllers
 
             // Call the schedule finding algorithm.
             var data = scheduleRepo.FindScheduleForClasses(courses);
-            schedule = data[0];
+            // = data[0];
+
+            // ScheduleViewModel format changed, need to fix this section here.
+            throw new NotImplementedException();
 
             return View(nameof(Index), schedule);
         }

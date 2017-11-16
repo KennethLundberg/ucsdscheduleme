@@ -164,8 +164,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = 89.7M,
                 RecommendedProfessor = 97.5M,
                 StudyHoursPerWeek = 6.69M,
-                AverageGradeExpected = "B+ (3.68)",
-                AverageGradeReceived = "B (3.16)",
+                AverageGradeExpected = 3.68M,
+                AverageGradeReceived = 3.16M,
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=895687"
             };
 
@@ -327,8 +327,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = (decimal)90.4,
                 RecommendedProfessor = (decimal)97.6,
                 StudyHoursPerWeek = (decimal)7.28,
-                AverageGradeExpected = "B+ (3.65)",
-                AverageGradeReceived = "B (3.16)",
+                AverageGradeExpected = 3.65M,
+                AverageGradeReceived = 3.16M,
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=895690"
             };
 
@@ -563,8 +563,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = 91.9M,
                 RecommendedProfessor = 96.0M,
                 StudyHoursPerWeek = 11.98M,
-                AverageGradeExpected = "B+ (3.65)",
-                AverageGradeReceived = "B+ (3.52)",
+                AverageGradeExpected = 3.65M,
+                AverageGradeReceived = 3.52M,
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=882255"
             };
 
@@ -779,8 +779,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = 92.1M,
                 RecommendedProfessor = 97.6M,
                 StudyHoursPerWeek = 12.34M,
-                AverageGradeExpected = "A- (3.71)",
-                AverageGradeReceived = "B+ (3.52)",
+                AverageGradeExpected = 3.71M,
+                AverageGradeReceived = 3.52M,
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=885069"
             };
 
@@ -962,8 +962,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = 90.3M,
                 RecommendedProfessor = 54.8M,
                 StudyHoursPerWeek = 7.63M,
-                AverageGradeExpected = "B+ (3.38)",
-                AverageGradeReceived = "B (3.21)", 
+                AverageGradeExpected = 3.38M,
+                AverageGradeReceived = 3.21M, 
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=903696"
             };
             Cape CSE101JonesCAPE = new Cape()
@@ -974,8 +974,8 @@ namespace ucsdscheduleme.Data
                 RecommendedClass = 84.2M,
                 RecommendedProfessor = 89.5M,
                 StudyHoursPerWeek = 8.76M,
-                AverageGradeExpected = "B (3.10)",
-                AverageGradeReceived = "B (3.20)",
+                AverageGradeExpected = 3.10M,
+                AverageGradeReceived = 3.20M,
                 URL = "http://cape.ucsd.edu/responses/CAPEReport.aspx?sectionid=903688"
             };
 
