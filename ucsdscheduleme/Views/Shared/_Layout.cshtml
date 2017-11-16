@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - ucsdscheduleme</title>
 
     <environment include="Development">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="~/css/main.css" />
         <link rel="stylesheet" href="~/css/normalize.css">
     </environment>
@@ -44,4 +45,21 @@
 
     @RenderSection("Scripts", required: false)
 </body>
+<script>
+    (function () {
+        var input = document.getElementById("search");
+        var dropdown = document.getElementById("courseItems");
+        input.addEventListener("focusin", fin);
+        input.addEventListener("focusout", fout);
+
+        function fin() {
+            dropdown.style.display = "block";
+        }
+
+        function fout() {
+            dropdown.style.display = "none";
+        }
+    })();
+</script>
+
 </html>
