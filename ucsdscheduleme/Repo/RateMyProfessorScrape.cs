@@ -35,19 +35,16 @@ namespace ucsdscheduleme.Repo
         /// Gets all the professor from the Database, and using the name of the professor
         /// stores the review of the professor from the ratemyprofessors.
         /// </summary>
-        public List<ScrapeResult> Update()
+        public void Update()
         {
             // Get professors list from database
             var professors = _context.Professor.ToList();
             
-            // Create empty list of ScrapeResult
-            List<ScrapeResult> scrapeRMP = new List<ScrapeResult>();
-
             // For each professor in the list from database
             foreach (var professor in professors)
             {
-                // Check if the professor has RateMyProfessor object
-                if (professor.RateMyProfessor != null)
+                // Check if the professor has RateMyProfessor object, if no make an object
+                if (professor.RateMyProfessor == null)
                 {
                     professor.RateMyProfessor = new RateMyProfessor();
                 }
@@ -55,28 +52,36 @@ namespace ucsdscheduleme.Repo
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
 
-                // Scrape the page and add the resultant to the ScrapeResult list
-                scrapeRMP.Add(InsertDataFromHtmlPage(rateMyProfURL));
+                // Scrape the page to get all the information about the professor
+                ScrapeResult scrapedProfessor = InsertDataFromHtmlPage(rateMyProfURL);
 
-
+                // Updating/Adding information of the professor in database
+                professor.RateMyProfessor.LevelOfDifficulty = scrapedProfessor.LevelOfDifficulty;
+                professor.RateMyProfessor.OverallQuality = scrapedProfessor.OverallQuality;
+                professor.RateMyProfessor.WouldTakeAgain = scrapedProfessor.WouldTakeAgain;
+                professor.RateMyProfessor.URL = rateMyProfURL;
             }
 
-            return scrapeRMP;
+            // Save changes made in the database
+            _context.SaveChanges();
 
         }
 
         /// <summary>
-        /// 
+        /// Generating the RMP page for professor sent as parameter.
         /// </summary>
-        /// <param name="ProfName"></param>
-        /// <returns></returns>
+        /// <param name="ProfName"> Name of the professor whose RMP page we're generating </param>
+        /// <returns>The RMP page's URL</returns>
         private string GetTidFromProfessorName(string ProfName)
         {
+            // Split the name to get first and last name
             string[] names = ProfName.Split(",");
 
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
+
+            // Need to add edge cases; when there are muntiple first and last names in the act and RMP.
 
             // Generate the URL with the first and last name
             string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
@@ -92,6 +97,12 @@ namespace ucsdscheduleme.Repo
             return ("http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + pk_id);
         }
 
+        /// <summary>
+        /// From the http get method, we extract and return a unique professor id, pk_id.
+        /// </summary>
+        /// <param name="Url"> The http URL that we'll be used to extract unique 
+        /// professor id. </param>
+        /// <returns> Unique professor id </returns>
         async static Task<string> GetRequest(string Url)
         {
             HttpClient client = new HttpClient();
@@ -113,6 +124,7 @@ namespace ucsdscheduleme.Repo
             JArray docsNode = (JArray)respondNode["docs"];
             JValue pk_id = (JValue)docsNode[0]["pk_id"];
 
+            // Unique professor ID
             string id = pk_id.ToString();
   
             return (id);
@@ -122,8 +134,8 @@ namespace ucsdscheduleme.Repo
         /// <summary>
         /// Scrapes a single RateMyProf page specified by the URL input parameter.
         /// </summary>
-        /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
-        /// <param name="Url">URL of single RateMyProf page to scrape</param>
+        /// <returns> ScrapeResult object containing the data </returns>
+        /// <param name="Url"> URL of single RateMyProf page to scrape </param>
         private ScrapeResult InsertDataFromHtmlPage(string Url)
         {
             // Check for null or empty URL
@@ -194,6 +206,7 @@ namespace ucsdscheduleme.Repo
                 LevelOfDifficulty = difficultyLevelRate
 
             };
+
             return rateMyProfessorResult;
         }
 

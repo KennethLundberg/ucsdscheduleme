@@ -172,9 +172,9 @@ namespace ucsdscheduleme.Data
             // Making RateMyProfessor Object
             RateMyProfessor MinnesKempRateMyProfessor = new RateMyProfessor()
             {
-                OverallQuality = (decimal)4.4,
-                WouldTakeAgain = 88,
-                LevelOfDifficulty = (decimal)3.4,
+                OverallQuality = "4.4",
+                WouldTakeAgain = "88",
+                LevelOfDifficulty = "3.4",
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=1516842"
             };
 
@@ -571,9 +571,9 @@ namespace ucsdscheduleme.Data
             // Making RateMyProfessor Object
             RateMyProfessor RickOrdRateMyProfessor = new RateMyProfessor()
             {
-                OverallQuality = 4.3M,
-                WouldTakeAgain = 61,
-                LevelOfDifficulty = 2.4M,
+                OverallQuality = "4.3",
+                WouldTakeAgain = "61",
+                LevelOfDifficulty = "2.4",
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=63529"
             };
 
@@ -940,16 +940,16 @@ namespace ucsdscheduleme.Data
             //Making new rate my professor ratings
             RateMyProfessor ImpagliazzoRMP = new RateMyProfessor()
             {
-                OverallQuality = 2.8M,
-                WouldTakeAgain = 0,
-                LevelOfDifficulty = 3.6M,
+                OverallQuality = "2.8",
+                WouldTakeAgain = "0",
+                LevelOfDifficulty = "3.6",
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=563826"
             };
             RateMyProfessor JonesRMP = new RateMyProfessor()
             {
-                OverallQuality = 3.0M,
-                WouldTakeAgain = 0,
-                LevelOfDifficulty = 3.0M, 
+                OverallQuality = "3.0",
+                WouldTakeAgain = "0",
+                LevelOfDifficulty = "3.0", 
                 URL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=2110462"
             };
 
