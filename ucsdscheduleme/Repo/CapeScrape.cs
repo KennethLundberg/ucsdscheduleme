@@ -7,7 +7,7 @@ using HtmlAgilityPack;
 
 namespace ucsdscheduleme.Repo
 {
-    public class ScrapeRepo
+    public class CapeScrape
     {
         #region Cape
 
@@ -36,7 +36,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <returns>A List of ScrapeResult objects containing the data</returns>
         /// <param name="Url">URL of single Cape page to scrape</param>
-        public List<ScrapeResult> ScrapeCape(string Url)
+        public List<ScrapeResult> InsertDataFromHtmlPage(string Url)
         {
             // Check for null or empty URL
             if (String.IsNullOrEmpty(Url))

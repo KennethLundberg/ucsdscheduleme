@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace HtmlAgilitySandbox
 {
-    class ActScrapeRepo
+    class ClassScrape
     {
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -26,7 +26,7 @@ namespace HtmlAgilitySandbox
         /// <param name="courses">The comma seperated course search parameter. See the ucsd act class 
         /// search for full information on how to use this. Ex: "cse 1-199" returns all CSE courses between 
         /// 1 and 199</param>
-        public ActScrapeRepo(string selectedTerm, string courses)
+        public ClassScrape(string selectedTerm, string courses)
         {
             _actFormRequest = new ActFormRequest(selectedTerm, courses);
         }

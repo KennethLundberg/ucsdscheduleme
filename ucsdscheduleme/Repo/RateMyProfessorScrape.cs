@@ -11,7 +11,7 @@ using ucsdscheduleme.Models;
 
 namespace ucsdscheduleme.Repo
 {
-    public class ScrapeRateMyProfessor
+    public class RateMyProfessorScrape
     {
         private readonly ScheduleContext _context;
 
@@ -53,10 +53,10 @@ namespace ucsdscheduleme.Repo
                 }
 
                 // Get the URL needed to scrape that Professors page at RMP 
-                string rateMyProfURL = GetRateMyProfessorUrl(professor.Name);
+                string rateMyProfURL = GetTidFromProfessorName(professor.Name);
 
                 // Scrape the page and add the resultant to the ScrapeResult list
-                scrapeRMP.Add(ScrapeRateMyProf(rateMyProfURL));
+                scrapeRMP.Add(InsertDataFromHtmlPage(rateMyProfURL));
 
 
             }
@@ -70,7 +70,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="ProfName"></param>
         /// <returns></returns>
-        private string GetRateMyProfessorUrl(string ProfName)
+        private string GetTidFromProfessorName(string ProfName)
         {
             string[] names = ProfName.Split(",");
 
@@ -124,7 +124,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
         /// <param name="Url">URL of single RateMyProf page to scrape</param>
-        private ScrapeResult ScrapeRateMyProf(string Url)
+        private ScrapeResult InsertDataFromHtmlPage(string Url)
         {
             // Check for null or empty URL
             if (String.IsNullOrEmpty(Url))
