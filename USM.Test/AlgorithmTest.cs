@@ -526,7 +526,7 @@ namespace USM.Test
         } */
 
         // test least day optimization, one with 2 days, the other with 3
-        [Fact]
+/*        [Fact]
         public void TestLeastDayWithDis1()
         {
             // use the course above
@@ -568,6 +568,6 @@ namespace USM.Test
 
             // three days: monday, tuesday, thursday
             Assert.Equal(expectedNum, actualNum);
-        }
+        } */
     }
 }
