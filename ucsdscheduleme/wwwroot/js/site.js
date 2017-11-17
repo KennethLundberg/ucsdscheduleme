@@ -9,10 +9,13 @@ function insertMetadata(metadata)
 
 }
 
+/*
+ * Will clear the calendar of events by removing all elements with class 'event'
+ */
 function clearMeetings()
 {
-    /* remove elements with class 'course' and all their children*/
-    $(".course > div").hide(); // TODO: update class name to hide certain classes
+    /* remove elements with class 'event' and all their children */
+    $(".event > div").remove();
 }
 
 function insertMeeting(meeting)
@@ -35,6 +38,7 @@ function insertMeeting(meeting)
     eventHeader.append(icon);
 
     // alternative way to create element using jquery
+    // but pure JS's createElement is faster
     /*
     var icon = $( "<div></div>", {
         "class": "icon",
