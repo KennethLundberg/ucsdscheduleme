@@ -57,7 +57,9 @@ function insertMeeting(meeting)
 
     /* create an event header div and add to event div */
     var $eventHeader = $(document.createElement('div'));
-    $($eventHeader).attr("class","event-header");
+    $($eventHeader).attr({
+        "class": "event-header"
+    });
     $event.append($eventHeader);
 
     /* create an icon and add to event header div */
@@ -83,7 +85,7 @@ function insertMeeting(meeting)
         "class": "event-info"
     });
 
-    /* create spans from meeting object */
+    /* create spans and set text to data from meeting object */
     var $classSpan = $(document.createElement('span'));
     $classSpan.text(meeting.courseAbbreviation);
 
@@ -91,11 +93,14 @@ function insertMeeting(meeting)
     $profSpan.text( meeting.professor);
 
     var $timeSpan = $(document.createElement('span'));
-    var time = meeting.startTime + " - " + meeting.endTime;
+    /* calculate start and end times */
+    var startTime = meeting.Timespan + ":" + meeting.StartTimeInMinutesAfterFirstHour;
+    var endTime = meeting.Timespan + ":" + (meeting.StartTimeInMinutesAfterFirstHour + meeting.DurationInMinutes);
+    var time = startTime + " - " + endTime;
     $timeSpan.text(time);
 
     var $sectSpan = $(document.createElement('span'));
-    $sectSpan.text(meeting.sectionId);
+    $sectSpan.text(meeting.code);
 
     /* add spans to event info div */
     $eventInfo.append($classSpan);
