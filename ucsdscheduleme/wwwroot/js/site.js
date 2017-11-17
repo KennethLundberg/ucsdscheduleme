@@ -10,7 +10,9 @@ function insertMetadata(metadata)
 }
 
 /*
- * Will clear the calendar of events by removing all elements with class 'event'
+ * Function: clearMeetings()
+ * Param: none
+ * Description: Will clear the calendar of events by removing all elements with class 'event'
  */
 function clearMeetings()
 {
@@ -18,6 +20,24 @@ function clearMeetings()
     $(".event > div").remove();
 }
 
+/*
+ * Function: insertMeeting(meeting)
+ * Param: meeting - the meeting to insert
+ * Description: Inserts a single meeting into the calendar
+ * Each meeting has the following format:
+ *   <div class="event">
+ *       <div class="event-header">
+ *           <div class="icon" id="lecture">LE</div>
+ *           <div class="event-info">
+ *               <span>CSE 110</span>
+ *               <span>Gary Gillespie</span>
+ *               <span>8:00am - 9:20am</span>
+ *               <span>A00</span>
+ *           </div>
+ *       </div>
+ *   </div>
+ *   Each div is assigned the appropriate class and id, if one exists.
+ */
 function insertMeeting(meeting)
 {
     /* create an event div */
@@ -33,7 +53,7 @@ function insertMeeting(meeting)
     var icon = $(document.createElement('div'));
     $(icon).attr({
         "class": "icon",
-        "id": meeting.kind // TODO: get meeting type from meeting object
+        "id": meeting.type
     });
     eventHeader.append(icon);
 
@@ -62,7 +82,7 @@ function insertMeeting(meeting)
     $timeSpan.text(time);
 
     var $sectSpan = $(document.createElement('span'));
-    $sectSpan.text(meeting.sectionCode);
+    $sectSpan.text(meeting.sectionId);
 
     /* add spans to event info div */
     $eventInfo.append($classSpan);
@@ -72,7 +92,12 @@ function insertMeeting(meeting)
     eventHeader.append(meeting);
 
 }
- 
+
+/*
+ * Function: updateMeetings(meetings)
+ * Param: meetings - an array of meetings to insert
+ * Description: Adds each meeting to the calendar by calling insertMeeting on each element
+ */
 function updateMeetings(meetings)
 {
     for(var i = 0; i < meetings.length; i++) {
