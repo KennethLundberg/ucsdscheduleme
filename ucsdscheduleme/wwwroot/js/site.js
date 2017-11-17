@@ -45,70 +45,55 @@ function clearMeetings()
  */
 function insertMeeting(meeting)
 {
-
-    // TODO Check for day of meeting and add it as an ID to each container div
-    // TODO Handle the case when a meeting is on more than one day
     // TODO based on the time and duration of the event, calculate the top and height of the event element
+    var numHalfHourInc = (meeting.DurationInMinutes) / 30;
+    var height30MinInc = 30;
+    var top = numHalfHourInc * height30MinInc;
+    var height = (meeting.DurationInMinutes) * (height30MinInc) / 30;
+
+    
     /* create an event div */
-    var $event = $(document.createElement('div'));
-    $($event).attr({
-        "class": "event"
-    });
+    var event = document.createElement('div');
+    event.style.top = 100;
+    event.className = "event";
 
     /* create an event header div and add to event div */
-    var $eventHeader = $(document.createElement('div'));
-    $($eventHeader).attr({
-        "class": "event-header"
-    });
-    $event.append($eventHeader);
+    var eventHeader = document.createElement('div');
+    eventHeader.className = "event-header";
+    event.append(eventHeader);
 
     /* create an icon and add to event header div */
-    var $icon = $(document.createElement('div'));
-    $($icon).attr({
-        "class": "icon",
-        "id": meeting.type
-    });
-    $eventHeader.append($icon);
-
-    // alternative way to create element using jquery
-    // but pure JS's createElement is faster
-    /*
-    var icon = $( "<div></div>", {
-        "class": "icon",
-        "id", meeting.kind
-    });
-    */
+    var icon = document.createElement('div');
+    icon.innerHTML = meeting.type;
+    eventHeader.append(icon);
 
     /* create an event info div */
-    var $eventInfo = $(document.createElement('div'));
-    $($eventInfo).attr({
-        "class": "event-info"
-    });
+    var eventInfo = document.createElement('div');
+    eventInfo.className = "event-info";
 
-    /* create spans and set text to data from meeting object */
-    var $classSpan = $(document.createElement('span'));
-    $classSpan.text(meeting.courseAbbreviation);
+    /* create spans from meeting object */
+    var classSpan = document.createElement('span');
+    classSpan.innerHTML = meeting.courseAbbreviation;
 
-    var $profSpan = $(document.createElement('span'));
-    $profSpan.text( meeting.professor);
+    var profSpan = document.createElement('span');
+    profSpan.innerHTML = meeting.professor;
 
-    var $timeSpan = $(document.createElement('span'));
-    /* calculate start and end times */
-    var startTime = meeting.Timespan + ":" + meeting.StartTimeInMinutesAfterFirstHour;
-    var endTime = meeting.Timespan + ":" + (meeting.StartTimeInMinutesAfterFirstHour + meeting.DurationInMinutes);
-    var time = startTime + " - " + endTime;
-    $timeSpan.text(time);
+    var timeSpan = document.createElement('span');
+    timeSpan.innerHTML = meeting.Timespan;
 
-    var $sectSpan = $(document.createElement('span'));
-    $sectSpan.text(meeting.code);
+    var sectSpan = document.createElement('span');
+    sectSpan.innerHTML = meeting.code;
 
     /* add spans to event info div */
-    $eventInfo.append($classSpan);
-    $eventInfo.append($profSpan);
-    $eventInfo.append($timeSpan);
-    $eventInfo.append($sectSpan);
-    $eventHeader.append($eventInfo);
+    eventInfo.append(classSpan);
+    eventInfo.append(profSpan);
+    eventInfo.append(timeSpan);
+    eventInfo.append(sectSpan);
+    eventHeader.append(eventInfo);
 
+    /* add event to day of meeting */
+    var dayElem = document.getElementById(meeting.Day);
+    dayElem.append(event);
 }
 
 /*
