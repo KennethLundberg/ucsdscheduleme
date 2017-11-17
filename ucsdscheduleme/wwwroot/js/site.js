@@ -9,6 +9,7 @@ function insertMetadata(metadata)
 
 }
 
+
 /*
  * Function: clearMeetings()
  * Param: none
@@ -23,39 +24,49 @@ function clearMeetings()
 /*
  * Function: insertMeeting(meeting)
  * Param: meeting - the meeting to insert
- * Description: Inserts a single meeting into the calendar
- * Each meeting has the following format:
- *   <div class="event">
- *       <div class="event-header">
- *           <div class="icon" id="lecture">LE</div>
- *           <div class="event-info">
- *               <span>CSE 110</span>
- *               <span>Gary Gillespie</span>
- *               <span>8:00am - 9:20am</span>
- *               <span>A00</span>
- *           </div>
- *       </div>
- *   </div>
- *   Each div is assigned the appropriate class and id, if one exists.
+ * Description: Inserts a single meeting into the calendar.
+ *  A meeting has the following structure
+    <div class="event">
+        <div class="event-header">
+            <div class="icon" id="lecture">LE</div>
+            <div class="event-info">
+                <span>CSE 110</span>
+                <span>Gary Gillespie</span>
+                <span>8:00am - 9:20am</span>
+                <span>A00</span>
+            </div>
+        </div>
+    </div>
+ *  Based on the time and duration of the event, calculate the top and height of the event element.
+ *      This can be done because the height of any 30 minute increment is fixed, so a calculation of the top is just
+ *      (# half hour increments after 7:30 am) * (height of individual 30 min increment) in px.
+ *      Then height is just (duration of event in minutes) * (height of 30 min section) / 30.
+ *  Each div is assigned the appropriate class and id.
  */
 function insertMeeting(meeting)
 {
+
+    // TODO Check for day of meeting and add it as an ID to each container div
+    // TODO Handle the case when a meeting is on more than one day
+    // TODO based on the time and duration of the event, calculate the top and height of the event element
     /* create an event div */
-    var event = $(document.createElement('div'));
-    $(event).attr("class","event");
+    var $event = $(document.createElement('div'));
+    $($event).attr({
+        "class": "event"
+    });
 
     /* create an event header div and add to event div */
-    var eventHeader = $(document.createElement('div'));
-    $(eventHeader).attr("class","event-header");
-    event.append(eventHeader);
+    var $eventHeader = $(document.createElement('div'));
+    $($eventHeader).attr("class","event-header");
+    $event.append($eventHeader);
 
     /* create an icon and add to event header div */
-    var icon = $(document.createElement('div'));
-    $(icon).attr({
+    var $icon = $(document.createElement('div'));
+    $($icon).attr({
         "class": "icon",
         "id": meeting.type
     });
-    eventHeader.append(icon);
+    $eventHeader.append($icon);
 
     // alternative way to create element using jquery
     // but pure JS's createElement is faster
@@ -68,7 +79,9 @@ function insertMeeting(meeting)
 
     /* create an event info div */
     var $eventInfo = $(document.createElement('div'));
-    $($eventInfo).attr("class","event-info");
+    $($eventInfo).attr({
+        "class": "event-info"
+    });
 
     /* create spans from meeting object */
     var $classSpan = $(document.createElement('span'));
@@ -89,7 +102,7 @@ function insertMeeting(meeting)
     $eventInfo.append($profSpan);
     $eventInfo.append($timeSpan);
     $eventInfo.append($sectSpan);
-    eventHeader.append(meeting);
+    $eventHeader.append($eventInfo);
 
 }
 
