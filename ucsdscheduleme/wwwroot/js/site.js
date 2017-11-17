@@ -15,9 +15,8 @@ function clearMeetings()
     $(".course > div").hide(); // TODO: update class name to hide certain classes
 }
 
-function insertMeeting(meeting) 
+function insertMeeting(meeting)
 {
-
     /* create an event div */
     var event = $(document.createElement('div'));
     $(event).attr("class","event");
@@ -49,24 +48,24 @@ function insertMeeting(meeting)
 
     /* create spans from meeting object */
     var $classSpan = $(document.createElement('span'));
-    $classSpan.attr("html", meeting.courseAbbreviation);
+    $classSpan.text(meeting.courseAbbreviation);
 
     var $profSpan = $(document.createElement('span'));
-    $profSpan.attr("html", meeting.professor);
+    $profSpan.text( meeting.professor);
 
     var $timeSpan = $(document.createElement('span'));
     var time = meeting.startTime + " - " + meeting.endTime;
-    $timeSpan.attr("html", time);
+    $timeSpan.text(time);
 
     var $sectSpan = $(document.createElement('span'));
-    $sectSpan.attr("html", meeting.sectionCode);
+    $sectSpan.text(meeting.sectionCode);
 
     /* add spans to event info div */
-    eventInfo.append($classSpan);
-    eventInfo.append($profSpan);
-    eventInfo.append($timeSpan);
-    eventInfo.append($sectSpan);
-    eventHeader.append(eventInfo);
+    $eventInfo.append($classSpan);
+    $eventInfo.append($profSpan);
+    $eventInfo.append($timeSpan);
+    $eventInfo.append($sectSpan);
+    eventHeader.append(meeting);
 
 }
  
