@@ -17,32 +17,32 @@ namespace ucsdscheduleme.Data
             // Making Location objects
             Location CENTR115 = new Location()
             {
-                RoomNumber = 115, 
+                RoomNumber = "115", 
                 Building = "Center"
             };
             Location PCYNH120 = new Location()
             {
-                RoomNumber = 120, 
+                RoomNumber = "120", 
                 Building = "Pepper Canyon Hall"
             };
             Location CENTR101 = new Location()
             {
-                RoomNumber = 101, 
+                RoomNumber = "101", 
                 Building = "Center"
             };
             Location CENTR105 = new Location()
             {
-                RoomNumber = 105, 
+                RoomNumber = "105", 
                 Building = "Center"
             };
             Location WLH2207 = new Location()
             {
-                RoomNumber = 2207, 
+                RoomNumber = "2207", 
                 Building = "Warren Lecture Hall"
             };
             Location TBA = new Location()
             {
-                RoomNumber = 0,
+                RoomNumber = "",
                 Building = "TBA"
             };
 
@@ -370,28 +370,28 @@ namespace ucsdscheduleme.Data
             Location WLH2001 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2001
+                RoomNumber = "2001"
             };
 
             Location SOLIS107 = new Location()
             {
                 Building = "Solios Hall",
-                RoomNumber = 107
+                RoomNumber = "107"
             };
             Location PETER108 = new Location()
             {
                 Building = "Peterson Hall",
-                RoomNumber = 108
+                RoomNumber = "108"
             };
             Location CENTR119 = new Location()
             {
                 Building = "Center Hall",
-                RoomNumber = 119
+                RoomNumber = "119"
             };
             Location PETER110 = new Location()
             {
                 Building = "Peterson Hall",
-                RoomNumber = 110
+                RoomNumber = "110"
             };
 
             // Making Meeting Objects
@@ -627,7 +627,7 @@ namespace ucsdscheduleme.Data
             Location WLH2005 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2005
+                RoomNumber = "2005"
             };
 
             CSE11Lecture = new Meeting()
@@ -830,18 +830,18 @@ namespace ucsdscheduleme.Data
             Location CENTR214 = new Location()
             {
                 Building = "Center",
-                RoomNumber = 214
+                RoomNumber = "214"
             };
             Location WLH2113 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2113
+                RoomNumber = "2113"
             };
 
             Location CENTR222 = new Location()
             {
                 Building = "Center",
-                RoomNumber = 222
+                RoomNumber = "222"
             };
 
             //Making meeting objects
