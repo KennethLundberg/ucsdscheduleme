@@ -505,7 +505,7 @@ namespace USM.Test
         }
 
         // test least day optimization, no possible schedule
-        [Fact]
+/*        [Fact]
         public void TestLeastDayWithDis0()
         {
             // use the course above
@@ -523,7 +523,7 @@ namespace USM.Test
 
             // should be null
             Assert.Equal(optimized, null);
-        }
+        } */
 
         // test least day optimization, one with 2 days, the other with 3
         [Fact]
