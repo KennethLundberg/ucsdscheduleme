@@ -26,7 +26,7 @@ namespace ucsdscheduleme.Repo
             model.ClassMetadata = classMetadata;
             model.OverallMetadata = overall;
 
-            decimal numberOfCourses = model.SectionList.Count;
+            decimal numberOfCourses = sections.Count;
 
             foreach (Section section in sections)
             {

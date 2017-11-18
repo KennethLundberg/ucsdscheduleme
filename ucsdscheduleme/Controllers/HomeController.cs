@@ -10,6 +10,7 @@ using ucsdscheduleme.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ucsdscheduleme.Repo;
+using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -68,40 +69,15 @@ namespace ucsdscheduleme.Controllers
             var scheduleRepo = new ScheduleRepo();
 
             // Call the schedule finding algorithm.
-            var data = scheduleRepo.FindScheduleForClasses(courses);
+            PossibleSchedules schedules = scheduleRepo.FindScheduleForClasses(courses);
 
-            List<Section> schedule = data[0];
+            List<Section> schedule = scheduleRepo.Optimize(optimization, schedules);
 
-            switch (optimization)
-            {
-                case Optimization.HighestGPA:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.HighestRMP:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.EarlyEnd:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LateStart:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.MostDays:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LeastDays:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.MostGaps:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LeastGaps:
-                    //scheduule = functioin(data);
-                    break;
-            }
+            ScheduleViewModel model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
 
-            return Json(schedule);
+            return Json(model);
         }
+
         public IActionResult TypeAhead(string input)
         {
             var suggestions = _context.Courses
