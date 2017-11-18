@@ -30,7 +30,7 @@ namespace ucsdscheduleme.Controllers
                     scrape.ScrapeResults = scrapeRepo.InsertDataFromHtmlPage(scrape.Url);
                     break;
                 case ScrapeSite.RateMyProfessor:
-                    scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
+                    //scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
                     break;
             }
 
