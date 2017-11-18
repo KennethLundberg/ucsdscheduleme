@@ -35,10 +35,17 @@ namespace ucsdscheduleme.Controllers
             var user = _userManager.GetUserAsync(User).Result;
 
             // Grab schedule from db.
-            List<Section> schedule = user.UserSections.Select(us => us.Section).ToList();
+            List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
 
             // Populate model with schedule info.
-            model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+            if (schedule != null)
+            {
+                model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+            }
+            else
+            {
+                model = new ScheduleViewModel();
+            }
 
             return View(model);
         }
@@ -88,5 +95,12 @@ namespace ucsdscheduleme.Controllers
 
             return Json(suggestions);
         }
+
+        public IActionResult GetSectionsForBase()
+        {
+            return null;
+        }
+
+        //public IActionResult GetSectionsFor
     }
 }
