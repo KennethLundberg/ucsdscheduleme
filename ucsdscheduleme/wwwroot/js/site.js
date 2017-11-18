@@ -54,11 +54,8 @@ function insertMeeting(meeting)
 {
     /* calculate top and height based on number of half hour increments after 7:30am and duration */
     var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
-    var height30MinInc = document.querySelector(".time > div").childNodes[1].offsetHeight;
+    var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
     var timeOffSet = 50;
-
-    //var height1 = document.querySelector(".time").childNodes[1].offsetHeight;
-    //console.log(height1);
 
     var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
     var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
