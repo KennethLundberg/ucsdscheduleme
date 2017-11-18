@@ -1,13 +1,18 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Net.Http;
+using ucsdscheduleme.Data;
+using ucsdscheduleme.Models;
 
 namespace HtmlAgilitySandbox
 {
     class ClassScrape
     {
+        private readonly ScheduleContext _context;
+
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
         // This is the Url to make the form post to.
@@ -16,6 +21,32 @@ namespace HtmlAgilitySandbox
         private static readonly string _baseIndividualResponseUrl = @"https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudentResult.htm";
 
         private ActFormRequest _actFormRequest;
+
+        /// <summary>
+        /// Contains XPaths used in scraping data from Act.
+        /// </summary>
+        struct ActStrings
+        {
+            // XPaths
+            public static readonly string AllTables = "//table";
+            public static readonly string NavigationTableNode = "//td[@align='right']";
+            public static readonly string LastPageNode = "//a[text() = 'Last']";
+            public static readonly string AllTableRows = "//table[contains(@class, 'tbrdr')]//tr";
+            public static readonly string ClassCrsheader = ".//td[contains(@class, 'crsheader')]";
+            public static readonly string PrereqNode = ".//td/span[contains(., 'Prerequisites')]/parent::*";
+            public static readonly string MeetingTypeNode = "./td[span[contains(@id, 'insTyp')]]";
+            public static readonly string AnchorChildNode = ".//a";
+            public static readonly string TRSectionClass = "sectxt";
+            public static readonly string TRTestClass = "nonenrtxt";
+
+            // DateTime formatting
+            public static readonly string TimeFormat = "h:mmtt";
+            public static readonly string DateFormat = "M/d/yyyy";
+
+            // Browser http alias
+            public static readonly string UserAlias = "User-Agent";
+            public static readonly string BrowserAlias = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36";
+        }
 
         /// <summary>
         /// Constructor that builds a form request to ucsd act to grab all html pages for a given term and 
@@ -49,7 +80,7 @@ namespace HtmlAgilitySandbox
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, _baseIndividualResponseUrl);
             message.Headers.Referrer = new Uri(_baseRequestUrl);
             // Pretend we're a browser.
-            message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+            message.Headers.Add(ActStrings.UserAlias, ActStrings.BrowserAlias);
             message.Content = request;
 
             var formResponse = client.SendAsync(message).Result;
@@ -61,17 +92,17 @@ namespace HtmlAgilitySandbox
             htmlDoc.LoadHtml(responseAsString);
 
             // Get the table that contains the number of pages we'll need to get results for.
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//table");
+            var nodes = htmlDoc.DocumentNode.SelectNodes(ActStrings.AllTables);
             // The navigation table is ALWAYS the third table.
             var navigationTable = nodes[2];
-            var navigationText = navigationTable.SelectSingleNode("//td[@align='right']").InnerText;
+            var navigationText = navigationTable.SelectSingleNode(ActStrings.NavigationTableNode).InnerText;
 
             // This will check if there is more than one page. If there is only one, we're done
             // Otherwise we gotta make a request for each page.
             if(navigationText.Contains("Last"))
             {
                 // Get the a tag with the last page value
-                var lastPageATag = navigationTable.SelectSingleNode("//a[text() = 'Last']");
+                var lastPageATag = navigationTable.SelectSingleNode(ActStrings.LastPageNode);
                 // The actual last page is stored as baseUrl?page=[lastPageNumber]
                 string lastPageHref = lastPageATag.GetAttributeValue("href","");
                 // Get the part of the href which is the page, ie the part after the "="
@@ -89,7 +120,7 @@ namespace HtmlAgilitySandbox
                         // Tell ucsd that we're always coming from the first response page.
                         thisMessage.Headers.Referrer = new Uri(_baseIndividualResponseUrl);
                         // Pretend we're a browser.
-                        thisMessage.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+                        thisMessage.Headers.Add(ActStrings.UserAlias, ActStrings.BrowserAlias);
 
                         var pageResponse = client.SendAsync(thisMessage).Result;
 
@@ -111,6 +142,342 @@ namespace HtmlAgilitySandbox
             }
 
             return allDocumentsForQuerry;
+        }
+
+        /// <summary>
+        /// Parses ACT pages received from class querry and inserts results into database.
+        /// </summary>
+        /// <param name="allDocumentsForQuerry">The HTML pages gathered from the course querry.</param>
+        private void InsertDataFromHtmlPages(List<HtmlDocument> allDocumentsForQuerry)
+        {
+            // Vars to keep track of current class number, professor and course.
+            string currentClassNum = "";
+            string currentProf = "";
+            Course currentCourse = new Course();
+            // Chars to trim from the extracted units.
+            char[] unitsTrimChars = { '(', ')' };
+
+            // Lists of each needed object to keep track of each iteration.
+            List<Course> courseList = new List<Course>();
+            List<Section> sectionList = new List<Section>();
+            List<Meeting> meetingList = new List<Meeting>();
+
+            // Loop through all of the documents in the query.
+            foreach (HtmlDocument htmlDocument in allDocumentsForQuerry)
+            {
+                // Get all of the TR children of the table.
+                HtmlNodeCollection allTableNodes = htmlDocument.DocumentNode.SelectNodes(ActStrings.AllTableRows);
+
+                foreach (HtmlNode node in allTableNodes)
+                {
+                    // Gather current node's class for checks later on.
+                    var nodeClasses = node.Attributes["class"]?.Value;
+
+                    // Check if TR contains children with course name and abbreviation.
+                    HtmlNodeCollection trCrsHeaderCheck = node?.SelectNodes(ActStrings.ClassCrsheader);
+
+                    if (trCrsHeaderCheck != null)
+                    {
+                        // Make sure that the "Prerequisites field exists, otherwise this row is empty.
+                        HtmlNode prereqNode = node?.SelectSingleNode(ActStrings.PrereqNode);
+                        if (prereqNode == null) continue;
+
+                        // Push all static meetings to each section.
+                        foreach (Meeting meeting in meetingList)
+                        {
+                            foreach (Section section in sectionList)
+                            {
+                                section.Meetings.Add(meeting);
+                            }
+                        }
+
+                        // Push all sections to current course.
+                        foreach (Section section in sectionList)
+                        {
+                            currentCourse.Sections.Add(section);
+                        }
+
+                        // Empty meeting and section lists for next iteration.
+                        meetingList.Clear();
+                        sectionList.Clear();
+
+                        // Nodes for the class name and the class number.
+                        HtmlNode classNameTDNode = prereqNode.PreviousSibling.PreviousSibling;
+                        HtmlNode classNumberTDNode = classNameTDNode.PreviousSibling.PreviousSibling;
+
+                        // Check if the current class number matches the previous iteration's.
+                        string classNum = classNumberTDNode.InnerText;
+                        if (classNum != currentClassNum)
+                        {
+                            // Create new course for course list.
+                            currentClassNum = classNum;
+                            currentCourse = new Course();
+
+                            // Trim the class name and units fields.
+                            HtmlNode classNameNode = classNameTDNode.FirstChild.NextSibling.FirstChild;
+                            string className = classNameNode.InnerText;
+                            string classNameTrimmed = className.Replace("&amp;", "&");
+                            HtmlNode classUnitsNode = classNameNode.ParentNode.NextSibling;
+                            string classUnits = classUnitsNode.InnerText;
+                            string classUnitsTrimSpaces = Regex.Replace(classUnits, @"\s+", "");
+                            string classUnitsTrimUnits = classUnitsTrimSpaces.Replace("Units", "");
+                            string classUnitsFinal = classUnitsTrimUnits.Trim(unitsTrimChars);
+
+                            // Set course members and add it to the course list.
+                            currentCourse.CourseName = classNameTrimmed;
+                            currentCourse.CourseAbbreviation = "CSE " + classNum;       // TODO fix prefix
+                            currentCourse.Units = classUnitsFinal;
+                            courseList.Add(currentCourse);
+                        }
+                    }
+
+                    // Else check if node is a TR that contains section/meeting data.
+                    else if (nodeClasses != null && nodeClasses.Contains(ActStrings.TRSectionClass))
+                    {
+                        // Select the meeting type node to begin iterating from.
+                        HtmlNode meetingTypeTDNode = node.SelectSingleNode(ActStrings.MeetingTypeNode);
+
+                        // Create new meeting and set meeting type.
+                        Meeting currentMeeting = new Meeting();
+                        string meetingType = meetingTypeTDNode.InnerText;
+                        currentMeeting.MeetingType = getMeetingType(meetingType);
+
+                        // Set code.
+                        HtmlNode codeNode = meetingTypeTDNode.NextSibling.NextSibling;
+                        string code = codeNode.InnerText;
+                        currentMeeting.Code = code;
+
+                        // Check if class times are TBA, or if class is cancelled.
+                        HtmlNode daysNode = codeNode.NextSibling.NextSibling;
+                        if (!daysNode.InnerText.Contains("TBA") && !daysNode.InnerText.Contains("Cancelled"))
+                        {
+                            // Set days.
+                            string days = daysNode.InnerText.Trim();
+                            currentMeeting.Days = getDays(days);
+
+                            // Set time after formatting it into DateTime.
+                            HtmlNode timeNode = daysNode.NextSibling.NextSibling;
+                            string unsplitTime = timeNode.InnerText;
+                            string startTime = unsplitTime.Substring(0, unsplitTime.IndexOf('-')) + "m";
+                            string endTime = unsplitTime.Substring(unsplitTime.IndexOf('-') + 1, unsplitTime.Length - unsplitTime.IndexOf('-') - 1) + "m";
+                            currentMeeting.StartTime = DateTime.ParseExact(startTime, ActStrings.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                            currentMeeting.EndTime = DateTime.ParseExact(endTime, ActStrings.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+
+                            // Set building and classroom.
+                            Location classLocation = new Location();
+                            HtmlNode buildingNode = timeNode.NextSibling.NextSibling;
+                            classLocation.Building = buildingNode.InnerText;
+                            HtmlNode roomNode = buildingNode.NextSibling.NextSibling;
+                            classLocation.RoomNumber = roomNode.InnerText;
+
+                            currentMeeting.Location = classLocation;
+
+                            // Check if instructor is not determined yet (currently set as "Staff").
+                            HtmlNode instrNode = roomNode.NextSibling.NextSibling?.SelectSingleNode(ActStrings.AnchorChildNode) ?? roomNode.NextSibling.NextSibling;
+
+                            // Check if current meeting has an empty instructor field.
+                            if (!String.IsNullOrEmpty(instrNode.InnerText.Trim()))
+                            {
+                                currentProf = instrNode.InnerText.Trim();
+                            }
+                        }
+                        // Meeting exists but its day, time (not initialized in case of TBA) and location are TBA.
+                        else if (daysNode.InnerText.Contains("TBA"))
+                        {
+                            currentMeeting.Days = getDays("TBA");
+                            Location classLocation = new Location();
+                            classLocation.Building = "TBA";
+                            classLocation.RoomNumber = "TBA";
+                            currentMeeting.Location = classLocation;
+
+                            // Check for edge case where professor field is empty, so we use the previous professor.
+                            HtmlNode instrNode = daysNode.NextSibling.NextSibling?.SelectSingleNode(ActStrings.AnchorChildNode) ?? daysNode.NextSibling.NextSibling;
+                            currentProf = instrNode.InnerText;
+                        }
+                        // Class is cancelled so continue to next node.
+                        else if (daysNode.InnerText.Contains("Cancelled")) continue;
+
+                        // Check if the section ID exists for this row.
+                        HtmlNode sectionIDNode = meetingTypeTDNode.PreviousSibling.PreviousSibling;
+                        if (!String.IsNullOrEmpty(sectionIDNode.InnerText.Trim()) && !sectionIDNode.InnerText.Trim().Contains("&nbsp"))
+                        {
+                            // Section ID exists, so create new section and add current meeting to section.
+                            Section currentSection = new Section();
+                            currentSection.Ticket = Int32.Parse(sectionIDNode.InnerText.Trim());
+                            currentSection.Course = currentCourse;
+                            currentSection.Meetings.Add(currentMeeting);
+                            Professor prof = new Professor();
+                            prof.Name = currentProf;
+                            currentSection.Professor = prof;
+                            sectionList.Add(currentSection);
+                        }
+                        else
+                        {
+                            // Add new Meeting (to be added to every section) to the static list .
+                            meetingList.Add(currentMeeting);
+                        }
+                    }
+
+                    // Else check if node is a TR that contains final/midterms data
+                    else if (nodeClasses != null && nodeClasses.Contains(ActStrings.TRTestClass))
+                    {
+                        // Select the test type node to begin iterating from
+                        HtmlNode testTypeTDNode = node?.SelectSingleNode(ActStrings.MeetingTypeNode);
+
+                        // Create new meeting
+                        Meeting currentMeeting = new Meeting();
+
+                        // Edge case for when test fields contains title information
+                        if (testTypeTDNode == null) continue;
+
+                        // Set meeting type.
+                        string testType = testTypeTDNode.InnerText;
+                        currentMeeting.MeetingType = getMeetingType(testType);
+
+                        // Set date.
+                        HtmlNode testDateNode = testTypeTDNode.NextSibling.NextSibling;
+                        string date = testDateNode.InnerText;
+                        currentMeeting.StartDate = DateTime.ParseExact(date, ActStrings.DateFormat, System.Globalization.CultureInfo.InvariantCulture);
+
+                        // Set test day.
+                        HtmlNode testDayNode = testDateNode.NextSibling.NextSibling;
+                        string days = testDayNode.InnerText.Trim();
+                        currentMeeting.Days = getDays(days);
+
+                        // Set time after formatting it into DateTime.
+                        HtmlNode testTimeNode = testDayNode.NextSibling.NextSibling;
+                        string unsplitTime = testTimeNode.InnerText;
+                        string startTime = unsplitTime.Substring(0, unsplitTime.IndexOf('-')) + "m";
+                        string endTime = unsplitTime.Substring(unsplitTime.IndexOf('-') + 1, unsplitTime.Length - unsplitTime.IndexOf('-') - 1) + "m";
+                        currentMeeting.StartTime = DateTime.ParseExact(startTime, ActStrings.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+                        currentMeeting.EndTime = DateTime.ParseExact(endTime, ActStrings.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+
+                        // Set test building and room number.
+                        HtmlNode testBuildingNode = testTimeNode.NextSibling.NextSibling;
+                        string testBuilding = testBuildingNode.InnerText;
+                       
+                        HtmlNode testRoomNode = testBuildingNode.NextSibling.NextSibling;
+                        string testRoom = testRoomNode.InnerText;
+
+                        // Create new location to insert into meeting.
+                        Location classLocation = new Location();
+                        classLocation.Building = testBuilding;
+                        classLocation.RoomNumber = testRoom;
+                        currentMeeting.Location = classLocation;
+
+                        // Push to all sections currently in section list.
+                        foreach (Section section in sectionList)
+                        {
+                            section.Meetings.Add(currentMeeting);
+                        }
+                    }
+                }
+            }
+
+            // Push the last static meetings to each section.
+            foreach (Meeting meeting in meetingList)
+            {
+                foreach (Section section in sectionList)
+                {
+                    section.Meetings.Add(meeting);
+                }
+            }
+
+            // Push all sections to all course instances to current course.
+            foreach (Section section in sectionList)
+            {
+                currentCourse.Sections.Add(section);
+            }
+
+            // TODO use context to insert to db
+        }
+
+        /// <summary>
+        /// Gets the MeetingType of the meeting.
+        /// </summary>
+        /// <returns>The MeetingType.</returns>
+        /// <param name="meetingType">String representation of the meeting type.</param>
+        public static MeetingType getMeetingType(string meetingType)
+        {
+            switch (meetingType)
+            {
+                case "LE":
+                    return MeetingType.Lecture;
+                case "DI":
+                    return MeetingType.Discussion;
+                case "LA":
+                    return MeetingType.Lab;
+                case "RE":
+                    return MeetingType.Review;
+                case "FI":
+                    return MeetingType.Final;
+                case "MI":
+                    return MeetingType.Midterm;
+                default:
+                    throw new FormatException();
+            }
+        }
+
+        /// <summary>
+        /// Gets the enumerated days of the meeting.
+        /// </summary>
+        /// <returns>The enumerated days of the meeting.</returns>
+        /// <param name="days">String that represents the days of the meeting.</param>
+        public static Days getDays(string days)
+        {
+            // Initialize the return value.
+            Days daysEnumerated = 0;
+
+            if (days == "TBA")
+            {
+                return Days.TBA;
+            }
+
+            for (int i = 0; i < days.Length; i++)
+            {
+                switch (days[i])
+                {
+                    case 'S':
+                        // Case for Saturday (with a check first to see if Saturday is the only day listed).
+                        if (i + 1 < days.Length && days[++i] != 'u')
+                        {
+                            daysEnumerated |= Days.Saturday;
+                            --i;
+                        }
+                        // Case for Sunday.
+                        else
+                        {
+                            daysEnumerated |= Days.Sunday;
+                            ++i;
+                        }
+                        break;
+                    case 'M':
+                        daysEnumerated |= Days.Monday;
+                        break;
+                    case 'T':
+                        // Case for Tuesday.
+                        if (days[++i] == 'u')
+                        {
+                            daysEnumerated |= Days.Tuesday;
+                        }
+                        //Case for Thursday.
+                        else
+                        {
+                            daysEnumerated |= Days.Thursday;
+                        }
+                        break;
+                    case 'W':
+                        daysEnumerated |= Days.Wednesday;
+                        break;
+                    case 'F':
+                        daysEnumerated |= Days.Friday;
+                        break;
+                    default:
+                        throw new FormatException();
+                }
+            }
+
+            return daysEnumerated;
         }
     }
 }
