@@ -41,7 +41,7 @@ namespace ucsdscheduleme.Controllers
                 {
                     CourseAbbreviation = "CSE20",
                     CourseName = "Intro / Discrete Mathematics",
-                    Units = 4,
+                    Units = "4",
                     Description = ""
                 };
                 Section CSE20Section1 = new Section()
@@ -90,7 +90,7 @@ namespace ucsdscheduleme.Controllers
                 {
                     CourseAbbreviation = "CSE21",
                     CourseName = "Intro / Discrete Mathematics",
-                    Units = 4,
+                    Units = "4",
                     Description = ""
                 };
 
@@ -140,7 +140,7 @@ namespace ucsdscheduleme.Controllers
                 {
                     CourseAbbreviation = "CSE101",
                     CourseName = "ALGORITHMS",
-                    Units = 4,
+                    Units = "4",
                     Description = ""
                 };
                 Section CSE101Section1 = new Section()
@@ -191,7 +191,7 @@ namespace ucsdscheduleme.Controllers
                 {
                     CourseAbbreviation = "CSE110",
                     CourseName = "SOFTWARE ENGINEERING",
-                    Units = 4,
+                    Units = "4",
                     Description = ""
                 };
                 Section CSE110Section1 = new Section()

@@ -21,4 +21,7 @@
   <ItemGroup>
     <Folder Include="Views\TestSchedule\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\Home\index.html" />
+  </ItemGroup>
 </Project>
