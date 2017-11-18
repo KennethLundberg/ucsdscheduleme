@@ -17,24 +17,24 @@ namespace ucsdscheduleme.Controllers
                 {
                     MeetingType = MeetingType.Lecture,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 1400,
-                    EndTime = 1520,
+                    StartTime = new DateTime(0, 0, 0, 14, 0, 0),
+                    EndTime = new DateTime(0, 0, 0, 15, 20, 0),
                     Code = "A00"
                 };
                 Meeting CSE20Discussion1 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday,
-                    StartTime = 1000,
-                    EndTime = 1050,
+                    StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                    EndTime = new DateTime(0, 0, 0, 10, 50, 0),
                     Code = "A02"
                 };
                 Meeting CSE20Discussion2 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 1711,
-                    EndTime = 1712,
+                    StartTime = new DateTime(0, 0, 0, 17, 11, 0),
+                    EndTime = new DateTime(0, 0, 0, 17, 12, 0),
                     Code = "B02"
                 };
                 Course CSE20 = new Course()
@@ -66,24 +66,24 @@ namespace ucsdscheduleme.Controllers
                 {
                     MeetingType = MeetingType.Lecture,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 1700,
-                    EndTime = 1710,
+                    StartTime = new DateTime(0, 0, 0, 17, 0, 0),
+                    EndTime = new DateTime(0, 0, 0, 17, 10, 0),
                     Code = "A00"
                 };
                 Meeting CSE21Discussion1 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday,
-                    StartTime = 900,
-                    EndTime = 901,
+                    StartTime = new DateTime(0, 0, 0, 9, 0, 0),
+                    EndTime = new DateTime(0, 0, 0, 9, 1, 0),
                     Code = "A02"
                 };
                 Meeting CSE21Discussion2 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday,
-                    StartTime = 903,
-                    EndTime = 904,
+                    StartTime = new DateTime(0, 0, 0, 9, 3, 0),
+                    EndTime = new DateTime(0, 0, 0, 9, 4, 0),
                     Code = "A02"
                 }; 
                 Course CSE21 = new Course()
@@ -116,24 +116,24 @@ namespace ucsdscheduleme.Controllers
                 {
                     MeetingType = MeetingType.Lecture,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 1,
-                    EndTime = 2,
+                    StartTime = new DateTime(0, 0, 0, 0, 1, 0),
+                    EndTime = new DateTime(0, 0, 0, 0, 2, 0),
                     Code = "A00"
                 };
                 Meeting CSE101Discussion1 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday,
-                    StartTime = 3,
-                    EndTime = 4,
+                    StartTime = new DateTime(0, 0, 0, 0, 3, 0),
+                    EndTime = new DateTime(0, 0, 0, 0, 4, 0),
                     Code = "A02"
                 };
                 Meeting CSE101Discussion2 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 5,
-                    EndTime = 6,
+                    StartTime = new DateTime(0, 0, 0, 0, 5, 0),
+                    EndTime = new DateTime(0, 0, 0, 0, 6, 0),
                     Code = "B02"
                 };
                 Course CSE101 = new Course()
@@ -167,24 +167,24 @@ namespace ucsdscheduleme.Controllers
                 {
                     MeetingType = MeetingType.Lecture,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 2100,
-                    EndTime = 2101,
+                    StartTime = new DateTime(0, 0, 0, 21, 0, 0),
+                    EndTime = new DateTime(0, 0, 0, 21, 1, 0),
                     Code = "A00"
                 };
                 Meeting CSE110Discussion1 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = Days.Wednesday,
-                    StartTime = 2102,
-                    EndTime = 2103,
+                    StartTime = new DateTime(0, 0, 0, 21, 2, 0),
+                    EndTime = new DateTime(0, 0, 0, 21, 3, 0),
                     Code = "A02"
                 };
                 Meeting CSE110Discussion2 = new Meeting()
                 {
                     MeetingType = MeetingType.Discussion,
                     Days = (Days.Tuesday | Days.Thursday),
-                    StartTime = 2104,
-                    EndTime = 2105,
+                    StartTime = new DateTime(0, 0, 0, 21, 4, 0),
+                    EndTime = new DateTime(0, 0, 0, 21, 5, 0),
                     Code = "B02"
                 };
                 Course CSE110 = new Course()
