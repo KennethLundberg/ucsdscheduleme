@@ -132,7 +132,7 @@ function setup() {
 
     var cse20lectureMonday = {
         type: "lecture",
-        courseAbbreviation: "CSE 20",
+        courseAbbreviation: "CSE 101",
         professor: "Miles, Jones",
         code: "A02",
         StartTimeInMinutesAfterFirstHour: 30,
@@ -142,7 +142,7 @@ function setup() {
     };
     var cse20lectureWed = {
         type: "lecture",
-        courseAbbreviation: "CSE 20",
+        courseAbbreviation: "CSE 101",
         professor: "Miles, Jones",
         code: "A02",
         StartTimeInMinutesAfterFirstHour: 30,
@@ -152,7 +152,7 @@ function setup() {
     };
     var cse20disTu = {
         type: "discussion",
-        courseAbbreviation: "CSE 20",
+        courseAbbreviation: "CSE 101",
         professor: "Miles, Jones",
         code: "A02",
         StartTimeInMinutesAfterFirstHour: 60,
@@ -222,7 +222,7 @@ function setup() {
     meetings2[4] = cse100lectureFri;
     meetings2[5] = cse110lectureThur;
     meetings2[6] = cse110labThur;
-    meetings2[7] = cse112labThur;
+    //meetings2[7] = cse112labThur;
 
     updateMeetings(meetings2);
 }
