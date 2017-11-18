@@ -17,32 +17,32 @@ namespace ucsdscheduleme.Data
             // Making Location objects
             Location CENTR115 = new Location()
             {
-                RoomNumber = 115, 
+                RoomNumber = "115", 
                 Building = "Center"
             };
             Location PCYNH120 = new Location()
             {
-                RoomNumber = 120, 
+                RoomNumber = "120", 
                 Building = "Pepper Canyon Hall"
             };
             Location CENTR101 = new Location()
             {
-                RoomNumber = 101, 
+                RoomNumber = "101", 
                 Building = "Center"
             };
             Location CENTR105 = new Location()
             {
-                RoomNumber = 105, 
+                RoomNumber = "105", 
                 Building = "Center"
             };
             Location WLH2207 = new Location()
             {
-                RoomNumber = 2207, 
+                RoomNumber = "2207", 
                 Building = "Warren Lecture Hall"
             };
             Location TBA = new Location()
             {
-                RoomNumber = 0,
+                RoomNumber = "",
                 Building = "TBA"
             };
 
@@ -51,8 +51,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1400,
-                EndTime = 1520,
+                StartTime = new DateTime(0, 0, 0, 14, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 15, 20, 0),
                 Location = CENTR115,
                 Code = "A00"
             };
@@ -60,8 +60,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1000,
-                EndTime = 1050, 
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 50, 0),
                 Location = PCYNH120,
                 Code = "A02"
             };
@@ -69,8 +69,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1100,
-                EndTime = 1150, 
+                StartTime = new DateTime(0, 0, 0, 11, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 11, 50, 0),
                 Location = PCYNH120,
                 Code = "A03"
             };
@@ -78,8 +78,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1200,
-                EndTime = 1250, 
+                StartTime = new DateTime(0, 0, 0, 12, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 12, 50, 0),
                 Location = PCYNH120,
                 Code = "A04"
             };
@@ -87,8 +87,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Review,
                 Days = Days.Sunday,
-                StartTime = 1000,
-                EndTime = 1150, 
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 11, 50, 0),
                 Location = CENTR101,
                 StartDate = new DateTime(2017, 10, 29)
             };
@@ -96,8 +96,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Final,
                 Days = Days.Saturday,
-                StartTime = 1130,
-                EndTime = 1429,
+                StartTime = new DateTime(0, 0, 0, 11, 30, 0),
+                EndTime = new DateTime(0, 0, 0, 14, 29, 0),
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 16)
             };
@@ -146,7 +146,7 @@ namespace ucsdscheduleme.Data
             {
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
 
@@ -229,8 +229,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1100,
-                EndTime = 1220,
+                StartTime = new DateTime(0, 0, 0, 11, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 12, 20, 0),
                 Location = CENTR105,
                 Code = "B00"
             };
@@ -238,8 +238,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1600,
-                EndTime = 1650,
+                StartTime = new DateTime(0, 0, 0, 16, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 16, 50, 0),
                 Location = WLH2207,
                 Code = "B01"
             };
@@ -247,8 +247,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1700,
-                EndTime = 1750,
+                StartTime = new DateTime(0, 0, 0, 17, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 17, 50, 0),
                 Location = WLH2207,
                 Code = "B02"
             };
@@ -256,8 +256,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1800,
-                EndTime = 1850,
+                StartTime = new DateTime(0, 0, 0, 18, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 18, 50, 0),
                 Location = WLH2207,
                 Code = "B03"
             };
@@ -265,8 +265,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Review,
                 Days = Days.Sunday,
-                StartTime = 1000,
-                EndTime = 1150,
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 11, 50, 0),
                 Location = TBA,
                 StartDate = new DateTime(2017, 10, 29)
             };
@@ -274,8 +274,8 @@ namespace ucsdscheduleme.Data
             {
                 MeetingType = MeetingType.Final,
                 Days = Days.Saturday,
-                StartTime = 1130,
-                EndTime = 1429,
+                StartTime = new DateTime(0, 0, 0, 11, 30, 0),
+                EndTime = new DateTime(0, 0, 0, 14, 29, 0),
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 16)
             };
@@ -370,28 +370,28 @@ namespace ucsdscheduleme.Data
             Location WLH2001 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2001
+                RoomNumber = "2001"
             };
 
             Location SOLIS107 = new Location()
             {
                 Building = "Solios Hall",
-                RoomNumber = 107
+                RoomNumber = "107"
             };
             Location PETER108 = new Location()
             {
                 Building = "Peterson Hall",
-                RoomNumber = 108
+                RoomNumber = "108"
             };
             Location CENTR119 = new Location()
             {
                 Building = "Center Hall",
-                RoomNumber = 119
+                RoomNumber = "119"
             };
             Location PETER110 = new Location()
             {
                 Building = "Peterson Hall",
-                RoomNumber = 110
+                RoomNumber = "110"
             };
 
             // Making Meeting Objects
@@ -399,8 +399,8 @@ namespace ucsdscheduleme.Data
             {
                 Code = "A00",
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 0800,
-                EndTime = 0920,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 20, 0),
                 MeetingType = MeetingType.Lecture,
                 Location = WLH2001
             };
@@ -408,8 +408,8 @@ namespace ucsdscheduleme.Data
             {
                 Code = "A01",
                 Days = Days.Friday,
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 50, 0),
                 MeetingType = MeetingType.Discussion,
                 Location = SOLIS107
             };
@@ -417,16 +417,16 @@ namespace ucsdscheduleme.Data
             {
                 Code = "A50",
                 Days = Days.TBA,
-                StartTime = 0,
-                EndTime = 0,
+                //StartTime = null,
+                //EndTime = null,
                 MeetingType = MeetingType.Lab,
                 Location = TBA
             };
             Meeting CSE11Review1 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = PETER108,
                 StartDate = new DateTime(2017, 10, 09)
@@ -434,8 +434,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review2 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = CENTR119,
                 StartDate = new DateTime(2017, 10, 23)
@@ -443,8 +443,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review3 = new Meeting()
             {
                 Days = Days.Wednesday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = PETER108,
                 StartDate = new DateTime(2017, 11, 01)
@@ -452,8 +452,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review4 = new Meeting()
             {
                 Days = Days.Sunday,
-                StartTime = 1600,
-                EndTime = 1650,
+                StartTime = new DateTime(0, 0, 0, 16, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 16, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = WLH2001,
                 StartDate = new DateTime(2017, 11, 05)
@@ -461,8 +461,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review5 = new Meeting()
             {
                 Days = Days.Thursday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = PETER110,
                 StartDate = new DateTime(2017, 11, 09)
@@ -470,8 +470,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review6 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = CENTR119,
                 StartDate = new DateTime(2017, 11, 20)
@@ -479,8 +479,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review7 = new Meeting()
             {
                 Days = Days.Tuesday,
-                StartTime = 0830,
-                EndTime = 0920,
+                StartTime = new DateTime(0, 0, 0, 8, 30, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 20, 0),
                 MeetingType = MeetingType.Review,
                 Location = PETER108,
                 StartDate = new DateTime(2017, 11, 21)
@@ -488,8 +488,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review8 = new Meeting()
             {
                 Days = Days.Wednesday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = WLH2001,
                 StartDate = new DateTime(2017, 12, 06)
@@ -497,8 +497,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Review9 = new Meeting()
             {
                 Days = Days.Sunday,
-                StartTime = 1600,
-                EndTime = 1650,
+                StartTime = new DateTime(0, 0, 0, 16, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 16, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = WLH2001,
                 StartDate = new DateTime(2017, 12, 10)
@@ -506,8 +506,8 @@ namespace ucsdscheduleme.Data
             Meeting CSE11Final = new Meeting()
             {
                 Days = Days.Tuesday,
-                StartTime = 0800,
-                EndTime = 1059,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 59, 0),
                 MeetingType = MeetingType.Final,
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 12)
@@ -546,7 +546,7 @@ namespace ucsdscheduleme.Data
             {
                 CourseAbbreviation = "CSE11",
                 CourseName = "Intr/Computer Sci&Obj-Ori: Java",
-                Units = 4,
+                Units = "4",
                 Description = ""
                 // Cape
             };
@@ -627,15 +627,15 @@ namespace ucsdscheduleme.Data
             Location WLH2005 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2005
+                RoomNumber = "2005"
             };
 
             CSE11Lecture = new Meeting()
             {
                 Code = "B00",
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1100,
-                EndTime = 1220,
+                StartTime = new DateTime(0, 0, 0, 11, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 12, 20, 0),
                 MeetingType = MeetingType.Lecture,
                 Location = WLH2005
             };
@@ -643,8 +643,8 @@ namespace ucsdscheduleme.Data
             {
                 Code = "B50",
                 Days = Days.TBA,
-                StartTime = 0,
-                EndTime = 0,
+                //StartTime = new DateTime(0, 0, 0, 0, 0, 0),
+                //EndTime = new DateTime(0, 0, 0, 0, 0, 0),
                 MeetingType = MeetingType.Lab,
                 Location = TBA
             };
@@ -652,16 +652,16 @@ namespace ucsdscheduleme.Data
             {
                 Code = "B01",
                 Days = Days.Friday,
-                StartTime = 1100,
-                EndTime = 1150,
+                StartTime = new DateTime(0, 0, 0, 11, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 11, 50, 0),
                 MeetingType = MeetingType.Discussion,
                 Location = SOLIS107
             };
             CSE11Review1 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 10, 09)
@@ -669,8 +669,8 @@ namespace ucsdscheduleme.Data
             CSE11Review2 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 10, 23)
@@ -678,8 +678,8 @@ namespace ucsdscheduleme.Data
             CSE11Review3 = new Meeting()
             {
                 Days = Days.Wednesday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 11, 01)
@@ -687,8 +687,8 @@ namespace ucsdscheduleme.Data
             CSE11Review4 = new Meeting()
             {
                 Days = Days.Sunday,
-                StartTime = 1600,
-                EndTime = 1650,
+                StartTime = new DateTime(0, 0, 0, 16, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 16, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 11, 05)
@@ -696,8 +696,8 @@ namespace ucsdscheduleme.Data
             CSE11Review5 = new Meeting()
             {
                 Days = Days.Thursday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 11, 09)
@@ -705,8 +705,8 @@ namespace ucsdscheduleme.Data
             CSE11Review6 = new Meeting()
             {
                 Days = Days.Monday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 11, 20)
@@ -714,8 +714,8 @@ namespace ucsdscheduleme.Data
             CSE11Review7 = new Meeting()
             {
                 Days = Days.Tuesday,
-                StartTime = 0830,
-                EndTime = 0920,
+                StartTime = new DateTime(0, 0, 0, 8, 30, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 20, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 11, 21)
@@ -723,8 +723,8 @@ namespace ucsdscheduleme.Data
             CSE11Review8 = new Meeting()
             {
                 Days = Days.Wednesday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 06)
@@ -732,8 +732,8 @@ namespace ucsdscheduleme.Data
             CSE11Review9 = new Meeting()
             {
                 Days = Days.Sunday,
-                StartTime = 1600,
-                EndTime = 1650,
+                StartTime = new DateTime(0, 0, 0, 16, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 16, 50, 0),
                 MeetingType = MeetingType.Review,
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 10)
@@ -741,8 +741,8 @@ namespace ucsdscheduleme.Data
             CSE11Final = new Meeting()
             {
                 Days = Days.Tuesday,
-                StartTime = 0800,
-                EndTime = 1059,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 59, 0),
                 MeetingType = MeetingType.Final,
                 Location = TBA,
                 StartDate = new DateTime(2017, 12, 13)
@@ -830,18 +830,18 @@ namespace ucsdscheduleme.Data
             Location CENTR214 = new Location()
             {
                 Building = "Center",
-                RoomNumber = 214
+                RoomNumber = "214"
             };
             Location WLH2113 = new Location()
             {
                 Building = "Warren Lecture Hall",
-                RoomNumber = 2113
+                RoomNumber = "2113"
             };
 
             Location CENTR222 = new Location()
             {
                 Building = "Center",
-                RoomNumber = 222
+                RoomNumber = "222"
             };
 
             //Making meeting objects
@@ -850,8 +850,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Lecture,
                 Code = "A00",
                 Days = Days.Monday | Days.Wednesday,
-                StartTime = 1700,
-                EndTime = 1820,
+                StartTime = new DateTime(0, 0, 0, 17, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 18, 20, 0),
                 Location = CENTR214
             };
             Meeting CSE101Lecture2 = new Meeting()
@@ -859,8 +859,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Lecture,
                 Code = "B00",
                 Days = Days.Tuesday | Days.Thursday,
-                StartTime = 0800,
-                EndTime = 0920,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 20, 0),
                 Location = CENTR115
             };
             Meeting CSE101Discussion1 = new Meeting()
@@ -868,8 +868,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "A02",
                 Days = Days.Wednesday,
-                StartTime = 0900,
-                EndTime = 0950,
+                StartTime = new DateTime(0, 0, 0, 9, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 50, 0),
                 Location = WLH2113
 
             };
@@ -878,8 +878,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "A03",
                 Days = Days.Wednesday,
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 50, 0),
                 Location = WLH2113
             };
             Meeting CSE101Discussion3 = new Meeting()
@@ -887,8 +887,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "A04",
                 Days = Days.Wednesday,
-                StartTime = 1100,
-                EndTime = 1150,
+                StartTime = new DateTime(0, 0, 0, 11, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 11, 50, 0),
                 Location = WLH2113
             };
             Meeting CSE101Discussion4 = new Meeting()
@@ -896,8 +896,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "B01",
                 Days = Days.Friday,
-                StartTime = 0800,
-                EndTime = 0850,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 8, 50, 0),
                 Location = CENTR222
             };
             Meeting CSE101Discussion5 = new Meeting()
@@ -905,8 +905,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "B02",
                 Days = Days.Friday,
-                StartTime = 0900,
-                EndTime = 0950,
+                StartTime = new DateTime(0, 0, 0, 9, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 9, 50, 0),
                 Location = CENTR222
             };
             Meeting CSE101Discussion6 = new Meeting()
@@ -914,8 +914,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Discussion,
                 Code = "B03",
                 Days = Days.Friday,
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new DateTime(0, 0, 0, 10, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 50, 0),
                 Location = CENTR222
             };
             Meeting CSE101Final1 = new Meeting()
@@ -923,8 +923,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Final,
                 StartDate = new DateTime(2017, 12, 14),
                 Days = Days.Thursday,
-                StartTime = 1900,
-                EndTime = 2159,
+                StartTime = new DateTime(0, 0, 0, 19, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 21, 59, 0),
                 Location = TBA
             };
             Meeting CSE101Final2 = new Meeting()
@@ -932,8 +932,8 @@ namespace ucsdscheduleme.Data
                 MeetingType = MeetingType.Final,
                 StartDate = new DateTime(2017, 12, 12),
                 Days = Days.Tuesday,
-                StartTime = 0800,
-                EndTime = 1059,
+                StartTime = new DateTime(0, 0, 0, 8, 0, 0),
+                EndTime = new DateTime(0, 0, 0, 10, 59, 0),
                 Location = TBA
             };
 
@@ -1093,7 +1093,7 @@ namespace ucsdscheduleme.Data
                 CourseAbbreviation = "CSE 101",
                 CourseName = "Design & Analysis of Algorithm",
                 Description = "",
-                Units = 4
+                Units = "4"
             };
 
             // Adding different sections to the course object
