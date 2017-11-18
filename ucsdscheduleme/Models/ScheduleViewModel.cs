@@ -19,6 +19,8 @@ namespace ucsdscheduleme.Models
         public string ProfessorName { get; set; } 
         public string FormattedGpaExpected {get {return ConvertGPAToStringFormat(AverageGpaExpected); }}
         public string FormattedGpaRecieved { get {return ConvertGPAToStringFormat(AverageGpaReceived); }}
+        public int CourseId { get; set; }
+
 
         //helper function that takes GPA decimal and returns equivalent
         // letter grade in proper format.
