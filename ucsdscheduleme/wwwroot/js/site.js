@@ -24,13 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function clearMeetings()
 {
     console.log("clearMeetings");
-    /* remove elements with class 'event' and all their children */
+    /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName('event');
 
+    /* remove first element in resulting list */
     while(elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
-
 }
 
 /*
@@ -84,9 +84,9 @@ function insertMeeting(meeting)
     icon.id = meeting.type;
     eventHeader.append(icon);
 
+    /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
     iconLabel.className = "class-icon-label";
-
     iconLabel.innerText = "LE";
     icon.append(iconLabel);
 
@@ -97,8 +97,7 @@ function insertMeeting(meeting)
     var eventInfo = document.createElement('div');
     eventInfo.className = "event-info";
 
-    /* create spans from meeting object */
-
+    /** create spans from meeting object **/
     /* courseAbbreviation */
     var classSpan = document.createElement('span');
     classSpan.innerHTML = meeting.courseAbbreviation;
@@ -188,7 +187,6 @@ function setup() {
         Timespan: "9:30am - 11:00am",
         Day: "wednesday"
     };
-
     var cse100lectureFri = {
         type: "lecture",
         courseAbbreviation: "CSE 100",
