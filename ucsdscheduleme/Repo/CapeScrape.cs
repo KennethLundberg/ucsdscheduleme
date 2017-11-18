@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using ucsdscheduleme.Models;
 using HtmlAgilityPack;
+using ucsdscheduleme.Data;
 
 namespace ucsdscheduleme.Repo
 {
     public class CapeScrape
     {
-        #region Cape
+        private readonly ScheduleContext _context;
 
         /// <summary>
         /// Contains XPaths used in scraping data from Cape
@@ -33,7 +34,79 @@ namespace ucsdscheduleme.Repo
 
         }
 
-        // Generate the url of a specific Cape page from professor's name and course name
+        /// <summary>
+        /// Gets all the professor and the courses from the database, and using
+        /// populates the database using the name of the course and professor
+        /// </summary>
+        public void Update()
+        {
+            // Getting the list of courses from the database
+            var courses = _context.Courses.ToList();
+
+            // Iterate over all the courses we recieved from the database
+            foreach (var course in courses)
+            {
+                // for each course list out all the sections that are present
+                var sections = course.Sections.ToList();
+
+                // Variable to store all the professors that are teaching one course
+                List<string> listOfProfessors = new List<string>();
+
+                // Iterate over all the sections for each course
+                foreach (var section in sections)
+                {
+                    Professor currProfessor = section.Professor;
+                    // Update the Cape review for each professor only one time
+                    if (!listOfProfessors.Contains(currProfessor.Name))
+                    {
+                        listOfProfessors.Add(currProfessor.Name);
+
+                        // Note: Cape has already been initialized in the database model
+                        // as a empty list.
+
+                        // Gets the CAPE page for the specific professor
+                        string capePageURL = GenerateURL(currProfessor.Name, course.CourseName);
+
+                        // If there is cape review page for the specific professor and specific course
+                        if (capePageURL.Length != 0)
+                        {
+                            ScrapeResult scrapedCapePage = InsertDataFromHtmlPage(capePageURL);
+
+                            // Updating the cape review result for professor object
+                            Cape newCapeReview = new Cape()
+                            {
+                                Term = scrapedCapePage.Term,
+                                StudentsEnrolled = scrapedCapePage.StudentsEnrolled,
+                                NumberOfEvaluation = scrapedCapePage.NumberOfEvaluation,
+                                RecommendedClass = scrapedCapePage.RecommendedClass,
+                                RecommendedProfessor = scrapedCapePage.RecommendedProfessor,
+                                StudyHoursPerWeek = scrapedCapePage.StudyHoursPerWeek,
+                                AverageGradeExpected = scrapedCapePage.AverageGradeExpected,
+                                AverageGradeReceived = scrapedCapePage.AverageGradeReceived,
+                                URL = capePageURL
+                            };
+
+                            // Adding cape review to professor and cource object
+                            currProfessor.Cape.Add(newCapeReview);
+                            course.Cape.Add(newCapeReview);                       
+
+                        }
+
+                        // Save Changes in the database
+                        _context.SaveChanges();
+
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Generate the url of a specific Cape page from professor's name and course name
+        /// </summary>
+        /// <param name="professorName"> Name of the professor </param>
+        /// <param name="courseName"> Name of the course </param>
+        /// <returns> The URL to the page that has the review of the class and the professor </returns>
         public static string GenerateURL(string professorName, string courseName)
         {
             // Encode the professor's name and course name
@@ -64,9 +137,9 @@ namespace ucsdscheduleme.Repo
         /// Scrapes a single Cape page specified by the URL input parameter.
         /// Note that this works only for FA12 term to the present
         /// </summary>
-        /// <returns>A List of ScrapeResult objects containing the data</returns>
+        /// <returns>ScrapeResult objects containing the data</returns>
         /// <param name="Url">URL of single Cape page to scrape</param>
-        public List<ScrapeResult> InsertDataFromHtmlPage(string Url)
+        public ScrapeResult InsertDataFromHtmlPage(string Url)
         {
             // Check for null or empty URL
             if (String.IsNullOrEmpty(Url))
@@ -133,24 +206,21 @@ namespace ucsdscheduleme.Repo
                 avgGradeReceived = (avgGradeReceivedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
             }
 
-            // Insert the results into their proper member and return
-            List<ScrapeResult> retList = new List<ScrapeResult>()
-            {
-                new ScrapeResult
-                    { InstructorName = instructorName,
-                      Term = term,
-                      StudentsEnrolled = Convert.ToInt32(enrollment),
-                      NumberOfEvaluation = Convert.ToInt32(evalsSubmitted),
-                      RecommendedClass = Convert.ToDecimal(recCourseMean),
-                      RecommendedProfessor = Convert.ToDecimal(recProfMean),
-                      StudyHoursPerWeek = Convert.ToDecimal(studyHoursMean),
-                      AverageGradeExpected = avgGradeExpected,
-                      AverageGradeReceived = avgGradeReceived }
+            // Make a scrapeResult object to store the result
+            ScrapeResult result = new ScrapeResult()
+             {
+                InstructorName = instructorName,
+                Term = term,
+                StudentsEnrolled = Convert.ToInt32(enrollment),
+                NumberOfEvaluation = Convert.ToInt32(evalsSubmitted),
+                RecommendedClass = Convert.ToDecimal(recCourseMean),
+                RecommendedProfessor = Convert.ToDecimal(recProfMean),
+                StudyHoursPerWeek = Convert.ToDecimal(studyHoursMean),
+                AverageGradeExpected = avgGradeExpected,
+                AverageGradeReceived = avgGradeReceived
             };
-            return retList;
+            return result;
         }
-
-        #endregion
         
     }
 }
