@@ -14,11 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\ScheduleController.cs" />
     <Compile Remove="Models\ScrapeResultRateMyProf.cs" />
     <Folder Include="Views\Schedule\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\TestSchedule\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\Home\index.html" />
   </ItemGroup>
 </Project>

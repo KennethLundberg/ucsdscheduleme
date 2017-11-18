@@ -13,6 +13,10 @@ namespace ucsdscheduleme.Data
         {
         }
 
+        public ScheduleContext() : base()
+        {
+        }
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<Section> Sections { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
@@ -20,6 +24,10 @@ namespace ucsdscheduleme.Data
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Cape> Cape { get; set; }
         public DbSet<RateMyProfessor> RateMyProfessor { get; set; }
+        public DbSet<UserSection> UserSections { get; set; }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //=> optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EFTest;Trusted_Connection=True;");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
