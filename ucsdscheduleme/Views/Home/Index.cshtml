@@ -121,18 +121,18 @@
                     </tr>
                     <tr class="statsdata">
                         <th class="statsdata"> Overall Avg. GPA Expected: </th>
-                        <th class="statsdata"> <em> B+ (3.34) </em> </th>
+                        <th class="statsdata"> <em> Model.OverallMetadata.AverageGpaExpected </em> </th>
                     </tr>
                     <tr class="statsdata">
                         <th class="statsdata"> Overall Avg. Recieved: </th>
-                        <th class="statsdata"> <em> B- (2.99) </em> </th>
+                        <th class="statsdata"> <em> Model.OverallMetadata.AverageGpaReceived </em> </th>
                     </tr>
                 </table>
             </div>
             <div id="colorstrip"> </div>
             <div id="metadata">
                 @foreach (var metadata in Model.ClassMetadata)
-                {
+                { // still keep this id as course1?
                     <div class="courseStat" id="course1">
                         <div id="coursetaken">
                             <div id="coursename">@metadata.CourseAbbreviation</div>
@@ -144,33 +144,6 @@
                     </div>
 
                 }
-                <div class="courseStat" id="course1">
-                    <div id="coursetaken">
-                        <div id="coursename">CSE 110</div>
-                        <div id="professorname">Gary Gillespie</div>
-                        <div>Avg. Workload: 69 Hrs/Wk </div>
-                        <div>Avg. Grade Expected: F- (0.00)</div>
-                        <div>Avg. Grade Received: F- (0.00)</div>
-                    </div>
-                </div>
-                <div class="courseStat" id="course2">
-                    <div id="coursetaken">
-                        <div id="coursename">CSE 110</div>
-                        <div id="professorname">Professor Name</div>
-                        <div>Avg. Workload: 69 Hrs/Wk </div>
-                        <div>Avg. Grade Expected: F- (0.00)</div>
-                        <div>Avg. Grade Received: F- (0.00)</div>
-                    </div>
-                </div>
-                <div class="courseStat" id="course3">
-                    <div id="coursetaken">
-                        <div id="coursename">CSE 110</div>
-                        <div id="professorname">Gary Gillespie</div>
-                        <div>Avg. Workload: 69 Hrs/Wk </div>
-                        <div>Avg. Grade Expected: F- (0.00)</div>
-                        <div>Avg. Grade Received: F- (0.00)</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
