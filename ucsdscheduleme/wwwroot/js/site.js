@@ -11,9 +11,10 @@ function insertMetadata(metadata)
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    clearMeetings();
-    //setup();
+    //clearMeetings();
+
 });
+
 
 /*
  * Function: clearMeetings()
@@ -22,8 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function clearMeetings()
 {
+    console.log("clearMeetings");
     /* remove elements with class 'event' and all their children */
-    $(".event > div").remove();
+    var elements = document.getElementsByClassName('event');
+    console.log(elements);
+    for(var i = 0; i < elements.length; i++) {
+        elements[i].remove();
+    }
 }
 
 /*
@@ -162,6 +168,7 @@ function updateMeetings(meetings)
  * test adding calendar events, will delete later
  **/
 function setup() {
+    clearMeetings();
     console.log("setup()");
     var meetings2 = new Array();
 

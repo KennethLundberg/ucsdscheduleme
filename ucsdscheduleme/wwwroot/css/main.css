@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans");
-/*$font: 'Work Sans', sans-serif;*/
+
 html, body {
     height: 100%;
     margin: 0;
@@ -40,6 +40,7 @@ ul {
 
 .calendar {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    border-top: 4px solid #FFCC03;
     display: block;
     position: relative;
     overflow-y: scroll;
@@ -178,6 +179,7 @@ ul {
         }
 
         .event .event-header .event-info {
+            margin-top: 10px;
             position: relative;
             text-align: center;
         }
@@ -189,20 +191,29 @@ ul {
 
 .bottom {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    display: flex;
+    border-top: 4px solid #FFCC03;
+    border-collapse: collapse;
     height: 20%;
+    width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;
     background-color: white;
+    font-size: 12px;
+    margin-bottom: 15px;
 }
 
-#examdata {
-    width: 100%;
-}
+    .bottom tr th {
+        background-color: #203E5F;
+        color: #FEFEFE;
+        font-size: 14px;
+        border: 1px solid black;
+    }
 
-.final-row td {
-    border-left: 1px solid black;
-}
+    .bottom tr td {
+        border: 1px solid black;
+        text-align: center;
+        color: black;
+    }
 
 .searchbar-container {
     position: relative;
@@ -295,6 +306,25 @@ ul {
         .class .class-icon:hover {
             color: #FFCC03;
         }
+
+.edit-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #666;
+}
+
+    .edit-button:hover {
+        cursor: pointer;
+        color: #151515;
+    }
+
+    .edit-button span {
+        margin-right: 5px;
+    }
 
 .generate-schedule-button {
     cursor: pointer;
@@ -419,6 +449,11 @@ ul {
             text-align: center;
             color: #151515;
         }
+
+.course-stat-container {
+    overflow-y: scroll;
+    height: 57%;
+}
 
 .course-stat {
     background-color: #FEFEFE;

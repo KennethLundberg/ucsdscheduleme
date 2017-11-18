@@ -1,11 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans');
 
 $font: 'Open Sans', sans-serif;
-/*$font: 'Work Sans', sans-serif;*/
 $primary-color: #203E5F;
 $secondary-color: #FFCC03;
-//$primary-color: #4183D7;
-//$secondary-color: #F9BF3B;
 $off-white: #EDEDED;
 $off-black: #151515;
 $white-bg: #EFEFEF;
@@ -78,6 +75,7 @@ ul {
 
 .calendar {
     @include boxshadow();
+    border-top: 4px solid $secondary-color;
     display: block;
     position: relative;
     overflow-y: scroll;
@@ -206,6 +204,7 @@ ul {
         }
 
         .event-info {
+            margin-top: 10px;
             position: relative;
             text-align: center;
 
@@ -219,21 +218,33 @@ ul {
 
 .bottom {
     @include boxshadow();
-    display: flex;
+    border-top: 4px solid $secondary-color;
+    border-collapse: collapse;
     height: 20%;
+    width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;
     background-color: white;
-}
+    font-size: 12px;
+    margin-bottom: 15px;
 
-#examdata {
-    width: 100%;
+    tr {
+        th {
+            background-color: $primary-color;
+            color: $text-white;
+            font-size: 14px;
+            border: 1px solid black;
+        }
+
+        td {
+            border: 1px solid black;
+            text-align: center;
+            color: black;
+        }
+    }
 }
 
 .final-row {
-    td {
-        border-left: 1px solid black;
-    }
 }
 
 .searchbar-container {
@@ -325,6 +336,25 @@ ul {
         &:hover {
             color: $secondary-color;
         }
+    }
+}
+
+.edit-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #666;
+
+    &:hover {
+        cursor: pointer;
+        color: $off-black;
+    }
+
+    span {
+        margin-right: 5px;
     }
 }
 
@@ -433,6 +463,11 @@ ul {
             }
         }
     }
+}
+
+.course-stat-container {
+    overflow-y: scroll;
+    height: 57%;
 }
 
 .course-stat {
