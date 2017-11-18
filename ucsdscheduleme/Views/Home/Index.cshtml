@@ -10,6 +10,7 @@
                 <div id="monday" class="schedule-group">
                     <div class="schedule-header"><span>Monday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lecture"><div class="class-icon-label">LE</div></div>
                             <div class="event-info">
@@ -24,6 +25,7 @@
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Tuesday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -38,6 +40,7 @@
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Wednesday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="discussion"><div class="class-icon-label">DI</div></div>
                             <div class="event-info">
@@ -52,6 +55,7 @@
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Thursday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -66,6 +70,7 @@
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Friday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -115,7 +120,7 @@
         </div>
 
         <table class="bottom" id="examdata">
-            <!-- foreach (var examData in Model.Finals)
+            @* foreach (var examData in Model.Finals)
             {
                 <tr>
                     course name, final day, final time and final location
@@ -124,7 +129,7 @@
                     <td>@examData.DateAndTime</td>
                     <td>@examData.Location</td>
                 </tr>
-            }@-->
+            }*@
             <tbody>
                 <tr>
                     <th>Course</th>
@@ -161,7 +166,7 @@
     <div class="side left-bar">
         <div>
             <div id="logo">
-                <img id="logo-image" alt="ucsdschedule.me" src="logo.svg">
+                <img id="logo-image" alt="ucsdschedule.me" src="~/images/logo.svg">
             </div>
         </div>
 
@@ -219,7 +224,7 @@
                     <td>B+ (3.34)</td>
                 </tr>
                 <tr>
-                    <td>Overall Avg. Recieved</td>
+                    <td>Overall Avg. Received</td>
                     <td>B- (2.99)</td>
                 </tr>
             </table>

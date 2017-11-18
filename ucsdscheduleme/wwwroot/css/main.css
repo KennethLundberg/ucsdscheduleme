@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans");
-/*$font: 'Work Sans', sans-serif;*/
+
 html, body {
     height: 100%;
     margin: 0;
@@ -179,6 +179,7 @@ ul {
         }
 
         .event .event-header .event-info {
+            margin-top: 10px;
             position: relative;
             text-align: center;
         }
