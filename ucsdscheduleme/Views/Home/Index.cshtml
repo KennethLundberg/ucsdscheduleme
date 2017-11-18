@@ -217,26 +217,29 @@
             <table id="tabledata">
                 <tr>
                     <td>Overall Avg. Workload</td>
-                    <td>29.9 Hr/wk</td>
+                    <td id="overall-average-workload">@Model.OverallMetadata.AverageTotalWorkload</td>
                 </tr>
                 <tr>
                     <td>Overall Avg. GPA Expected</td>
-                    <td>B+ (3.34)</td>
+                    <td id="overall-average-gpa-expected">@Model.OverallMetadata.AverageGpaExpected</td>
                 </tr>
                 <tr>
                     <td>Overall Avg. Received</td>
-                    <td>B- (2.99)</td>
+                    <td id="overall-average-recieved">@Model.OverallMetadata.AverageGpaReceived</td>
                 </tr>
             </table>
         </div>
-        <div class="course-stat-container">
-            <div class="course-stat" id="course1">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Gary Gillespie</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
+        <div class="course-stat-container" id="course-stat-container">
+             @foreach (var metadata in Model.ClassMetadata)
+             {
+            <div class="course-stat" id="@metadata.CourseId">
+                <div class="course-name">@metadata.CourseAbbreviation</div>
+                <div class="professor-name">@metadata.ProfessorName</div>
+                <div class="course-info">Avg. Workload: @metadata.AverageTotalWorkload</div>
+                <div class="course-info">Avg. Grade Expected: @metadata.AverageGpaExpected</div>
+                <div class="course-info">Avg. Grade Received: @metadata.AverageGpaReceived</div>
             </div>
+             }
             <div class="course-stat" id="course2">
                 <div class="course-name">CSE 110</div>
                 <div class="professor-name">Professor Name</div>
