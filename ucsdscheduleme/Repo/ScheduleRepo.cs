@@ -232,7 +232,7 @@ namespace ucsdscheduleme.Repo
 
                     if (cape != null)
                     {
-                        currentGPA += GetGPA(cape.AverageGradeReceived);
+                        currentGPA += GetGPA(cape.AverageGradeReceived.ToString());
                     }
                 }
 
