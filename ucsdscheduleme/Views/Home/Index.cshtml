@@ -8,9 +8,11 @@
         <div class="calendar">
             <div class="schedule">
                 <div id="monday" class="schedule-group">
+                    <div class="schedule-header"><span>Monday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
-                            <div class="icon" id="lecture">LE</div>
+                            <div class="class-icon" id="lecture"><div class="class-icon-label">LE</div></div>
                             <div class="event-info">
                                 <span>CSE 110</span>
                                 <span>Gary Gillespie</span>
@@ -19,13 +21,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="schedule-header"><span>Monday</span></div>
                 </div>
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Tuesday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
-                            <div class="icon" id="lab">LA</div>
+                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
                                 <span>CSE 110</span>
                                 <span>Gary Gillespie</span>
@@ -38,8 +40,9 @@
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Wednesday</span></div>
                     <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
-                            <div class="icon" id="discussion">DI</div>
+                            <div class="class-icon" id="discussion"><div class="class-icon-label">DI</div></div>
                             <div class="event-info">
                                 <span>CSE 110</span>
                                 <span>Gary Gillespie</span>
@@ -51,99 +54,216 @@
                 </div>
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Thursday</span></div>
+                    <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="event-header">
+                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
+                            <div class="event-info">
+                                <span>CSE 110</span>
+                                <span>Gary Gillespie</span>
+                                <span>8:00am - 9:20am</span>
+                                <span>A00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="schedule-group">
                     <div class="schedule-header"><span>Friday</span></div>
+                    <div class="event">
+                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="event-header">
+                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
+                            <div class="event-info">
+                                <span>CSE 110</span>
+                                <span>Gary Gillespie</span>
+                                <span>8:00am - 9:20am</span>
+                                <span>A00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="time">
-                <div>
-                    <div><span>07:30am</span></div>
-                    <div><span>08:00am</span></div>
-                    <div><span>08:30am</span></div>
-                    <div><span>09:00am</span></div>
-                    <div><span>09:30am</span></div>
-                    <div><span>10:00am</span></div>
-                    <div><span>10:30am</span></div>
-                    <div><span>11:00am</span></div>
-                    <div><span>11:30am</span></div>
-                    <div><span>12:00pm</span></div>
-                    <div><span>12:30pm</span></div>
-                    <div><span>01:00pm</span></div>
-                    <div><span>01:30pm</span></div>
-                    <div><span>02:00pm</span></div>
-                    <div><span>02:30pm</span></div>
-                    <div><span>03:00pm</span></div>
-                    <div><span>03:30pm</span></div>
-                    <div><span>04:00pm</span></div>
-                    <div><span>04:30pm</span></div>
-                    <div><span>05:00pm</span></div>
-                    <div><span>05:30pm</span></div>
-                    <div><span>06:00pm</span></div>
-                    <div><span>06:30pm</span></div>
-                    <div><span>07:00pm</span></div>
-                    <div><span>07:30pm</span></div>
-                    <div><span>08:00pm</span></div>
-                    <div><span>08:30pm</span></div>
-                    <div><span>09:00pm</span></div>
-                    <div><span>09:30pm</span></div>
-                    <div><span>10:00pm</span></div>
-                    <div><span>10:30pm</span></div>
-                    <div><span>11:00pm</span></div>
-                </div>
+                <div><span class="time-block">7:30<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">8:00<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">8:30<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">9:00<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">9:30<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">10:00<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">10:30<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">11:00<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">11:30<span class="am-pm">am</span></span></div>
+                <div><span class="time-block">12:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">12:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">1:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">1:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">2:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">2:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">3:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">3:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">4:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">4:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">5:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">5:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">6:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">6:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">7:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">7:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">8:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">8:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">9:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">9:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">10:00<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">10:30<span class="am-pm">pm</span></span></div>
+                <div><span class="time-block">11:00<span class="am-pm">pm</span></span></div>
             </div>
         </div>
 
-        <div class="bottom">
-            <ul>
-                </br>
-                TO-DO:
-                <li>- Finish calendar</li>
-                <li>- Make the event divs</li>
-                <li>- Destroy all computers in B260 and get arrested.</li>
-            </ul>
-        </div>
+        <table class="bottom" id="examdata">
+            @* foreach (var examData in Model.Finals)
+            {
+                <tr>
+                    course name, final day, final time and final location
+                    <td>@examData.CourseAbbreviation</td>
+                    <td>@examData.Type</td>
+                    <td>@examData.DateAndTime</td>
+                    <td>@examData.Location</td>
+                </tr>
+            }*@
+            <tbody>
+                <tr>
+                    <th>Course</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Location</th>
+                </tr>
+                <tr>
+                    <td>CSE 100</td>
+                    <td>Final</td>
+                    <td>Monday 11/17</td>
+                    <td>8:00AM-12:00PM</td>
+                    <td>WLH 2201</td>
+                </tr>
+                <tr>
+                    <td>CSE 101</td>
+                    <td>Final</td>
+                    <td>Monday 11/17</td>
+                    <td>8:00AM-12:00PM</td>
+                    <td>WLH 2201</td>
+                </tr>
+                <tr>
+                    <td>CSE 110</td>
+                    <td>Final</td>
+                    <td>Monday 11/17</td>
+                    <td>8:00AM-12:00PM</td>
+                    <td>WLH 2201</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="side left-bar">
-        <div id="logo">
-            <h2>ucsdschedule.me</h2>
+        <div>
+            <div id="logo">
+                <img id="logo-image" alt="ucsdschedule.me" src="~/images/logo.svg">
+            </div>
+        </div>
+
+        <div class="searchbar-container">
+            <div class="searchbar">
+                <input type="text" id="search" placeholder="Search classes" name="q" />
+                <button type="submit" value="text" class="search-icon"><i class="fa fa-search"></i></button>
+                <div class="search-result" id="courseItems">
+                    <div class="courseItem">CSE 100</div>
+                    <div class="courseItem">CSE 101</div>
+                    <div class="courseItem">CSE 110</div>
+                </div>
+            </div>
+        </div>
+        <div class="class-list">
+            <div class="class">
+                <span>CSE 100</span>
+                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
+            </div>
+            <div class="class">
+                <span>CSE 101</span>
+                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
+            </div>
+            <div class="class">
+                <span>CSE 110</span>
+                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
+            </div>
+        </div>
+        <div class="generate-schedule-container">
+            <select style="width: 100%;">
+                <option selected="selected">Select Optimization</option>
+                <option>Most Gaps</option>
+                <option>Fewest Gaps</option>
+                <option>Most Days</option>
+                <option>Fewest Days</option>
+                <option>Highest GPA</option>
+                <option>Highest Rate My Professor</option>
+                <option>Earliest Start</option>
+                <option>Latest Start</option>
+            </select>
+            <div class="generate-schedule-button">
+            </div>
         </div>
     </div>
 
     <div class="side right-bar">
-        <div id="averages">
-            <div id="overallStat">
-                <table class="statsdata" id="tabledata">
-                    <tr class="statsdata">
-                        <th class="statsdata"> Overall Avg. Workload: </th>
-                        <th class="statsdata"> <em> @Model.OverallMetadata.AverageTotalWorkload </em> </th>
-                    </tr>
-                    <tr class="statsdata">
-                        <th class="statsdata"> Overall Avg. GPA Expected: </th>
-                        <th class="statsdata"> <em> Model.OverallMetadata.AverageGpaExpected </em> </th>
-                    </tr>
-                    <tr class="statsdata">
-                        <th class="statsdata"> Overall Avg. Recieved: </th>
-                        <th class="statsdata"> <em> Model.OverallMetadata.AverageGpaReceived </em> </th>
-                    </tr>
-                </table>
+        <div id="overall-stat">
+            <table id="tabledata">
+                <tr>
+                    <td>Overall Avg. Workload</td>
+                    <td>29.9 Hr/wk</td>
+                </tr>
+                <tr>
+                    <td>Overall Avg. GPA Expected</td>
+                    <td>B+ (3.34)</td>
+                </tr>
+                <tr>
+                    <td>Overall Avg. Received</td>
+                    <td>B- (2.99)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="course-stat-container">
+            <div class="course-stat" id="course1">
+                <div class="course-name">CSE 110</div>
+                <div class="professor-name">Gary Gillespie</div>
+                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
+                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
+                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
             </div>
-            <div id="colorstrip"> </div>
-            <div id="metadata">
-                @foreach (var metadata in Model.ClassMetadata)
-                { // still keep this id as course1?
-                    <div class="courseStat" id="course1">
-                        <div id="coursetaken">
-                            <div id="coursename">@metadata.CourseAbbreviation</div>
-                            <div id="professorname">@metadata.ProfessorName</div>
-                            <div>Avg. Workload: @metadata.AverageTotalWorkload</div>
-                            <div>Avg. Grade Expected: @metadata.AverageGpaExpected</div>
-                            <div>Avg. Grade Received: @metadata.AverageGpaReceived</div>
-                        </div>
-                    </div>
-
-                }
+            <div class="course-stat" id="course2">
+                <div class="course-name">CSE 110</div>
+                <div class="professor-name">Professor Name</div>
+                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
+                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
+                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
+            </div>
+            <div class="course-stat" id="course3">
+                <div class="course-name">CSE 110</div>
+                <div class="professor-name">Gary Gillespie</div>
+                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
+                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
+                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
+            </div>
+            <div class="course-stat" id="course3">
+                <div class="course-name">CSE 110</div>
+                <div class="professor-name">Gary Gillespie</div>
+                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
+                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
+                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
+            </div>
+            <div class="course-stat" id="course3">
+                <div class="course-name">CSE 110</div>
+                <div class="professor-name">Gary Gillespie</div>
+                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
+                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
+                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
             </div>
         </div>
     </div>
