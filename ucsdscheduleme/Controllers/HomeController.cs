@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
+using ucsdscheduleme.Repo;
 using ucsdscheduleme.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -60,12 +61,53 @@ namespace ucsdscheduleme.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        public IActionResult GenerateSchedule(Course[] courses, Optimization optimization)
+        {
+            // Used to return a list courses. 
+       
+            var scheduleRepo = new ScheduleRepo();
+
+            // Call the schedule finding algorithm.
+            var data = scheduleRepo.FindScheduleForClasses(courses);
+
+            List<Section> schedule = data[0];
+
+            switch (optimization)
+            {
+                case Optimization.HighestGPA:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.HighestRMP:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.EarlyEnd:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.LateStart:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.MostDays:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.LeastDays:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.MostGaps:
+                    //scheduule = functioin(data);
+                    break;
+                case Optimization.LeastGaps:
+                    //scheduule = functioin(data);
+                    break;
+            }
+
+            return Json(schedule);
+        }
         public IActionResult TypeAhead(string input)
         {
             var suggestions = _context.Courses
                                     .Where(c => c.CourseAbbreviation.Contains(input))
                                     .Take(3)
-                                    .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })                                 
+                                    .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
                                     .ToArray();
 
             return Json(suggestions);
