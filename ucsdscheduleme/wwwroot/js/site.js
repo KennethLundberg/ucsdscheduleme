@@ -12,7 +12,7 @@ function insertMetadata(metadata)
 
 document.addEventListener('DOMContentLoaded', function() {
     clearMeetings();
-    setup();
+    //setup();
 });
 
 /*
@@ -73,9 +73,44 @@ function insertMeeting(meeting)
 
     /* create an icon and add to event header div */
     var icon = document.createElement('div');
-    icon.className = "icon";
+    icon.className = "class-icon";
     icon.id = meeting.type;
     eventHeader.append(icon);
+
+    var iconLabel = document.createElement('div');
+    iconLabel.className = "class-icon-label";
+
+    iconLabel.innerText = "LE";
+
+    icon.append(iconLabel);
+    iconLabel.innerText = meeting.type.toUpperCase().substr(0,2);
+    /*
+    if(meeting.type == "lecture") {
+        iconLabel.innerText = "LE";
+    } else if(meeting.type == 'discussion') {
+        iconLabel.innerText = "DI";
+    } else {
+        iconLabel.innerText = meeting.type.toUpperCase();
+    }
+    */
+    /*
+    switch(meeting.type) {
+        case 'lecture':
+            iconLabel.text = "LE";
+            console.log("le")
+            break;
+        case 'discussion':
+            iconLabel.innerHTML = "DI";
+            break;
+        case 'lab':
+            iconLabel.innerHTML = "LAB";
+            break;
+        default:
+            iconLabel.innerHTML = meeting.type;
+            alert("test");
+            break;
+    }
+    */
 
     /* create an event info div */
     var eventInfo = document.createElement('div');
