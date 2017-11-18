@@ -4,8 +4,14 @@ $font: 'Open Sans', sans-serif;
 /*$font: 'Work Sans', sans-serif;*/
 $primary-color: #203E5F;
 $secondary-color: #FFCC03;
+//$primary-color: #4183D7;
+//$secondary-color: #F9BF3B;
+$off-white: #EDEDED;
+$off-black: #151515;
+$white-bg: #EFEFEF;
+$text-white: #FEFEFE;
 $gray: #E9E9E9;
-$border-color: #C0C0C0;
+$border-color: #E0E0E0;
 $lecture-color: #FF9703;
 $discussion-color: #188CF0;
 $lab-color: #CC0000;
@@ -18,6 +24,10 @@ $row-height: 50px;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+}
+
+@mixin boxshadow() {
+    box-shadow: 0 0 4px rgba(0,0,0, 0.25);
 }
 
 @mixin flex($values) {
@@ -36,29 +46,11 @@ $row-height: 50px;
     order: $val;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: $primary-color;
-    border-radius: 10px;
-}
-
-::webkit-scrollbar-button {
-    width: 40px;
-    height: 40px;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: $secondary-color;
-}
-
 html, body {
     height: 100%;
     margin: 0;
     font-family: $font;
+    background-color: $off-white;
 }
 
 ul {
@@ -76,38 +68,23 @@ ul {
 }
 
 .middle {
-    height: 100%
-}
-
-.left-bar, .right-bar {
-    background-color: $primary-color;
-}
-
-.right-bar {
-    #averages {
-        text-align: center;
-        color: $secondary-color;
-    }
+    height: calc(100% - 15px);
+    margin-top: 15px;
 }
 
 #logo {
-    background-color: $secondary-color;
-    color: $primary-color;
-    text-align: center;
-    font-size: 1em;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .calendar {
+    @include boxshadow();
     display: block;
     position: relative;
     overflow-y: scroll;
     overflow-x: hidden;
-    width: calc(100% - 20px);
+    width: 100%;
     height: 75%;
     background-color: $primary-color;
-    margin-left: 10px;
 }
 
 /* for timebar */
@@ -119,18 +96,18 @@ ul {
     div {
         position: relative;
         height: $row-height;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px dashed $border-color;
     }
+}
 
-    span {
-        position: absolute;
-        background-color: $primary-color;
-        color: $secondary-color;
-        padding-left: 5px;
-        width: 4.3em;
-        line-height: 1.4em;
-        bottom: calc(1.4em / 2 * -1);
-    }
+.time-block {
+    position: absolute;
+    background-color: $primary-color;
+    color: $text-white;
+    padding-left: 5px;
+    width: 4.3em;
+    line-height: 1.4em;
+    bottom: calc(1.4em / 2 * -1);
 }
 
 /*rest of schedule*/
@@ -144,16 +121,17 @@ ul {
 
     .schedule-group {
         @include flex(1);
-        background-color: #E9E9E9;
+        background-color: $text-white;
         height: 1675px;
         float: left;
         position: relative;
-        border: 1px solid $border-color;
+        border: 1px dashed $border-color;
         border-right: none;
         border-top: none;
 
         &:first-of-type {
             margin-left: 4em;
+            border: none;
         }
     }
 
@@ -162,15 +140,27 @@ ul {
         display: table;
         height: $row-height;
         width: 100%;
+        position: relative;
+
+        &::after {
+            content: "";
+            height: 100%;
+            width: 1px;
+            background-color: $primary-color;
+            position: absolute;
+            left: -1px;
+            top: 0;
+        }
 
         > span {
-            color: $secondary-color;
+            color: $text-white;
             display: table-cell;
             text-align: center;
             vertical-align: middle;
             line-height: 1.2;
             margin-bottom: 0;
-            font-size: 1.25em;
+            font-weight: bold;
+            letter-spacing: 0.1em;
         }
     }
 }
@@ -178,21 +168,29 @@ ul {
 .event {
     position: absolute;
     background-color: white;
-    border-radius: 5px;
     width: calc( 100% - 10px );
     /*off-set for very first line @ 7:30am */
-    top: 50.8px;
+    top: 50px;
+    height: 100px;
     z-index: 1;
+    @include boxshadow();
 
     .event-header {
         position: relative;
         width: 100%;
         height: 10%;
 
-        .icon {
-            position: absolute;
-            border-radius: 5px;
+        .class-icon {
+            vertical-align: middle;
             padding: 5px;
+        }
+
+        .class-icon-label {
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+            line-height: 1.2em;
         }
 
         #lecture {
@@ -213,39 +211,51 @@ ul {
 
             span {
                 display: block;
+                font-size: 10px;
             }
         }
     }
 }
 
 .bottom {
+    @include boxshadow();
     display: flex;
-    height: 21%;
+    height: 20%;
     margin-top: 15px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border: 8px solid $primary-color;
+    margin-bottom: 10px;
     background-color: white;
 }
 
+#examdata {
+    width: 100%;
+}
+
+.final-row {
+    td {
+        border-left: 1px solid black;
+    }
+}
+
 .searchbar-container {
-    margin-left: 6%;
     position: relative;
 
     .searchbar {
+        @include boxshadow();
         overflow: hidden;
         white-space: nowrap;
 
         input#search {
             height: 50px;
-            width: 71%;
+            width: calc(100% - 65px);
             border: none;
             font-family: $font;
-            color: $primary-color;
-            padding-left: 5%;
+            color: $off-black;
+            background-color: $text-white;
+            padding: 0;
+            padding-left: 15px;
         }
 
-        .icon {
+        .search-icon {
             display: inline-block;
             -o-transition: .2s;
             -ms-transition: .2s;
@@ -253,38 +263,106 @@ ul {
             -webkit-transition: .2s;
             transition: .2s;
             position: absolute;
-            height: 100%;
-            width: 19%;
+            height: 50px;
+            width: 50px;
             border: none;
-            background-color: $secondary-color;
-            color: #4f5b66;
+            background-color: $text-white;
+            color: $off-black;
+            cursor: pointer;
 
             &:hover {
-                color: $secondary-color;
-                background-color: black;
+                color: $text-white;
+                background-color: $secondary-color;
             }
         }
 
         .search-result {
+            box-shadow: 5px 5px 5px rgba(0,0,0,0.2), -5px 5px 5px rgba(0,0,0,0.2);
+            border-top: 4px solid $off-white;
             display: none;
             position: absolute;
-            background: $secondary-color;
-            width: 95%;
+            background: $text-white;
+            width: 100%;
 
             .courseItem {
                 display: block;
                 padding: 10px;
                 text-decoration: none;
-                color: $primary-color;
+                color: $off-black;
                 font-family: $font;
 
                 &:hover {
-                    background-color: black;
-                    color: $secondary-color;
+                    background-color: $secondary-color;
+                    color: $text-white;
                 }
             }
         }
     }
+}
+
+.class {
+    border-top: 4px solid $secondary-color;
+    @include boxshadow();
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: $primary-color;
+    color: $text-white;
+    font-family: $font;
+    vertical-align: middle;
+
+    .class-icon {
+        cursor: pointer;
+        display: inline-block;
+        float: right;
+        border: none;
+        text-align: center;
+        vertical-align: text-bottom;
+        font-size: 18.4px;
+        line-height: 1em;
+        color: $text-white;
+
+        &:hover {
+            color: $secondary-color;
+        }
+    }
+}
+
+.generate-schedule-button {
+    cursor: pointer;
+    @include boxshadow();
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: $secondary-color;
+    color: $off-black;
+    font-family: $font;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+
+    &:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255,255,255, 0.2);
+    }
+
+    &:after {
+        content: "Generate Schedule";
+        color: $off-black;
+    }
+}
+
+.am-pm {
+    font-size: 10px;
+    color: $off-white;
+    line-height: 1em;
+    display: inline-block;
+    padding-left: 0.15em;
 }
 
 @media all and (min-width: 600px) {
@@ -302,108 +380,93 @@ ul {
 
     .left-bar {
         @include order(1);
+        padding: 15px;
     }
 
     .right-bar {
         @include order(3);
+        padding: 15px;
     }
 }
 
 /* For the right side bar */
-#overallStat {
+#overall-stat {
+    @include boxshadow();
     position: relative;
     text-align: center;
     margin: auto;
-    color: #000000;
-    padding-top: 20px;
-}
-
-.statsdata {
-    margin: 0 auto;
-    border: 1px solid black;
-    text-align: center;
-    border-collapse: collapse;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    font-weight: normal;
-    font-size: 12px;
-    width: 90%;
+    background-color: $primary-color;
+    border-top: 4px solid $secondary-color;
 }
 
 #tabledata {
-    background-color: #cfcfcf;
+    font-size: 12px;
+    margin: 0;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+
+    tr {
+        &:last-of-type {
+            border-bottom: none;
+        }
+
+        td {
+            text-align: left;
+            color: $text-white;
+            padding: 15px 20px;
+            border: none;
+            outline: none;
+            margin: 0;
+
+            &:first-of-type {
+                border-bottom: 1px solid rgba(255,255,255,0.33);
+            }
+
+            &:last-of-type {
+                border-bottom: rgba(0,0,0,0.15) 1px solid;
+                background-color: $text-white;
+                text-align: center;
+                color: $off-black;
+            }
+        }
+    }
 }
 
-#colorstrip {
-    height: 2px;
-    border-style: solid;
-    border-width: thin;
-    border-color: #FFCC03;
-    background-color: #FFCC03;
-    margin-bottom: 20px;
-    margin-top: 20px;
+.course-stat {
+    background-color: $text-white;
+    border-top: 4px solid $secondary-color;
+    @include boxshadow();
+    margin-bottom: 15px;
 }
 
-.courseStat {
-    -webkit-flex: 2 0 0;
-    flex: 2 0 0;
-    position: relative;
+.course-name {
+    font-size: 14px;
+    padding: 10px;
     text-align: center;
-    font-size: .65em;
-    margin-bottom: 25px;
-    padding-right: 10px;
-    padding-left: 10px;
-    color: #000;
-    width: 90%;
-    margin: 0 auto;
-    margin-bottom: 5%;
+    background-color: $primary-color;
+    color: $off-white;
 }
 
-#coursetaken {
-    border-style: solid;
-    padding-top: 5px;
-    padding-bottom: 15px;
-    border-width: 1px;
-    background-color: #cfcfcf;
-    font-size: 1.2em;
-}
-
-#coursename {
-    font-size: 1.4em;
-    font-weight: bolder;
-    padding-bottom: 2px;
-}
-
-#professorname {
-    font-size: 1.2em;
-    border-bottom-style: solid;
+.professor-name {
+    text-align: center;
+    font-size: 12px;
+    padding: 5px;
     margin-bottom: 5px;
-    padding-bottom: 3px;
-    border-width: thin;
-}
-}
-
-#coursetaken {
-  border-style: solid;
-  padding-top: 5px;
-  padding-bottom: 15px;
-  border-width: 1px;
-  background-color: #cfcfcf;
-  font-size: 1.2em;
+    background-color: #EAEAEA;
+    color: $off-black;
 }
 
-#coursename {
-  font-size: 1.4em;
-  font-weight: bolder;
-  padding-bottom: 2px;
-}
+.course-info {
+    font-size: 11px;
+    line-height: 1.4em;
+    text-align: center;
+    padding: 5px;
+    color: $off-black;
 
-#professorname {
-  font-size: 1.2em;
-  border-bottom-style: solid;
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  border-width: thin;
+    &:last-of-type {
+        padding-bottom: 10px;
+    }
 }
