@@ -53,12 +53,13 @@ function insertMeeting(meeting)
     var timeOffSet = 50;
 
     var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
-    var height = (meeting.DurationInMinutes) * (height30MinInc) / 30;
+    var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
 
     /* create an event div */
     var event = document.createElement('div');
     event.style.top = top;
     event.className = "event";
+    event.style.height = height;
 
     /* create an event header div and add to event div */
     var eventHeader = document.createElement('div');
@@ -118,7 +119,7 @@ function updateMeetings(meetings)
 }
 
 /**
- * test adding calendar events
+ * test adding calendar events, will delete later
  **/
 function setup() {
     console.log("setup()");
@@ -155,14 +156,14 @@ function setup() {
         Day: "tuesday"
     };
 
-    var cse100lectureTu = {
+    var cse100lectureWed = {
         type: "lecture",
         courseAbbreviation: "CSE 100",
         professor: "Alvarado, Christine",
         code: "A12",
-        StartTimeInMinutesAfterFirstHour: 90,
-        DurationInMinutes: 60,
-        Timespan: "9:00am - 10:00am",
+        StartTimeInMinutesAfterFirstHour: 120,
+        DurationInMinutes: 90,
+        Timespan: "9:30am - 11:00am",
         Day: "wednesday"
     };
 
@@ -177,11 +178,34 @@ function setup() {
         Day: "friday"
     };
 
+    var cse110lectureThur = {
+        type: "lecture",
+        courseAbbreviation: "CSE 110",
+        professor: "Gary Gilesspie",
+        code: "C02",
+        StartTimeInMinutesAfterFirstHour: 60,
+        DurationInMinutes: 60,
+        Timespan: "8:30am - 9:30am",
+        Day: "thursday"
+    };
+    var cse110labThur = {
+        type: "lab",
+        courseAbbreviation: "CSE 110",
+        professor: "Gary Gilesspie",
+        code: "C02",
+        StartTimeInMinutesAfterFirstHour: 210,
+        DurationInMinutes: 180,
+        Timespan: "11:00am - 2:00pm",
+        Day: "tuesday"
+    };
+
     meetings2[0] = cse20lectureMonday;
     meetings2[1] = cse20lectureWed;
     meetings2[2] = cse20disTu;
-    meetings2[3] = cse100lectureTu;
+    meetings2[3] = cse100lectureWed;
     meetings2[4] = cse100lectureFri;
+    meetings2[5] = cse110lectureThur;
+    meetings2[6] = cse110labThur;
 
     updateMeetings(meetings2);
 }
