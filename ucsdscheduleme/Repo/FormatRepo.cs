@@ -23,9 +23,10 @@ namespace ucsdscheduleme.Repo
             {
                 string courseAbbreviation = section.Course.CourseAbbreviation;
                 string professorName = section.Professor.Name;
-                string sectionCode = "";
+
                 foreach(Meeting meeting in section.Meetings)
                 {
+                    string sectionCode = meeting.Code;
                     string type = meeting.MeetingType.ToString();
 
                     DateTime start = meeting.StartTime;
