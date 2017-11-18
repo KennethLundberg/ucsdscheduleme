@@ -10,6 +10,11 @@ function insertMetadata(metadata)
 }
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    clearMeetings();
+    setup();
+});
+
 /*
  * Function: clearMeetings()
  * Param: none
@@ -49,8 +54,11 @@ function insertMeeting(meeting)
 {
     /* calculate top and height based on number of half hour increments after 7:30am and duration */
     var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
-    var height30MinInc = 50;
+    var height30MinInc = document.querySelector(".time > div").childNodes[1].offsetHeight;
     var timeOffSet = 50;
+
+    //var height1 = document.querySelector(".time").childNodes[1].offsetHeight;
+    //console.log(height1);
 
     var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
     var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
@@ -199,6 +207,17 @@ function setup() {
         Day: "tuesday"
     };
 
+    var cse112labThur = {
+        type: "lab",
+        courseAbbreviation:  "CSE 112",
+        professor: "Mystery",
+        code: "A23",
+        StartTimeInMinutesAfterFirstHour: 390,
+        DurationInMinutes: 120,
+        Timespan: "2:00pm - 4:00pm",
+        Day: "thursday"
+    };
+
     meetings2[0] = cse20lectureMonday;
     meetings2[1] = cse20lectureWed;
     meetings2[2] = cse20disTu;
@@ -206,6 +225,7 @@ function setup() {
     meetings2[4] = cse100lectureFri;
     meetings2[5] = cse110lectureThur;
     meetings2[6] = cse110labThur;
+    meetings2[7] = cse112labThur;
 
     updateMeetings(meetings2);
 }
