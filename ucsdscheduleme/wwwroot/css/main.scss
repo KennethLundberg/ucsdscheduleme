@@ -46,25 +46,6 @@ $row-height: 50px;
     order: $val;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: $primary-color;
-    border-radius: 10px;
-}
-
-::webkit-scrollbar-button {
-    width: 40px;
-    height: 40px;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: $secondary-color;
-}
-
 html, body {
     height: 100%;
     margin: 0;
@@ -319,34 +300,60 @@ ul {
     }
 }
 
-.class-list {
+.class {
+    border-top: 4px solid $secondary-color;
+    @include boxshadow();
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: $primary-color;
+    color: $text-white;
+    font-family: $font;
+    vertical-align: middle;
 
-    .class {
-        border-top: 4px solid $secondary-color;
-        @include boxshadow();
-        padding: 15px;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        background-color: $primary-color;
+    .class-icon {
+        cursor: pointer;
+        display: inline-block;
+        float: right;
+        border: none;
+        text-align: center;
+        vertical-align: text-bottom;
+        font-size: 18.4px;
+        line-height: 1em;
         color: $text-white;
-        font-family: $font;
-        vertical-align: middle;
 
-        .class-icon {
-            cursor: pointer;
-            display: inline-block;
-            float: right;
-            border: none;
-            text-align: center;
-            vertical-align: text-bottom;
-            font-size: 18.4px;
-            line-height: 1em;
-            color: $text-white;
-
-            &:hover {
-                color: $secondary-color;
-            }
+        &:hover {
+            color: $secondary-color;
         }
+    }
+}
+
+.generate-schedule-button {
+    cursor: pointer;
+    @include boxshadow();
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: $secondary-color;
+    color: $off-black;
+    font-family: $font;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+
+    &:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255,255,255, 0.2);
+    }
+
+    &:after {
+        content: "Generate Schedule";
+        color: $off-black;
     }
 }
 
