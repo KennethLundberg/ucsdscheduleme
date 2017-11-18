@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ucsdscheduleme.Data;
 using Microsoft.EntityFrameworkCore;
+using ucsdscheduleme.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ucsdscheduleme
 {
@@ -23,8 +27,23 @@ namespace ucsdscheduleme
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+
             services.AddDbContext<ScheduleContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ScheduleContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            { 
+                googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
+            });
 
             services.AddMvc();
         }
@@ -42,7 +61,14 @@ namespace ucsdscheduleme
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            var options = new RewriteOptions()
+                .AddRedirectToHttps();
+
+            app.UseRewriter(options);
+
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

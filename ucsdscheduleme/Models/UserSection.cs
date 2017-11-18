@@ -12,5 +12,6 @@ namespace ucsdscheduleme.Models
         public int SectionId { get; set; }
 
         public Section Section { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

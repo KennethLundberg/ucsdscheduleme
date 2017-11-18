@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ucsdscheduleme.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
