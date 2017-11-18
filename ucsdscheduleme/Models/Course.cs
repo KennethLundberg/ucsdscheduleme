@@ -13,7 +13,8 @@ namespace ucsdscheduleme.Models
         public string CourseAbbreviation { get; set; }
         [StringLength(50)]
         public string CourseName { get; set; }
-        public byte Units { get; set; }
+        [StringLength(6)]
+        public string Units { get; set; }
         public string Description { get; set; }
 
         public ICollection<Section> Sections { get; set; } = new List<Section>();

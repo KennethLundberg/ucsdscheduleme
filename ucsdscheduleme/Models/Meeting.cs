@@ -28,12 +28,11 @@ namespace ucsdscheduleme.Models
         [StringLength(3)]
         public string Code { get; set; }
         public Days Days { get; set; }
-        public int StartTime { get; set; }
-        public int EndTime { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
         public DateTime? StartDate { get; set; }
 
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
-        //public ICollection<Section> Section { get; set; } = new List<Section>();
     }
 }

@@ -5,11 +5,17 @@ namespace ucsdscheduleme.Models
 {
     public class ScheduleViewModel
     {
-        public List<Course> CourseList { get; set; } = new List<Course>();
+        public Metadata OverallMetadata { get; set; }
+        public List<Metadata> ClassMetadata { get; set; } = new List<Metadata>();
+        public List<Section> SectionList { get; set; } = new List<Section>();
+    }
 
-        public static implicit operator ScheduleViewModel(List<Section> v)
-        {
-            throw new NotImplementedException();
-        }
+    public struct Metadata
+    {
+        public decimal AverageGpaExpected { get; set; }
+        public decimal AverageGpaReceived { get; set; }
+        public decimal AverageTotalWorkload { get; set; }
+        public string CourseAbbreviation { get; set; }
+        public string ProfessorName { get; set; }
     }
 }

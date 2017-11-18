@@ -1,108 +1,195 @@
-﻿@{
+﻿@model ucsdscheduleme.Models.ScheduleViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        <li data-target="#myCarousel" data-slide-to="3"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how to build ASP.NET apps that can run anywhere.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
+<div class="flex-container">
+    <div class="middle">
+        <div class="calendar">
+            <div class="schedule">
+                <div id="monday" class="schedule-group">
+                    <div class="event">
+                        <div class="event-header">
+                            <div class="icon" id="lecture">LE</div>
+                            <div class="event-info">
+                                <span>CSE 110</span>
+                                <span>Gary Gillespie</span>
+                                <span>8:00am - 9:20am</span>
+                                <span>A00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="schedule-header"><span>Monday</span></div>
+                </div>
+                <div class="schedule-group">
+                    <div class="schedule-header"><span>Tuesday</span></div>
+                    <div class="event">
+                        <div class="event-header">
+                            <div class="icon" id="lab">LA</div>
+                            <div class="event-info">
+                                <span>CSE 110</span>
+                                <span>Gary Gillespie</span>
+                                <span>8:00am - 9:20am</span>
+                                <span>A00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-group">
+                    <div class="schedule-header"><span>Wednesday</span></div>
+                    <div class="event">
+                        <div class="event-header">
+                            <div class="icon" id="discussion">DI</div>
+                            <div class="event-info">
+                                <span>CSE 110</span>
+                                <span>Gary Gillespie</span>
+                                <span>8:00am - 9:20am</span>
+                                <span>A00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-group">
+                    <div class="schedule-header"><span>Thursday</span></div>
+                </div>
+                <div class="schedule-group">
+                    <div class="schedule-header"><span>Friday</span></div>
+                </div>
+            </div>
+            <div class="time">
+                <div>
+                    <div><span>07:30am</span></div>
+                    <div><span>08:00am</span></div>
+                    <div><span>08:30am</span></div>
+                    <div><span>09:00am</span></div>
+                    <div><span>09:30am</span></div>
+                    <div><span>10:00am</span></div>
+                    <div><span>10:30am</span></div>
+                    <div><span>11:00am</span></div>
+                    <div><span>11:30am</span></div>
+                    <div><span>12:00pm</span></div>
+                    <div><span>12:30pm</span></div>
+                    <div><span>01:00pm</span></div>
+                    <div><span>01:30pm</span></div>
+                    <div><span>02:00pm</span></div>
+                    <div><span>02:30pm</span></div>
+                    <div><span>03:00pm</span></div>
+                    <div><span>03:30pm</span></div>
+                    <div><span>04:00pm</span></div>
+                    <div><span>04:30pm</span></div>
+                    <div><span>05:00pm</span></div>
+                    <div><span>05:30pm</span></div>
+                    <div><span>06:00pm</span></div>
+                    <div><span>06:30pm</span></div>
+                    <div><span>07:00pm</span></div>
+                    <div><span>07:30pm</span></div>
+                    <div><span>08:00pm</span></div>
+                    <div><span>08:30pm</span></div>
+                    <div><span>09:00pm</span></div>
+                    <div><span>09:30pm</span></div>
+                    <div><span>10:00pm</span></div>
+                    <div><span>10:30pm</span></div>
+                    <div><span>11:00pm</span></div>
+                </div>
             </div>
         </div>
-        <div class="item">
-            <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    There are powerful new features in Visual Studio for building modern web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="item">
-            <img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Bring in libraries from NuGet, Bower, and npm, and automate tasks using Grunt or Gulp.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="item">
-            <img src="~/images/banner4.svg" alt="Microsoft Azure" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
 
-<div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518004">Bower</a> for managing client-side libraries</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+        <div class="bottom">
+            <ul>
+                </br>
+                TO-DO:
+                <li>- Finish calendar</li>
+                <li>- Make the event divs</li>
+                <li>- Destroy all computers in B260 and get arrested.</li>
+            </ul>
+        </div>
     </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699318">Add client packages using Bower.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
+
+    <div class="side left-bar">
+        <div>
+            <div id="logo">
+                <h2>ucsdschedule.me</h2>
+            </div>
+            <div id="colorstrip"></div>
+        </div>
+
+        <div class="searchbar-container">
+            <div class="searchbar">
+                <input type="text" id="search" placeholder="Search classes" name="q" />
+                <button type="submit" value="text" class="icon"><i class="fa fa-search"></i></button>
+                <div class="search-result" id="courseItems">
+                    <div class="courseItem">CSE 100</div>
+                    <div class="courseItem">CSE 101</div>
+                    <div class="courseItem">CSE 110</div>
+                </div>
+            </div>
+        </div>
+        <div class="class-list">
+
+        </div>
     </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
+
+    <div class="side right-bar">
+        <div id="averages">
+            <div id="overallStat">
+                <table class="statsdata" id="tabledata">
+                    <tr class="statsdata">
+                        <th class="statsdata"> Overall Avg. Workload: </th>
+                        <th class="statsdata"> <em> @Model.OverallMetadata.AverageTotalWorkload </em> </th>
+                    </tr>
+                    <tr class="statsdata">
+                        <th class="statsdata"> Overall Avg. GPA Expected: </th>
+                        <th class="statsdata"> <em> B+ (3.34) </em> </th>
+                    </tr>
+                    <tr class="statsdata">
+                        <th class="statsdata"> Overall Avg. Recieved: </th>
+                        <th class="statsdata"> <em> B- (2.99) </em> </th>
+                    </tr>
+                </table>
+            </div>
+            <div id="colorstrip"> </div>
+            <div id="metadata">
+                @foreach (var metadata in Model.ClassMetadata)
+                {
+                    <div class="courseStat" id="course1">
+                        <div id="coursetaken">
+                            <div id="coursename">@metadata.CourseAbbreviation</div>
+                            <div id="professorname">@metadata.ProfessorName</div>
+                            <div>Avg. Workload: @metadata.AverageTotalWorkload</div>
+                            <div>Avg. Grade Expected: @metadata.AverageGpaExpected</div>
+                            <div>Avg. Grade Received: @metadata.AverageGpaReceived</div>
+                        </div>
+                    </div>
+
+                }
+                <div class="courseStat" id="course1">
+                    <div id="coursetaken">
+                        <div id="coursename">CSE 110</div>
+                        <div id="professorname">Gary Gillespie</div>
+                        <div>Avg. Workload: 69 Hrs/Wk </div>
+                        <div>Avg. Grade Expected: F- (0.00)</div>
+                        <div>Avg. Grade Received: F- (0.00)</div>
+                    </div>
+                </div>
+                <div class="courseStat" id="course2">
+                    <div id="coursetaken">
+                        <div id="coursename">CSE 110</div>
+                        <div id="professorname">Professor Name</div>
+                        <div>Avg. Workload: 69 Hrs/Wk </div>
+                        <div>Avg. Grade Expected: F- (0.00)</div>
+                        <div>Avg. Grade Received: F- (0.00)</div>
+                    </div>
+                </div>
+                <div class="courseStat" id="course3">
+                    <div id="coursetaken">
+                        <div id="coursename">CSE 110</div>
+                        <div id="professorname">Gary Gillespie</div>
+                        <div>Avg. Workload: 69 Hrs/Wk </div>
+                        <div>Avg. Grade Expected: F- (0.00)</div>
+                        <div>Avg. Grade Received: F- (0.00)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
