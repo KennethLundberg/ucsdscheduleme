@@ -9,6 +9,15 @@ namespace ucsdscheduleme.Models
         public List<Metadata> ClassMetadata { get; set; } = new List<Metadata>();
         public List<Section> SectionList { get; set; } = new List<Section>();
         public List<CalendarEvent> Events { get; set; } = new List<CalendarEvent>();
+        public List<OneTimeEvent> OneTimeEvents { get; set; }
+    }
+
+    public class OneTimeEvent
+    {
+        public string CourseAbbreviation { get; set; }
+        public string DateAndTime { get; set; }
+        public string Location { get; set; }
+        public string Type { get; set; }
     }
 
     public struct Metadata

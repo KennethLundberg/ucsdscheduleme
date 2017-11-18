@@ -8,6 +8,7 @@ using ucsdscheduleme.Models;
 using ucsdscheduleme.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using ucsdscheduleme.Repo;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -26,34 +27,16 @@ namespace ucsdscheduleme.Controllers
         public IActionResult Index()
         {
 
-            ScheduleViewModel model = new ScheduleViewModel();
+            ScheduleViewModel model;
 
-            // Find our user with the auth token
+            // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
 
-            model.SectionList = user.UserSections.Select(us => us.Section).ToList();
+            // Grab schedule from db.
+            List<Section> schedule = user.UserSections.Select(us => us.Section).ToList();
 
-            Metadata overallMetadata = model.OverallMetadata;
-
-            decimal numberOfCourses = model.SectionList.Count;
-
-            foreach (var section in model.SectionList)
-            {
-                var capeForSection = section.Course.Cape.First(ca => ca.Professor == section.Professor);
-
-                overallMetadata.AverageGpaExpected += capeForSection.AverageGradeExpected / numberOfCourses;
-                overallMetadata.AverageGpaReceived += capeForSection.AverageGradeReceived / numberOfCourses;
-                overallMetadata.AverageTotalWorkload += capeForSection.StudyHoursPerWeek;
-
-                model.ClassMetadata.Add(new Metadata
-                {
-                    AverageGpaExpected = capeForSection.AverageGradeExpected,
-                    AverageGpaReceived = capeForSection.AverageGradeReceived,
-                    AverageTotalWorkload = capeForSection.StudyHoursPerWeek,
-                    CourseAbbreviation = section.Course.CourseAbbreviation,
-                    ProfessorName = section.Professor.Name
-                });
-            }
+            // Populate model with schedule info.
+            model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
 
             return View(model);
         }
