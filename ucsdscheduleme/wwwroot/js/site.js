@@ -1,4 +1,5 @@
-﻿/** Randomly select from demo data - TODO Delete later! **/
+﻿/** START OF DELETE **/
+/* Randomly select from demo data - TODO Delete later! */
 var bases = ["A", "B"];
 var randomBaseIndex = Math.floor(Math.random() * 2);
 var randomSelectionIndex = Math.floor(Math.random() * 2);
@@ -321,7 +322,20 @@ var courses = {
     }
     
 }
+/**
+ * test adding calendar events, will delete later
+ **/
+function setup() {
+    clearMeetings();
+    console.log("setup()");
+    updateMeetings(courses);
+}
+/** END OF DELETE **/
 
+/* called when DOM is ready */
+document.addEventListener('DOMContentLoaded', function() {
+    setup();
+});
 
 // Write your JavaScript Code.
 function updateMetadata(metadataList)
@@ -334,27 +348,24 @@ function insertMetadata(metadata)
 
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    setup();
-});
-
-
 /*
  * Function: clearMeetings()
  * Param: none
- * Description: Will clear the calendar of events by removing all elements with class 'event'
+ * Description: Clears the calendar of events by removing all elements with class 'event'
  */
 function clearMeetings()
 {
-    console.log("clearMeetings");
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName('event');
 
-    /* remove first element in resulting list */
+    /* remove first element in resulting list until all children are deleted*/
     while(elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
+}
+
+function calculateMeetingPosition() {
+    
 }
 
 /*
@@ -383,8 +394,6 @@ function clearMeetings()
  */
 function insertMeeting(meeting)
 {
-    console.log("insertingMeeting() " + meeting);
-
     /* calculate top and height based on number of half hour increments after 7:30am and duration */
     var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
     var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
@@ -457,7 +466,7 @@ function insertMeeting(meeting)
  * Param: meetings - the JSON object with a list of selected bases, selections
  *      See global variable TODO for the structure
  * Description: From the list of all bases and sections, get only the selected ones.
- *  Then add each event to the calendar by calling insertMeeting on each meeting
+ *      Then add each event to the calendar by calling insertMeeting on each meeting
  */
 function updateMeetings(meetings)
 {
@@ -477,25 +486,13 @@ function updateMeetings(meetings)
             insertMeeting(baseElements[i]);
         }
 
-        if(sectionElements == null || sectionElements.length == 0) {
-            console.log(baseElements["CourseAbbreviation"] + ": " + selectedBase + " " + selectedSection + " is null");
-        }
+        /* check if there are any sections */
+        if(sectionElements != null) {
 
-        /* insert all section elements */
-        for(var i = 0; i < sectionElements.length; i++) {
-            insertMeeting(sectionElements[i]);
+            /* insert all section elements */
+            for(var i = 0; i < sectionElements.length; i++) {
+                insertMeeting(sectionElements[i]);
+            }
         }
-
     }
-
-}
-
-
-/**
- * test adding calendar events, will delete later
- **/
-function setup() {
-    clearMeetings();
-    console.log("setup()");
-    updateMeetings(courses);
 }
