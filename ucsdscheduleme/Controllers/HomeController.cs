@@ -91,28 +91,28 @@ namespace ucsdscheduleme.Controllers
             switch (optimization)
             {
                 case Optimization.HighestGPA:
-                    //scheduule = functioin(data);
+                    schedule = scheduleRepo.HighestGPA(data);
                     break;
-                case Optimization.HighestRMP:
-                    //scheduule = functioin(data);
+                case Optimization.RMPRating:
+                    schedule = scheduleRepo.RMPRating(data);
                     break;
-                case Optimization.EarlyEnd:
-                    //scheduule = functioin(data);
+                case Optimization.EarliestEnd:
+                    schedule = scheduleRepo.EarliestEnd(data);
                     break;
-                case Optimization.LateStart:
-                    //scheduule = functioin(data);
+                case Optimization.LatestStart:
+                    schedule = scheduleRepo.LatestStart(data);
                     break;
                 case Optimization.MostDays:
-                    //scheduule = functioin(data);
+                    schedule = scheduleRepo.MostDays(data);
                     break;
                 case Optimization.LeastDays:
-                    //scheduule = functioin(data);
+                    schedule = scheduleRepo.LeastDays(data);
                     break;
                 case Optimization.MostGaps:
-                    //scheduule = functioin(data);
+                    schedule = scheduleRepo.MostGaps(data);
                     break;
                 case Optimization.LeastGaps:
-                    //scheduule = functioin(data);
+                    schedule = scheduleRepo.LeastGaps(data);
                     break;
             }
 
