@@ -413,7 +413,18 @@ namespace HtmlAgilitySandbox
                 currentCourse.Sections.Add(section);
             }
 
-            // TODO use context to insert to db
+            // Pull from db to check for existence later on.
+            /*List<Course> dbCourses = _context.Courses.ToList();
+            List<Section> dbSections = _context.Sections.ToList();
+            List<Meeting> dbMeetings = _context.Meetings.ToList();
+            List<Location> dbLocations = _context.Locations.ToList();
+            List<Professor> dbProfessors = _context.Professor.ToList();*/
+
+            // TODO Courses are always gonna be unique between each quarter
+            foreach (Course course in courseList)
+            {
+                _context.Courses.Add(course);
+            }
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HtmlAgilitySandbox;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
 
@@ -15,7 +16,10 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            Course CSE20 = new Course()
+            ClassScrape classScraper = new ClassScrape("WI18", "cse 1-20");
+            classScraper.Update();
+
+            /*Course CSE20 = new Course()
             {
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
@@ -81,7 +85,7 @@ namespace ucsdscheduleme.Data
             context.Courses.Add(CSE20);
 
             context.SaveChanges();
-
+*/
             RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
             scrapeRMP.Update();
 
