@@ -335,7 +335,7 @@ function setup() {
 
 /* called when DOM is ready */
 document.addEventListener('DOMContentLoaded', function() {
-    //setup();
+    setup();
 });
 
 // Write your JavaScript code.
@@ -490,12 +490,12 @@ function updateMeetings(meetings)
     for(meeting in meetings) {
 
         /* extract selected base and section - the events to display on calendar */
-        var selectedBase = courses[meeting]["selectedBase"]
-        var selectedSection = courses[meeting]["selectedSection"]
+        var selectedBase = courses[meeting].selectedBase;
+        var selectedSection = courses[meeting].selectedSection;
 
         /* get list of selected base (i.e. lectures) and section elements (i.e. discussions) */
-        var baseElements = courses[meeting]["bases"][selectedBase]["baseElements"];
-        var sectionElements = courses[meeting]["bases"][selectedBase]["sectionElements"][selectedSection];
+        var baseElements = courses[meeting].bases[selectedBase].baseElements;
+        var sectionElements = courses[meeting].bases[selectedBase].sectionElements[selectedSection];
 
         /* insert all base elements */
         for(var i = 0; i < baseElements.length; i++) {
