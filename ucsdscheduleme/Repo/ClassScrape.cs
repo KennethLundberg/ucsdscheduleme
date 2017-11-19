@@ -12,6 +12,11 @@ namespace HtmlAgilitySandbox
     class ClassScrape
     {
         private readonly ScheduleContext _context;
+        // Sending in context to files in /repo.
+        public ClassScrape(ScheduleContext context)
+        {
+            _context = context;
+        }
 
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -60,6 +65,15 @@ namespace HtmlAgilitySandbox
         public ClassScrape(string selectedTerm, string courses)
         {
             _actFormRequest = new ActFormRequest(selectedTerm, courses);
+        }
+
+        /// <summary>
+        /// Called from ScrapeRepo Update(). The queried courses and term are in the _actFormRequest member.
+        /// Calls appropriate functions below to fulfill the query and update the db.
+        /// </summary>
+        public void Update()
+        {
+            InsertDataFromHtmlPages(GetAllDocumentsForQuery());
         }
 
         /// <summary>
@@ -209,10 +223,6 @@ namespace HtmlAgilitySandbox
                         string classNum = classNumberTDNode.InnerText;
                         if (classNum != currentClassNum)
                         {
-                            // Create new course for course list.
-                            currentClassNum = classNum;
-                            currentCourse = new Course();
-
                             // Trim the class name and units fields.
                             HtmlNode classNameNode = classNameTDNode.FirstChild.NextSibling.FirstChild;
                             string className = classNameNode.InnerText;
@@ -221,12 +231,16 @@ namespace HtmlAgilitySandbox
                             string classUnits = classUnitsNode.InnerText;
                             string classUnitsTrimSpaces = Regex.Replace(classUnits, @"\s+", "");
                             string classUnitsTrimUnits = classUnitsTrimSpaces.Replace("Units", "");
-                            string classUnitsFinal = classUnitsTrimUnits.Trim(unitsTrimChars);
+                            string classUnitsTrimmed = classUnitsTrimUnits.Trim(unitsTrimChars);
 
-                            // Set course members and add it to the course list.
-                            currentCourse.CourseName = classNameTrimmed;
-                            currentCourse.CourseAbbreviation = "CSE " + classNum;       // TODO fix prefix
-                            currentCourse.Units = classUnitsFinal;
+                            // Create new course for course list.
+                            currentClassNum = classNum;
+                            currentCourse = new Course
+                            {
+                                CourseName = classNameTrimmed,
+                                CourseAbbreviation = "CSE " + classNum,       // TODO fix prefix
+                                Units = classUnitsTrimmed
+                            };
                             courseList.Add(currentCourse);
                         }
                     }
@@ -240,7 +254,7 @@ namespace HtmlAgilitySandbox
                         // Create new meeting and set meeting type.
                         Meeting currentMeeting = new Meeting();
                         string meetingType = meetingTypeTDNode.InnerText;
-                        currentMeeting.MeetingType = getMeetingType(meetingType);
+                        currentMeeting.MeetingType = GetMeetingType(meetingType);
 
                         // Set code.
                         HtmlNode codeNode = meetingTypeTDNode.NextSibling.NextSibling;
@@ -253,7 +267,7 @@ namespace HtmlAgilitySandbox
                         {
                             // Set days.
                             string days = daysNode.InnerText.Trim();
-                            currentMeeting.Days = getDays(days);
+                            currentMeeting.Days = GetDays(days);
 
                             // Set time after formatting it into DateTime.
                             HtmlNode timeNode = daysNode.NextSibling.NextSibling;
@@ -264,12 +278,13 @@ namespace HtmlAgilitySandbox
                             currentMeeting.EndTime = DateTime.ParseExact(endTime, ActStrings.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
 
                             // Set building and classroom.
-                            Location classLocation = new Location();
                             HtmlNode buildingNode = timeNode.NextSibling.NextSibling;
-                            classLocation.Building = buildingNode.InnerText;
                             HtmlNode roomNode = buildingNode.NextSibling.NextSibling;
-                            classLocation.RoomNumber = roomNode.InnerText;
-
+                            Location classLocation = new Location
+                            {
+                                Building = buildingNode.InnerText,
+                                RoomNumber = roomNode.InnerText
+                            };
                             currentMeeting.Location = classLocation;
 
                             // Check if instructor is not determined yet (currently set as "Staff").
@@ -284,10 +299,12 @@ namespace HtmlAgilitySandbox
                         // Meeting exists but its day, time (not initialized in case of TBA) and location are TBA.
                         else if (daysNode.InnerText.Contains("TBA"))
                         {
-                            currentMeeting.Days = getDays("TBA");
-                            Location classLocation = new Location();
-                            classLocation.Building = "TBA";
-                            classLocation.RoomNumber = "TBA";
+                            currentMeeting.Days = GetDays("TBA");
+                            Location classLocation = new Location
+                            {
+                                Building = "TBA",
+                                RoomNumber = "TBA"
+                            };
                             currentMeeting.Location = classLocation;
 
                             // Check for edge case where professor field is empty, so we use the previous professor.
@@ -302,13 +319,18 @@ namespace HtmlAgilitySandbox
                         if (!String.IsNullOrEmpty(sectionIDNode.InnerText.Trim()) && !sectionIDNode.InnerText.Trim().Contains("&nbsp"))
                         {
                             // Section ID exists, so create new section and add current meeting to section.
-                            Section currentSection = new Section();
-                            currentSection.Ticket = Int32.Parse(sectionIDNode.InnerText.Trim());
-                            currentSection.Course = currentCourse;
+                            Professor prof = new Professor
+                            {
+                                Name = currentProf
+                            };
+
+                            Section currentSection = new Section
+                            {
+                                Ticket = Int32.Parse(sectionIDNode.InnerText.Trim()),
+                                Course = currentCourse,
+                                Professor = prof
+                            };
                             currentSection.Meetings.Add(currentMeeting);
-                            Professor prof = new Professor();
-                            prof.Name = currentProf;
-                            currentSection.Professor = prof;
                             sectionList.Add(currentSection);
                         }
                         else
@@ -332,7 +354,7 @@ namespace HtmlAgilitySandbox
 
                         // Set meeting type.
                         string testType = testTypeTDNode.InnerText;
-                        currentMeeting.MeetingType = getMeetingType(testType);
+                        currentMeeting.MeetingType = GetMeetingType(testType);
 
                         // Set date.
                         HtmlNode testDateNode = testTypeTDNode.NextSibling.NextSibling;
@@ -342,7 +364,7 @@ namespace HtmlAgilitySandbox
                         // Set test day.
                         HtmlNode testDayNode = testDateNode.NextSibling.NextSibling;
                         string days = testDayNode.InnerText.Trim();
-                        currentMeeting.Days = getDays(days);
+                        currentMeeting.Days = GetDays(days);
 
                         // Set time after formatting it into DateTime.
                         HtmlNode testTimeNode = testDayNode.NextSibling.NextSibling;
@@ -360,9 +382,11 @@ namespace HtmlAgilitySandbox
                         string testRoom = testRoomNode.InnerText;
 
                         // Create new location to insert into meeting.
-                        Location classLocation = new Location();
-                        classLocation.Building = testBuilding;
-                        classLocation.RoomNumber = testRoom;
+                        Location classLocation = new Location
+                        {
+                            Building = testBuilding,
+                            RoomNumber = testRoom
+                        };
                         currentMeeting.Location = classLocation;
 
                         // Push to all sections currently in section list.
@@ -397,7 +421,7 @@ namespace HtmlAgilitySandbox
         /// </summary>
         /// <returns>The MeetingType.</returns>
         /// <param name="meetingType">String representation of the meeting type.</param>
-        public static MeetingType getMeetingType(string meetingType)
+        public static MeetingType GetMeetingType(string meetingType)
         {
             switch (meetingType)
             {
@@ -423,7 +447,7 @@ namespace HtmlAgilitySandbox
         /// </summary>
         /// <returns>The enumerated days of the meeting.</returns>
         /// <param name="days">String that represents the days of the meeting.</param>
-        public static Days getDays(string days)
+        public static Days GetDays(string days)
         {
             // Initialize the return value.
             Days daysEnumerated = 0;

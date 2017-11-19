@@ -14,6 +14,11 @@ namespace ucsdscheduleme.Repo
     public class RateMyProfessorScrape
     {
         private readonly ScheduleContext _context;
+        // Sending in context to files in /repo.
+        public RateMyProfessorScrape(ScheduleContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Contains XPaths used in scraping data from RateMyProfessors

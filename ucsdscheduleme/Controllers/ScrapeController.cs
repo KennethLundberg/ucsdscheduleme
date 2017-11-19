@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
+using ucsdscheduleme.Data;
 
 namespace ucsdscheduleme.Controllers
 {
     public class ScrapeController : Controller
     {
+        private readonly ScheduleContext _context;
+        // Sending in context to files in /repo.
+        public ScrapeController(ScheduleContext context)
+        {
+            _context = context;
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {

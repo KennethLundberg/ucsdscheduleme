@@ -11,6 +11,11 @@ namespace ucsdscheduleme.Repo
     public class CapeScrape
     {
         private readonly ScheduleContext _context;
+        // Sending in context to files in /repo.
+        public CapeScrape(ScheduleContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Contains XPaths used in scraping data from Cape
@@ -65,7 +70,7 @@ namespace ucsdscheduleme.Repo
                         // as a empty list.
 
                         // Gets the CAPE page for the specific professor
-                        string capePageURL = GenerateURL(currProfessor.Name, course.CourseName);
+                        string capePageURL = GenerateURL(currProfessor.Name, course.CourseAbbreviation);
 
                         // If there is cape review page for the specific professor and specific course
                         if (capePageURL.Length != 0)
