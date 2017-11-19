@@ -32,17 +32,27 @@ namespace ucsdscheduleme
                 options.Filters.Add(new RequireHttpsAttribute());
             });
 
+            // Remote database
             services.AddDbContext<ScheduleContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
 
+            // SqlServer LocalDB
+            //services.AddDbContext<ScheduleContext>(options => 
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScheduleContext>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication().AddGoogle(googleOptions =>
             { 
-                googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
-                googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
+                // Max's Google API ids
+                // googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
+                // googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
+
+                // Sean's Google API ids
+                googleOptions.ClientId = "226496862693-jt3ln0g49bsusoo9h0f1b8hi8u4aee8k.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "ZFKYjlsmqqtsXqiFnHyRglks";
             });
 
             services.AddMvc();
