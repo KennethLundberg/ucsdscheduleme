@@ -129,11 +129,8 @@ namespace ucsdscheduleme.Repo
             JArray docsNode = (JArray)respondNode["docs"];
             JValue pk_id = (JValue)docsNode[0]["pk_id"];
 
-            // Unique professor ID
-            string id = pk_id.ToString();
-  
-            return (id);
-
+            // Return the unique professor ID
+            return (pk_id.ToString());
         }
 
         /// <summary>
@@ -163,6 +160,7 @@ namespace ucsdscheduleme.Repo
             // Get Would Take Again Info
             HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.WouldTakeAgainPath);
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
+            wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
 
             // Get Difficulty Level Info
             HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
@@ -177,8 +175,12 @@ namespace ucsdscheduleme.Repo
 
             // Professor's Full Name
             string professorFullName;
+            
+            // Check to see if this professor has any info available on the page
             if (professorIsRated)
             {
+                
+                // Scrape the professor's full name(if not, leave "N/A" )
                 HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorFirstNamePath);
                 string professorFirstName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
                 professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorMidNamePath);
@@ -186,6 +188,7 @@ namespace ucsdscheduleme.Repo
                 professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorLastNamePath);
                 string professorLastName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
 
+                // Handle the case when the professor has a middle name
                 if (string.IsNullOrEmpty(professorMiddleName))
                 {
                     professorFullName = professorFirstName + " " + professorLastName;
@@ -198,11 +201,10 @@ namespace ucsdscheduleme.Repo
             }
             else
             {
+                // If the professor has no info on the RMP page
                 HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorNotRatedNamePath);
                 professorFullName = (professorNode != null) ? professorNode.InnerText : "Professor Not Found";
             }
-
-            wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
 
             // Insert the results into their proper fields and return ScrapeResult obj
             ScrapeResult rateMyProfessorResult = new ScrapeResult()
