@@ -415,8 +415,8 @@ function insertMeeting(meeting)
 {
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
-    var top = pos['top'];
-    var height = pos['height'];
+    var top = pos.top;
+    var height = pos.height;
     
     /* create an event div */
     var event = document.createElement('div');
