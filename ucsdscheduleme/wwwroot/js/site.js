@@ -364,8 +364,29 @@ function clearMeetings()
     }
 }
 
-function calculateMeetingPosition() {
-    
+/*
+ * Function: calculateMeetingPosition(meeting)
+ * Param: meeting - the meeting to insert
+ * Description: Based on the time and duration of the event, calculate the top and height of the event element.
+ *      This can be done because the height of any 30 minute increment is fixed, so a calculation of the top is just
+ *      (# half hour increments after 7:30 am) * (height of individual 30 min increment) in px.
+ *      Then height is just (duration of event in minutes) * (height of 30 min section) / 30.
+ * Return: returns the top and height values
+ */
+function calculateMeetingPosition(meeting) {
+
+    /* calculate top and height based on number of half hour increments after 7:30am and duration */
+    var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
+    var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
+    var timeOffSet = 50;
+
+    var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
+    var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
+
+    return {
+        top: top,
+        height: height
+    };
 }
 
 /*
@@ -385,23 +406,17 @@ function calculateMeetingPosition() {
         </div>
     </div>
  * Creates each div and create the div hiearchy as shown above. Create and add the spans to the "event-info"
- * div. Populate divs and spans with data from the parameter.
- * Based on the time and duration of the event, calculate the top and height of the event element.
- *      This can be done because the height of any 30 minute increment is fixed, so a calculation of the top is just
- *      (# half hour increments after 7:30 am) * (height of individual 30 min increment) in px.
- *      Then height is just (duration of event in minutes) * (height of 30 min section) / 30.
+ * div. Populate divs and spans with data from the parameter. Use calculateMeetingPosition function to size
+ * and place the event div.
  *  Each div is assigned the appropriate class and id.
  */
 function insertMeeting(meeting)
 {
-    /* calculate top and height based on number of half hour increments after 7:30am and duration */
-    var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
-    var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
-    var timeOffSet = 50;
-
-    var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
-    var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
-
+    /* Calculate the meeting position using helper function */
+    var pos = calculateMeetingPosition(meeting);
+    var top = pos['top'];
+    var height = pos['height'];
+    
     /* create an event div */
     var event = document.createElement('div');
     event.style.top = top;
