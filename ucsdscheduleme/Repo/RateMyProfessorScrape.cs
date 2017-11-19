@@ -90,7 +90,7 @@ namespace ucsdscheduleme.Repo
 
             // Generate the URL with the first and last name
             string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
-                firstName[0].ToLower() + "+" + lastName[0].ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
+                firstName[1].ToLower() + "+" + lastName[0].ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
                 "fullname_t%5E2000+teacherfullname_autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&" +
                 "siteName=rmp&rows=20&group=off&group.field=content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%" +
                 "22University+of+California+San+Diego%22";
@@ -121,7 +121,7 @@ namespace ucsdscheduleme.Repo
 
             // Get rid of extra chars in the JSON returned from the request
             myContent = myContent.Replace("noCB(", "");
-            myContent = myContent.Replace(")", "");
+            myContent = myContent.Replace(");", "");
 
             // Parse the JSON to get pk_id of the professor 
             JObject responseObj = JObject.Parse(myContent);
@@ -202,13 +202,15 @@ namespace ucsdscheduleme.Repo
                 professorFullName = (professorNode != null) ? professorNode.InnerText : "Professor Not Found";
             }
 
+            wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
+
             // Insert the results into their proper fields and return ScrapeResult obj
             ScrapeResult rateMyProfessorResult = new ScrapeResult()
             {
                 InstructorName = professorFullName,
-                OverallQuality = qualityRate,
-                WouldTakeAgain = wouldTakeAgainRate,
-                LevelOfDifficulty = difficultyLevelRate
+                OverallQuality = Convert.ToDecimal(qualityRate),
+                WouldTakeAgain = Convert.ToDecimal(wouldTakeAgainRate),
+                LevelOfDifficulty = Convert.ToDecimal(difficultyLevelRate)
 
             };
 

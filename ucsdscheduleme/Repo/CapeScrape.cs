@@ -196,7 +196,9 @@ namespace ucsdscheduleme.Repo
             }
             else
             {
-                avgGradeExpected = (avgGradeExpectedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
+                avgGradeExpected = (avgGradeExpectedCheck.Substring(avgGradeExpectedCheck.IndexOf("(")));
+                avgGradeExpected = avgGradeExpected.Replace("(","");
+                avgGradeExpected = avgGradeExpected.Replace(")","");
             }
 
             // Gather average grade received, if valid only grabs letter grade portion of string
@@ -208,7 +210,9 @@ namespace ucsdscheduleme.Repo
             }
             else
             {
-                avgGradeReceived = (avgGradeReceivedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
+                avgGradeReceived = (avgGradeReceivedCheck.Substring(avgGradeReceivedCheck.IndexOf('(')));
+                avgGradeReceived = avgGradeReceived.Replace("(","");
+                avgGradeReceived = avgGradeReceived.Replace(")","");
             }
 
             // Make a scrapeResult object to store the result
@@ -221,8 +225,8 @@ namespace ucsdscheduleme.Repo
                 RecommendedClass = Convert.ToDecimal(recCourseMean),
                 RecommendedProfessor = Convert.ToDecimal(recProfMean),
                 StudyHoursPerWeek = Convert.ToDecimal(studyHoursMean),
-                AverageGradeExpected = avgGradeExpected,
-                AverageGradeReceived = avgGradeReceived
+                AverageGradeExpected = Convert.ToDecimal(avgGradeExpected),
+                AverageGradeReceived = Convert.ToDecimal(avgGradeReceived)
             };
             return result;
         }
