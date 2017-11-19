@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ucsdscheduleme.Models;
+using ucsdscheduleme.Repo;
 
 namespace ucsdscheduleme.Data
 {
@@ -11,11 +12,84 @@ namespace ucsdscheduleme.Data
         public static void Initialize(ScheduleContext context)
         {
             // TODO put back before commiting
-            //context.Database.EnsureDeleted();
-            //context.Database.EnsureCreated();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            Course CSE20 = new Course()
+            {
+                CourseAbbreviation = "CSE20",
+                CourseName = "Intro / Discrete Mathematics",
+                Units = "4",
+                Description = ""
+            };
+
+            Professor MinnesKemp = new Professor()
+            {
+                Name = "Altintas De Callaf, Ilkay ",
+            };
+
+
+            Professor RickOrd = new Professor()
+            {
+                Name = "Gillespie, Gary N",
+            };
+
+            // Making Course Object
+            Course CSE11 = new Course()
+            {
+                CourseAbbreviation = "CSE11",
+                CourseName = "Intr/Computer Sci&Obj-Ori: Java",
+                Units = "4",
+                Description = ""
+                // Cape
+            };
+            // Making Section Object
+            Section CSE20Section1 = new Section()
+            {
+                Ticket = 915105,
+                Professor = MinnesKemp,
+            };
+            Section CSE20Section2 = new Section()
+            {
+                Ticket = 915106,
+                Professor = MinnesKemp,
+            };
+            // Making Section Object
+            Section CSE11A = new Section()
+            {
+                Professor = RickOrd,
+                Ticket = 915077
+            };
+            // Making Section Object
+            Section CSE11B = new Section()
+            {
+                Ticket = 915080,
+                Professor = RickOrd
+            };
+
+            context.Professor.Add(RickOrd);
+            context.Professor.Add(MinnesKemp);
+            context.Sections.Add(CSE20Section1);
+            context.Sections.Add(CSE20Section2);
+            context.Sections.Add(CSE11A);
+            context.Sections.Add(CSE11B);
+            CSE11.Sections.Add(CSE11A);
+            CSE11.Sections.Add(CSE11B);
+            CSE20.Sections.Add(CSE20Section1);
+            CSE20.Sections.Add(CSE20Section2);
+            context.Courses.Add(CSE11);
+            context.Courses.Add(CSE20);
+
+            context.SaveChanges();
+
+            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
+            scrapeRMP.Update();
+
+            CapeScrape scrapeCape = new CapeScrape(context);
+            scrapeCape.Update();
 
             // Making Location objects
-            Location CENTR115 = new Location()
+            /*Location CENTR115 = new Location()
             {
                 RoomNumber = "115", 
                 Building = "Center"
@@ -525,6 +599,7 @@ namespace ucsdscheduleme.Data
                 Professor = RickOrd,
                 Ticket = 915077
             };
+
 
             // Adding Meetings to the sections
             CSE11A.Meetings.Add(CSE11Discussion);
@@ -1154,7 +1229,7 @@ namespace ucsdscheduleme.Data
 
             var count = context.Sections.First().Meetings.Count;
 
-            bool test = true;
+            bool test = true;*/
         }
     }
 }

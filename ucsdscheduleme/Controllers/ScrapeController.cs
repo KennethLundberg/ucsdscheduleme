@@ -31,11 +31,11 @@ namespace ucsdscheduleme.Controllers
         {
 
             // Scrape a single cape at specified URL by calling code in repo folder
-            CapeScrape scrapeRepo = new CapeScrape();
+            //CapeScrape scrapeRepo = new CapeScrape();
             switch (scrape.ScrapeSite)
             {
                 case ScrapeSite.Cape:
-                    scrape.ScrapeResults = scrapeRepo.InsertDataFromHtmlPage(scrape.Url);
+                    //scrape.ScrapeResults = scrapeRepo.InsertDataFromHtmlPage(scrape.Url);
                     break;
                 case ScrapeSite.RateMyProfessor:
                     //scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
