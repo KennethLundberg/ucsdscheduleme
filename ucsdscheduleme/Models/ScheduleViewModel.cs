@@ -11,6 +11,27 @@ namespace ucsdscheduleme.Models
         public List<OneTimeEvent> OneTimeEvents { get; set; }
     }
 
+    public class NewScheduleViewModel
+    {
+        public Metadata OverallMetadata { get; set; }
+        public Dictionary<string, CourseViewModel> Courses { get; set; }
+    }
+
+    public class CourseViewModel
+    {
+        public string SelectedBase { get; set; }
+        public string SelectedSection { get; set; }
+        public Dictionary<string, BaseViewModel> Bases { get; set; }
+        public List<OneTimeEvent> OneTimeEvents { get; set; }
+    }
+
+    public class BaseViewModel
+    {
+        public List<CalendarEvent> BaseElements { get; set; }
+        public Dictionary<string, CalendarEvent> SectionElements { get; set; }
+        public List<Metadata> Metadata { get; set; }
+    }
+
     public class OneTimeEvent
     {
         public string CourseAbbreviation { get; set; }

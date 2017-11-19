@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
 using ucsdscheduleme.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using ucsdscheduleme.Repo;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 
 namespace ucsdscheduleme.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
@@ -96,11 +92,55 @@ namespace ucsdscheduleme.Controllers
             return Json(suggestions);
         }
 
-        public IActionResult GetSectionsForBase()
+        public IActionResult GetModelSample()
         {
-            return null;
-        }
+            NewScheduleViewModel m = new NewScheduleViewModel
+            {
+                OverallMetadata = new Metadata
+                {
+                    AverageGpaExpected = 3.5M,
+                    AverageGpaReceived = 3.4M,
+                    AverageTotalWorkload = 6.7M
+                }
+            };
 
-        //public IActionResult GetSectionsFor
+            Dictionary<string, CourseViewModel> c = new Dictionary<string, CourseViewModel>();
+            m.Courses = c;
+
+            CalendarEvent ce = new CalendarEvent()
+            {
+                CourseAbbreviation = "CSE110",
+                Day = "Monday",
+                StartTimeInMinutesAfterFirstHour = 30,
+                DurationInMinutes = 60,
+                ProfessorName = "John Cena"
+            };
+
+            List<CalendarEvent> be = new List<CalendarEvent>() { ce };
+
+            Dictionary<string, CalendarEvent> se = new Dictionary<string, CalendarEvent>() { { "1234", ce } };
+
+            BaseViewModel b1 = new BaseViewModel()
+            {
+                BaseElements = be,
+                SectionElements = se
+            };
+
+
+            Dictionary<string, BaseViewModel> b = new Dictionary<string, BaseViewModel>()
+            {
+                { "Gary", b1 }
+            };
+
+
+            CourseViewModel c1 = new CourseViewModel
+            {
+                Bases = b,
+                SelectedBase = "Gary",
+                SelectedSection = "1234"
+            };
+
+            return (Json(m));
+        }
     }
 }
