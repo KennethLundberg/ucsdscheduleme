@@ -21,130 +21,130 @@ var courses = {
                 //Array of base object calenar events here (like lectures)
                 "baseElements": [
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 30,
-                        DurationInMinutes: 50,
-                        Timespan: "8:00am - 8:50am",
-                        Day: "monday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "monday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 30,
-                        DurationInMinutes: 50,
-                        Timespan: "8:00am - 8:50am",
-                        Day: "wednesday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "wednesday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 30,
-                        DurationInMinutes: 50,
-                        Timespan: "8:00am - 8:50am",
-                        Day: "friday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "friday"
                     }
                 ],
                 "sectionElements": {
                     //Array of this section specific courses here
                     "90210": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 101",
-                            Professor: "Miles, Jones",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (10*60+30),
-                            DurationInMinutes: 110,
-                            Timespan: "6:00pm - 7:50pm",
-                            Day: "tuesday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 110,
+                            timespan: "6:00pm - 7:50pm",
+                            day: "tuesday"
                         }
                     ],
                     "91023": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 101",
-                            Professor: "Miles, Jones",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (11*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "7:00pm - 8:50pm",
-                            Day: "tuesday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            durationInMinutes: 50,
+                            timespan: "7:00pm - 8:50pm",
+                            day: "tuesday"
                         }
                     ]
                 },
                 "metadata": [
                     {
-                        CourseAbbreviation: "CSE 110",
-                        Professor: "Gary Gillespie",
-                        AvgWorkload: "Avg. Workload: 69 Hrs/Wk ",
-                        AvgGradeExpected: "Avg. Grade Expected: F- (0.00)",
-                        AvgGradeReceived: "Avg. Grade Received: F- (0.00)",
+                        courseAbbreviation: "CSE 110",
+                        professor: "Gary Gillespie",
+                        avgWorkload: "Avg. Workload: 69 Hrs/Wk ",
+                        avgGradeExpected: "Avg. Grade Expected: F- (0.00)",
+                        avgGradeReceived: "Avg. Grade Received: F- (0.00)",
                     }
                 ]
             },
             "B": {
                 "baseElements": [
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 150,
-                        DurationInMinutes: 50,
-                        Timespan: "10:00am - 10:50am",
-                        Day: "monday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "monday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 150,
-                        DurationInMinutes: 50,
-                        Timespan: "10:00am - 10:50am",
-                        Day: "wednesday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "wednesday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 101",
-                        Professor: "Miles, Jones",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: 150,
-                        DurationInMinutes: 50,
-                        Timespan: "10:00am - 10:50am",
-                        Day: "friday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "friday"
                     }
                 ],
                 "sectionElements": {
                     //Array of this section specific courses here
                     "10201": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 101",
-                            Professor: "Miles, Jones",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (10*60+30),
-                            DurationInMinutes: 110,
-                            Timespan: "6:00pm - 7:50pm",
-                            Day: "thursday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 110,
+                            timespan: "6:00pm - 7:50pm",
+                            day: "thursday"
                         }
                     ],
                     "11023": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 101",
-                            Professor: "Miles, Jones",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (11*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "7:00pm - 8:50pm",
-                            Day: "monday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            durationInMinutes: 50,
+                            timespan: "7:00pm - 8:50pm",
+                            day: "monday"
                         }
                     ]
                 },
@@ -162,50 +162,50 @@ var courses = {
                 //Array of base object calenar events here (like lectures)
                 "baseElements": [
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 100",
-                        Professor: "Alvarado, Christine",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: (3*60+1*30),
-                        DurationInMinutes: 80,
-                        Timespan: "11:0am-12:20pm",
-                        Day: "tuesday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "11:0am-12:20pm",
+                        day: "tuesday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 100",
-                        Professor: "Alvarado, Christine",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: (3*60+1*30),
-                        DurationInMinutes: 80,
-                        Timespan: "11:0am-12:20pm",
-                        Day: "thursday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "11:0am-12:20pm",
+                        day: "thursday"
                     }
                 ],
                 "sectionElements": {
                     //Array of this section specific courses here
                     "90210": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Alvarado, Christine",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (10*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "6:00pm - 6:50pm",
-                            Day: "friday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 50,
+                            timespan: "6:00pm - 6:50pm",
+                            day: "friday"
                         }
                     ],
                     "91023": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Alvarado, Christine",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (11*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "7:00pm - 8:50pm",
-                            Day: "monday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            durationInMinutes: 50,
+                            timespan: "7:00pm - 8:50pm",
+                            day: "monday"
                         }
                     ]
                 },
@@ -216,50 +216,50 @@ var courses = {
             "B": {
                 "baseElements": [
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 100",
-                        Professor: "Alvarado, Christine",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: (5*60+1*30),
-                        DurationInMinutes: 80,
-                        Timespan: "12:00pm-1:20pm",
-                        Day: "tuesday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "12:00pm-1:20pm",
+                        day: "tuesday"
                     },
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 100",
-                        Professor: "Alvarado, Christine",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: (5*60+1*30),
-                        DurationInMinutes: 80,
-                        Timespan: "12:00pm-1:20pm",
-                        Day: "thursday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "12:00pm-1:20pm",
+                        day: "thursday"
                     }
                 ],
                 "sectionElements": {
                     //Array of this section specific courses here
                     "10201": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Alvarado, Christine",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (9*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "5:00pm - 5:50pm",
-                            Day: "thursday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (9*60+30),
+                            durationInMinutes: 50,
+                            timespan: "5:00pm - 5:50pm",
+                            day: "thursday"
                         }
                     ],
                     "11023": [
                         {
-                            Type: "discussion",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Alvarado, Christine",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (8*60+30),
-                            DurationInMinutes: 50,
-                            Timespan: "4:00pm - 4:50pm",
-                            Day: "monday"
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (8*60+30),
+                            durationInMinutes: 50,
+                            timespan: "4:00pm - 4:50pm",
+                            day: "monday"
                         }
                     ]
                 },
@@ -277,40 +277,40 @@ var courses = {
                 //Array of base object calenar events here (like lectures)
                 "baseElements": [
                     {
-                        Type: "lecture",
-                        CourseAbbreviation: "CSE 100",
-                        Professor: "Gillespie, Gary",
-                        Code: "A00",
-                        StartTimeInMinutesAfterFirstHour: (9*60+1*30),
-                        DurationInMinutes: 170,
-                        Timespan: "5:00pm-7:50pm",
-                        Day: "tuesday"
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Gillespie, Gary",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (9*60+1*30),
+                        durationInMinutes: 170,
+                        timespan: "5:00pm-7:50pm",
+                        day: "tuesday"
                     }
                 ],
                 "sectionElements": {
                     //Array of this section specific courses here
                     "90210": [
                         {
-                            Type: "lab",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Gillespie, Gary",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (5*60+30),
-                            DurationInMinutes: 170,
-                            Timespan: "5:00pm - 7:50pm",
-                            Day: "wednesday"
+                            type: "lab",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Gillespie, Gary",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (5*60+30),
+                            durationInMinutes: 170,
+                            timespan: "5:00pm - 7:50pm",
+                            day: "wednesday"
                         }
                     ],
                     "91023": [
                         {
-                            Type: "lab",
-                            CourseAbbreviation: "CSE 100",
-                            Professor: "Gillespie, Gary",
-                            Code: "A01",
-                            StartTimeInMinutesAfterFirstHour: (1*60+30),
-                            DurationInMinutes: 170,
-                            Timespan: "9:00am - 11:50am",
-                            Day: "monday"
+                            type: "lab",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Gillespie, Gary",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (1*60+30),
+                            durationInMinutes: 170,
+                            timespan: "9:00am - 11:50am",
+                            day: "monday"
                         }
                     ]
                 },
@@ -322,6 +322,7 @@ var courses = {
     }
     
 }
+
 /**
  * test adding calendar events, will delete later
  **/
@@ -334,10 +335,10 @@ function setup() {
 
 /* called when DOM is ready */
 document.addEventListener('DOMContentLoaded', function() {
-    setup();
+    //setup();
 });
 
-// Write your JavaScript Code.
+// Write your JavaScript code.
 function updateMetadata(metadataList)
 {
 
@@ -376,12 +377,12 @@ function clearMeetings()
 function calculateMeetingPosition(meeting) {
 
     /* calculate top and height based on number of half hour increments after 7:30am and duration */
-    var numHalfHourInc = (meeting.StartTimeInMinutesAfterFirstHour) / 30;
+    var numHalfHourInc = (meeting.startTimeInMinutesAfterFirstHour) / 30;
     var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
     var timeOffSet = 50;
 
     var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
-    var height = ((meeting.DurationInMinutes) * (height30MinInc) / 30) + "px";
+    var height = ((meeting.durationInMinutes) * (height30MinInc) / 30) + "px";
 
     return {
         top: top,
@@ -431,7 +432,7 @@ function insertMeeting(meeting)
     /* create an icon and add to event header div */
     var icon = document.createElement('div');
     icon.className = "class-icon";
-    icon.id = meeting.Type;
+    icon.id = meeting.type;
     eventHeader.append(icon);
 
     /* create an icon label and add to icon div */
@@ -441,28 +442,28 @@ function insertMeeting(meeting)
     icon.append(iconLabel);
 
     // Use first two letters as text
-    iconLabel.innerText = meeting.Type.toUpperCase().substr(0,2);
+    iconLabel.innerText = meeting.type.toUpperCase().substr(0,2);
 
     /* create an event info div */
     var eventInfo = document.createElement('div');
     eventInfo.className = "event-info";
 
     /** create spans from meeting object **/
-    /* CourseAbbreviation */
+    /* courseAbbreviation */
     var classSpan = document.createElement('span');
-    classSpan.innerHTML = meeting.CourseAbbreviation;
+    classSpan.innerHTML = meeting.courseAbbreviation;
 
-    /* Professor */
+    /* professor */
     var profSpan = document.createElement('span');
-    profSpan.innerHTML = meeting.Professor;
+    profSpan.innerHTML = meeting.professor;
 
     /* time range */
     var timeSpan = document.createElement('span');
-    timeSpan.innerHTML = meeting.Timespan;
+    timeSpan.innerHTML = meeting.timespan;
 
-    /* section Code */
+    /* section code */
     var sectSpan = document.createElement('span');
-    sectSpan.innerHTML = meeting.Code;
+    sectSpan.innerHTML = meeting.code;
 
     /* add spans to event info div */
     eventInfo.append(classSpan);
@@ -472,7 +473,7 @@ function insertMeeting(meeting)
     eventHeader.append(eventInfo);
 
     /* add event to day of meeting */
-    var dayElem = document.getElementById(meeting.Day);
+    var dayElem = document.getElementById(meeting.day);
     dayElem.append(event);
 }
 
