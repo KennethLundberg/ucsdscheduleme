@@ -56,15 +56,17 @@ namespace ucsdscheduleme.Repo
 
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
-
-                // Scrape the page to get all the information about the professor
-                ScrapeResult scrapedProfessor = InsertDataFromHtmlPage(rateMyProfURL);
-
-                // Updating/Adding information of the professor in database
-                professor.RateMyProfessor.LevelOfDifficulty = scrapedProfessor.LevelOfDifficulty;
-                professor.RateMyProfessor.OverallQuality = scrapedProfessor.OverallQuality;
-                professor.RateMyProfessor.WouldTakeAgain = scrapedProfessor.WouldTakeAgain;
-                professor.RateMyProfessor.URL = rateMyProfURL;
+                if (rateMyProfURL.Length != 0 )
+                {
+                    // Scrape the page to get all the information about the professor
+                    ScrapeResult scrapedProfessor = InsertDataFromHtmlPage(rateMyProfURL);
+                
+                    // Updating/Adding information of the professor in database
+                    professor.RateMyProfessor.LevelOfDifficulty = scrapedProfessor.LevelOfDifficulty;
+                    professor.RateMyProfessor.OverallQuality = scrapedProfessor.OverallQuality;
+                    professor.RateMyProfessor.WouldTakeAgain = scrapedProfessor.WouldTakeAgain;
+                    professor.RateMyProfessor.URL = rateMyProfURL;
+                }      
             }
 
             // Save changes made in the database
@@ -81,7 +83,12 @@ namespace ucsdscheduleme.Repo
         {
             // Split the name to get first and last name
             string[] names = ProfName.Split(",");
-
+            
+            // If the professor's name is staff, then there is no RMP page!
+            if (names[0] == "Staff")
+            {
+                return ("");   
+            }
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
@@ -97,6 +104,9 @@ namespace ucsdscheduleme.Repo
 
             // Use urlString to extract the pk_id
             string pk_id = (GetRequest(urlString)).Result;
+            // If no pk_id was returned, just return empty url
+            if (pk_id.Length == 0)
+                return ("");
 
             // Return the final url containing pk_id
             return ("http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + pk_id);
@@ -127,10 +137,17 @@ namespace ucsdscheduleme.Repo
             JObject responseObj = JObject.Parse(myContent);
             JObject respondNode = (JObject)responseObj["response"];
             JArray docsNode = (JArray)respondNode["docs"];
-            JValue pk_id = (JValue)docsNode[0]["pk_id"];
-
-            // Return the unique professor ID
-            return (pk_id.ToString());
+            
+            // Check the size of the array containing pk_id
+            if (docsNode.Count > 0 )
+            {   
+                JValue pk_id = (JValue)docsNode[0]["pk_id"];
+                // Return the unique professor ID
+                return (pk_id.ToString());
+            }
+            
+            // Return empty string if no pk_id existed
+            return ("");
         }
 
         /// <summary>
@@ -156,16 +173,27 @@ namespace ucsdscheduleme.Repo
             // Get Overall Quality Info
             HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.OverallQualityPath);
             string qualityRate = (quality != null) ? quality.InnerText : "N/A";
+            decimal qualityRateDecimal;
+            bool checkError = Decimal.TryParse(qualityRate, out qualityRateDecimal);
+            if(checkError)
+                Console.Error.WriteLine("Error while converting qualityRateDecimal");
 
             // Get Would Take Again Info
             HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.WouldTakeAgainPath);
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
             wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
-
+            decimal wouldTakeAgainDecimal;
+            checkError = Decimal.TryParse(wouldTakeAgainRate, out wouldTakeAgainDecimal);
+            if(checkError)
+                Console.Error.WriteLine("Error while converting wouldTakeAgainDecimal");
+                                                             
             // Get Difficulty Level Info
             HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
             string difficultyLevelRate = (difficultyLevel != null) ? difficultyLevel.InnerText.Trim() : "N/A";
-
+            decimal difficultyLevelDecimal;
+            checkError = Decimal.TryParse(difficultyLevelRate, out difficultyLevelDecimal);
+            if(checkError)
+                Console.Error.WriteLine("Error while converting difficultyLevelRateDecimal");
 
             // Check if professor was rated at all
             if (quality == null && wouldTakeAgain == null && difficultyLevel == null)
@@ -210,9 +238,9 @@ namespace ucsdscheduleme.Repo
             ScrapeResult rateMyProfessorResult = new ScrapeResult()
             {
                 InstructorName = professorFullName,
-                OverallQuality = Convert.ToDecimal(qualityRate),
-                WouldTakeAgain = Convert.ToDecimal(wouldTakeAgainRate),
-                LevelOfDifficulty = Convert.ToDecimal(difficultyLevelRate)
+                OverallQuality = qualityRateDecimal,
+                WouldTakeAgain = wouldTakeAgainDecimal,
+                LevelOfDifficulty = difficultyLevelDecimal
 
             };
 

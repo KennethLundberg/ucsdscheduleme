@@ -16,7 +16,7 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            ClassScrape classScraper = new ClassScrape("WI18", "cse 1-20");
+            ClassScrape classScraper = new ClassScrape(context, "WI18", "cse 1-199");
             classScraper.Update();
 
             /*Course CSE20 = new Course()
@@ -86,8 +86,8 @@ namespace ucsdscheduleme.Data
 
             context.SaveChanges();
 */
-            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
-            scrapeRMP.Update();
+            // RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
+            // scrapeRMP.Update();    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             CapeScrape scrapeCape = new CapeScrape(context);
             scrapeCape.Update();

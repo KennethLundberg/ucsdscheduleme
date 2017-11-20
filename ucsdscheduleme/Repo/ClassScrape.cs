@@ -12,11 +12,6 @@ namespace HtmlAgilitySandbox
     class ClassScrape
     {
         private readonly ScheduleContext _context;
-        // Sending in context to files in /repo.
-        public ClassScrape(ScheduleContext context)
-        {
-            _context = context;
-        }
 
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -62,8 +57,9 @@ namespace HtmlAgilitySandbox
         /// <param name="courses">The comma seperated course search parameter. See the ucsd act class 
         /// search for full information on how to use this. Ex: "cse 1-199" returns all CSE courses between 
         /// 1 and 199</param>
-        public ClassScrape(string selectedTerm, string courses)
+        public ClassScrape(ScheduleContext context, string selectedTerm, string courses)
         {
+            _context = context;
             _actFormRequest = new ActFormRequest(selectedTerm, courses);
         }
 
@@ -126,6 +122,7 @@ namespace HtmlAgilitySandbox
                 // so this should never fail, BUT, just in case, lets verfiy things are going as well as they should.
                 if (Int32.TryParse(lastPageAsString,out int lastPage))
                 {
+                     allDocumentsForQuerry.Add(htmlDoc);
                     // Start at page 2 because we already grabbed page 1.
                     for(int pageNum = 2; pageNum <= lastPage; pageNum++)
                     {
@@ -142,7 +139,7 @@ namespace HtmlAgilitySandbox
 
                         // Now we have the results for this page of classes
                         var thisHtmlDoc = new HtmlDocument();
-                        thisHtmlDoc.LoadHtml(responseAsString);
+                        thisHtmlDoc.LoadHtml(pageResponseAsString);
 
                         // Add it to the final return
                         allDocumentsForQuerry.Add(thisHtmlDoc);
@@ -425,6 +422,7 @@ namespace HtmlAgilitySandbox
             {
                 _context.Courses.Add(course);
             }
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -448,8 +446,17 @@ namespace HtmlAgilitySandbox
                     return MeetingType.Final;
                 case "MI":
                     return MeetingType.Midterm;
+                case "SE":
+                    return MeetingType.Seminar;
+                case "PR":
+                    return MeetingType.Practicum;
+                case "IN":
+                    return MeetingType.IndependentStudy;
+                case "ST":
+                    return MeetingType.Studio;
                 default:
-                    throw new FormatException();
+                    throw new FormatException(meetingType);
+
             }
         }
 
