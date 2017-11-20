@@ -16,6 +16,7 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
+            // Getting the cource from the act website
             ClassScrape classScraper = new ClassScrape(context, "WI18", "cse 1-199");
             classScraper.Update();
 
@@ -86,9 +87,11 @@ namespace ucsdscheduleme.Data
 
             context.SaveChanges();
 */
-            // RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
-            // scrapeRMP.Update();    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Scraping the rate my professor page for all professor in the db
+            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
+            scrapeRMP.Update();
 
+            // Scraping the cape website for each professor and course combo in db
             CapeScrape scrapeCape = new CapeScrape(context);
             scrapeCape.Update();
 
@@ -1234,6 +1237,8 @@ namespace ucsdscheduleme.Data
             var count = context.Sections.First().Meetings.Count;
 
             bool test = true;*/
+
+            Console.Write("Code has been completed");
         }
     }
 }

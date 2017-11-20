@@ -14,7 +14,8 @@ namespace ucsdscheduleme.Repo
     public class RateMyProfessorScrape
     {
         private readonly ScheduleContext _context;
-        // Sending in context to files in /repo.
+        
+        // Sending in context to files in repo.
         public RateMyProfessorScrape(ScheduleContext context)
         {
             _context = context;
@@ -89,11 +90,13 @@ namespace ucsdscheduleme.Repo
             {
                 return ("");   
             }
+
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
 
             // Need to add edge cases; when there are muntiple first and last names in the act and RMP.
+
 
             // Generate the URL with the first and last name
             string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
@@ -104,6 +107,7 @@ namespace ucsdscheduleme.Repo
 
             // Use urlString to extract the pk_id
             string pk_id = (GetRequest(urlString)).Result;
+
             // If no pk_id was returned, just return empty url
             if (pk_id.Length == 0)
                 return ("");
@@ -138,15 +142,15 @@ namespace ucsdscheduleme.Repo
             JObject respondNode = (JObject)responseObj["response"];
             JArray docsNode = (JArray)respondNode["docs"];
             
-            // Check the size of the array containing pk_id
-            if (docsNode.Count > 0 )
+            // Check the size of the array to check if we received pk_id;
+            if (docsNode.Count > 0)
             {   
                 JValue pk_id = (JValue)docsNode[0]["pk_id"];
                 // Return the unique professor ID
                 return (pk_id.ToString());
             }
             
-            // Return empty string if no pk_id existed
+            // Return empty string if no pk_id found
             return ("");
         }
 
@@ -173,6 +177,8 @@ namespace ucsdscheduleme.Repo
             // Get Overall Quality Info
             HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.OverallQualityPath);
             string qualityRate = (quality != null) ? quality.InnerText : "N/A";
+
+            // Converting the string review to decimal for inserting to db
             decimal qualityRateDecimal;
             bool checkError = Decimal.TryParse(qualityRate, out qualityRateDecimal);
             if(checkError)
@@ -181,6 +187,8 @@ namespace ucsdscheduleme.Repo
             // Get Would Take Again Info
             HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.WouldTakeAgainPath);
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
+
+            // Converting the string review to decimal for inserting to db
             wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
             decimal wouldTakeAgainDecimal;
             checkError = Decimal.TryParse(wouldTakeAgainRate, out wouldTakeAgainDecimal);
@@ -190,6 +198,8 @@ namespace ucsdscheduleme.Repo
             // Get Difficulty Level Info
             HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
             string difficultyLevelRate = (difficultyLevel != null) ? difficultyLevel.InnerText.Trim() : "N/A";
+
+            // Converting the string review to decimal for inserting to db
             decimal difficultyLevelDecimal;
             checkError = Decimal.TryParse(difficultyLevelRate, out difficultyLevelDecimal);
             if(checkError)
@@ -206,8 +216,7 @@ namespace ucsdscheduleme.Repo
             
             // Check to see if this professor has any info available on the page
             if (professorIsRated)
-            {
-                
+            {              
                 // Scrape the professor's full name(if not, leave "N/A" )
                 HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorFirstNamePath);
                 string professorFirstName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";

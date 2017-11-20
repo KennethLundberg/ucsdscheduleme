@@ -192,7 +192,8 @@ namespace ucsdscheduleme.Repo
             string avgGradeExpectedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeExpectedNode)?.InnerText;
             if (String.IsNullOrEmpty(avgGradeExpectedCheck))
             {
-                avgGradeExpected = "N/A";
+                // When cape doesn't have grade expected value
+                avgGradeExpected = "0";
             }
             else
             {
@@ -206,7 +207,8 @@ namespace ucsdscheduleme.Repo
             string avgGradeReceivedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeReceivedNode)?.InnerText;
             if (String.IsNullOrEmpty(avgGradeReceivedCheck))
             {
-                avgGradeReceived = ("N/A");
+                // When cape doesn't have grade recieved value
+                avgGradeReceived = ("0");
             }
             else
             {
