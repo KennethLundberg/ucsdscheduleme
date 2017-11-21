@@ -20,19 +20,23 @@ function typeAhead(e) {
     // Sends the input to the server to get the courses
     var input = e.target.value;
     var xhr = new XMLHttpRequest();
-    console.log(myApp.urls.typeAhead);
-    xhr.open("POST", myApp.urls.typeAhead, true);    
-    xhr.send({"input" : input });
+    var safeInput = encodeURI(input);
+    var url = myApp.urls.typeAhead + "?input=" + safeInput;
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send();
 
     // When the text is edited, it clears the search and populates it
     xhr.onreadystatechange = function() 
     {
         if (xhr.readyState == 4 && xhr.status == 200)
         {
+            var text = JSON.parse(xhr.responseText);
             clearSearch();
-            for (i = 0; i < (xhr.responseText.length - 2); i++)
+            for (i = 0; i < text.length; i++)
             {
-                populateSearch(xhr.responseText[i]);
+                populateSearch(text[i]);
             }
         }
     }
@@ -62,11 +66,11 @@ function populateSearch(data)
     var courses = document.getElementById("courseItems");
     var course = document.createElement('div');
     course.className = "courseItem";
-    course.innerText = data;
+    course.innerText = data.abbreviation;
 
     // Add it to the drop down
-    courses.add(course);
-    course.addEventListener("onclick", addList);
+    courses.append(course);
+    course.addEventListener("click", addList());
 }
 
 
@@ -75,6 +79,7 @@ function populateSearch(data)
  */
 function addList() 
 {
+    console.log("HELLO WORLD");
     // Create the element the add to the course list
     var list = document.getElementById("class-list");
     var course = document.createElement('div');
@@ -84,7 +89,7 @@ function addList()
     icon.className = "class-icon";
 
     // Add it to the course list
-    course.append(span);
-    course.append(icon);
-    list.append(course);
+//    course.append(span);
+//    course.append(icon);
+//    list.append(course);
 }
