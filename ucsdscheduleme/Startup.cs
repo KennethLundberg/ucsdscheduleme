@@ -29,21 +29,26 @@ namespace ucsdscheduleme
         {
             services.Configure<MvcOptions>(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+//                options.Filters.Add(new RequireHttpsAttribute());
             });
 
-            services.AddDbContext<ScheduleContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+//            services.AddDbContext<ScheduleContext>(options =>
+ //               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
+services.AddDbContext<ScheduleContext>(options =>
+                options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
+            
+
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScheduleContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            { 
-                googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
-                googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
-            });
+//            services.AddAuthentication().AddGoogle(googleOptions =>
+  //          { 
+   //             googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
+     //           googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
+       //     });
 
             services.AddMvc();
         }
@@ -64,11 +69,11 @@ namespace ucsdscheduleme
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
-            app.UseRewriter(options);
+           // app.UseRewriter(options);
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
+//            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

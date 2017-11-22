@@ -24,7 +24,7 @@ namespace ucsdscheduleme
                     try
                     {
                         var context = services.GetRequiredService<ScheduleContext>();
-                        DbInitializer.Initialize(context);
+                        //DbInitializer.Initialize(context);
                     }
                     catch (Exception ex)
                     {

@@ -14,7 +14,7 @@ using PossibleSchedules = System.Collections.Generic.List<System.Collections.Gen
 
 namespace ucsdscheduleme.Controllers
 {
-    [Authorize]
+  //  [Authorize]
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
@@ -30,6 +30,7 @@ namespace ucsdscheduleme.Controllers
         {
 
             ScheduleViewModel model;
+            return View(new ScheduleViewModel());
 
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
@@ -92,7 +93,6 @@ namespace ucsdscheduleme.Controllers
                                     .Take(3)
                                     .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
                                     .ToArray();
-
             return Json(suggestions);
         }
 

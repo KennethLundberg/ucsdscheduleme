@@ -181,7 +181,7 @@
                 </div>
             </div>
         </div>
-        <div class="class-list">
+        <div class="class-list" id="class-list">
             <div class="class">
                 <span>CSE 100</span>
                 <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
@@ -272,8 +272,8 @@
 <script>
     var myApp = {
         urls: {
-            generateSchedule: "@Url.Action("GenerateSchedule","HomeController")",
-            typeAhead: "@Url.Action("TypeAhead", "HomeController")"
+            generateSchedule: "@Url.Action("GenerateSchedule","Home")",
+            typeAhead: "@Url.Action("TypeAhead", "Home")"
         },
         courseList: [],
         metadata: []
@@ -284,11 +284,13 @@
 
 
         var search = document.getElementById("search");
+        search.addEventListener("input", typeAhead);
 
-        search.addEventListener("change", typeAhead);
-
+	
         var input = document.getElementById("search");
         var dropdown = document.getElementById("courseItems");
+
+	
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
 
@@ -300,9 +302,14 @@
             dropdown.style.display = "none";
         }
 
-        function typeAhead() {
-
-
-        }
+	    document.addEventListener('click',function(e) {
+            console.log(e.target);
+            if(e.target && e.target.classList.contains("courseItem")){
+	           console.log("sugoi");
+	            //call addList
+	            addList(e.target);
+	        }
+        })
+	
     })();
 </script>

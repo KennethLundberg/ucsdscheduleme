@@ -38,6 +38,14 @@ function typeAhead(e) {
             {
                 populateSearch(text[i]);
             }
+/*            var list = document.getElementsByClassName("courseItem");
+            var listLength = list.length;
+            for (i = 0; i < listLength; i++)
+            {
+                console.log(list[i]); 
+                //list[i].addEventListener("mouseup", addList());
+                list[i].onclick = addList(); 
+            } */
         }
     }
 }
@@ -70,26 +78,25 @@ function populateSearch(data)
 
     // Add it to the drop down
     courses.append(course);
-    course.addEventListener("click", addList());
 }
 
 
 /**
  * Adds the course selected to the class list below the search bar.
  */
-function addList() 
+function addList(e) 
 {
-    console.log("HELLO WORLD");
+    console.log("HELLO");
     // Create the element the add to the course list
     var list = document.getElementById("class-list");
     var course = document.createElement('div');
     var span = document.createElement('span');
-    span.innerText = this.name;
+    span.innerText = e.name;
     var icon = document.createElement('div');
     icon.className = "class-icon";
 
     // Add it to the course list
-//    course.append(span);
-//    course.append(icon);
-//    list.append(course);
+    course.append(span);
+    course.append(icon);
+    list.append(course);
 }
