@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ucsdscheduleme.Repo;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
+using Microsoft.EntityFrameworkCore;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -86,13 +87,14 @@ namespace ucsdscheduleme.Controllers
             return Json(model);
         }
 
+
         public IActionResult TypeAhead(string input)
         {
-            var suggestions = _context.Courses
-                                    .Where(c => c.CourseAbbreviation.Contains(input))
-                                    .Take(3)
-                                    .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
-                                    .ToArray();
+            var suggestions = _context.Courses.AsNoTracking()
+                                      .Where(c => c.CourseAbbreviation.Contains(input))
+                                      .Take(3)
+                                      .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
+                                      .ToArray();
             return Json(suggestions);
         }
 

@@ -24,7 +24,6 @@ function typeAhead(e) {
     var url = myApp.urls.typeAhead + "?input=" + safeInput;
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-
     xhr.send();
 
     // When the text is edited, it clears the search and populates it
@@ -34,18 +33,12 @@ function typeAhead(e) {
         {
             var text = JSON.parse(xhr.responseText);
             clearSearch();
+
             for (i = 0; i < text.length; i++)
             {
                 populateSearch(text[i]);
+                console.log(text[i]);
             }
-/*            var list = document.getElementsByClassName("courseItem");
-            var listLength = list.length;
-            for (i = 0; i < listLength; i++)
-            {
-                console.log(list[i]); 
-                //list[i].addEventListener("mouseup", addList());
-                list[i].onclick = addList(); 
-            } */
         }
     }
 }
@@ -76,6 +69,11 @@ function populateSearch(data)
     course.className = "courseItem";
     course.innerText = data.abbreviation;
 
+    course.id = data.id;
+
+    console.log("populateSearch");
+    console.log(course);
+
     // Add it to the drop down
     courses.append(course);
 }
@@ -84,19 +82,37 @@ function populateSearch(data)
 /**
  * Adds the course selected to the class list below the search bar.
  */
-function addList(e) 
+function addList(data) 
 {
     console.log("HELLO");
+    console.log(data);
+
+    // Hide dropdown menu
+    var dropdown = document.getElementById("courseItems");
+    dropdown.style.display = "none";
+
     // Create the element the add to the course list
     var list = document.getElementById("class-list");
+
     var course = document.createElement('div');
+    course.className = "class";
+    course.id = data.id;
+
     var span = document.createElement('span');
-    span.innerText = e.name;
-    var icon = document.createElement('div');
-    icon.className = "class-icon";
+    span.innerText = data.innerText;
+
+    console.log("data.id: " + data.id);
+    myApp.coursesToSchedule.push(data.id);
+
+    var iconContainer = document.createElement('div');
+    iconContainer.className = "class-icon";
+    var icon = document.createElement('i');
+    icon.className = "fa fa-window-close";
+    icon.setAttribute("aria-hidden", true);
+    iconContainer.append(icon);
 
     // Add it to the course list
     course.append(span);
-    course.append(icon);
+    course.append(iconContainer);
     list.append(course);
 }

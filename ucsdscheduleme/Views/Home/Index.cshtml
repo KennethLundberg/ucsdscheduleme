@@ -182,20 +182,20 @@
             </div>
         </div>
         <div class="class-list" id="class-list">
-            <div class="class">
+            <!--<div class="class">
                 <span>CSE 100</span>
                 <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
-            <div class="class">
+            </div>-->
+            <!--<div class="class">
                 <span>CSE 101</span>
                 <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
             </div>
             <div class="class">
                 <span>CSE 110</span>
                 <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
+            </div>-->
         </div>
-        <div class="generate-schedule-container">
+        <!--<div class="generate-schedule-container">
             <select style="width: 100%;">
                 <option selected="selected">Select Optimization</option>
                 <option>Most Gaps</option>
@@ -209,7 +209,7 @@
             </select>
             <div class="generate-schedule-button">
             </div>
-        </div>
+        </div>-->
     </div>
 
     <div class="side right-bar">
@@ -275,14 +275,13 @@
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
             typeAhead: "@Url.Action("TypeAhead", "Home")"
         },
-        courseList: [],
+	    coursesToSchedule: [],
+        courses: [],
         metadata: []
     };
 
 
     (function () {
-
-
         var search = document.getElementById("search");
         search.addEventListener("input", typeAhead);
 
@@ -294,18 +293,31 @@
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
 
+        dropdown.addEventListener("focusin", fin);
+	    dropdown.addEventListener("focusout", fout);
+	
+	    var isHover;
+        dropdown.onmouseover = function() {
+            isHover = true;
+	    }
+
+	    dropdown.onmouseout = function() {
+	    	isHover = false;
+	    }
+
         function fin() {
             dropdown.style.display = "block";
         }
 
         function fout() {
-            dropdown.style.display = "none";
+	        
+	        if(!isHover) {
+	        	dropdown.style.display = "none";
+	        }            	
         }
 
 	    document.addEventListener('click',function(e) {
-            console.log(e.target);
             if(e.target && e.target.classList.contains("courseItem")){
-	           console.log("sugoi");
 	            //call addList
 	            addList(e.target);
 	        }
