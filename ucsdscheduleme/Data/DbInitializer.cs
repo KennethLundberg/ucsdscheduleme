@@ -17,7 +17,7 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureCreated();
 
             // Getting the cource from the act website
-            ClassScrape classScraper = new ClassScrape(context, "WI18", "cse 1-199");
+            ClassScrape classScraper = new ClassScrape(context, "WI18", "cse 1-190");
             classScraper.Update();
 
             /*Course CSE20 = new Course()

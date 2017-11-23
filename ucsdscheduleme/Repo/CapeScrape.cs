@@ -48,6 +48,9 @@ namespace ucsdscheduleme.Repo
             // Getting the list of courses from the database
             var courses = _context.Courses.ToList();
 
+            // List of professor and courses that do not have cape review
+            List<Tuple<string, string>> profcourseNotFound = new List<Tuple<string, string>>();
+
             // Iterate over all the courses we recieved from the database
             foreach (var course in courses)
             {
@@ -96,13 +99,17 @@ namespace ucsdscheduleme.Repo
                             course.Cape.Add(newCapeReview);                       
 
                         }
-
-                        // Save Changes in the database
-                        _context.SaveChanges();
+                        else
+                        {
+                            profcourseNotFound.Add(Tuple.Create(currProfessor.Name, course.CourseAbbreviation));
+                        }
 
                     }
                 }
             }
+
+            // Save Changes in the database
+            _context.SaveChanges();
 
         }
 

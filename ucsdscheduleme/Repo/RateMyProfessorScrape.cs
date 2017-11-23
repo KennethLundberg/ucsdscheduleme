@@ -45,6 +45,9 @@ namespace ucsdscheduleme.Repo
         {
             // Get professors list from database
             var professors = _context.Professor.ToList();
+
+            // List of professor whose RMP page couldn't be found
+            List<string> profRMPNotFound = new List<string>();
             
             // For each professor in the list from database
             foreach (var professor in professors)
@@ -67,6 +70,10 @@ namespace ucsdscheduleme.Repo
                     professor.RateMyProfessor.OverallQuality = scrapedProfessor.OverallQuality;
                     professor.RateMyProfessor.WouldTakeAgain = scrapedProfessor.WouldTakeAgain;
                     professor.RateMyProfessor.URL = rateMyProfURL;
+                }
+                else
+                {
+                    profRMPNotFound.Add(professor.Name);
                 }      
             }
 
@@ -97,23 +104,82 @@ namespace ucsdscheduleme.Repo
 
             // Need to add edge cases; when there are muntiple first and last names in the act and RMP.
 
-
             // Generate the URL with the first and last name
-            string urlString = @"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
-                firstName[1].ToLower() + "+" + lastName[0].ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
-                "fullname_t%5E2000+teacherfullname_autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&" +
-                "siteName=rmp&rows=20&group=off&group.field=content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%" +
-                "22University+of+California+San+Diego%22";
+            string urlString = ReturnHttpUrl(firstName[1], lastName[0]);
 
             // Use urlString to extract the pk_id
             string pk_id = (GetRequest(urlString)).Result;
 
-            // If no pk_id was returned, just return empty url
+            // If no pk_id was returned, check for the unique cases
             if (pk_id.Length == 0)
-                return ("");
+            {
+                pk_id = CheckUniqueProfessor(firstName, lastName);
+
+                // If can't find the professor's RMP page even in unique case return null
+                if(pk_id.Length == 0)
+                    return ("");
+            }
 
             // Return the final url containing pk_id
             return ("http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + pk_id);
+        }
+
+        /// <summary>
+        /// This method is for the professor who have different name in the RMP page and in
+        /// act class schedules that was scraped into the database
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <returns></returns>
+        private string CheckUniqueProfessor(string[] firstName, string[] lastName)
+        {
+            if (lastName[0] == "Ord" && firstName[1] == "Richard")
+            {
+                return (GetRequest(ReturnHttpUrl("Rick", "Ord"))).Result;
+            }
+            else if (lastName[0] == "Porter" && firstName[1] == "Leonard")
+            {
+                return (GetRequest(ReturnHttpUrl("Leo", "Porter"))).Result;
+            }
+            else if (lastName[0] == "Cottrell" && firstName[1] == "Garrison")
+            {
+                return (GetRequest(ReturnHttpUrl("Gary", "Cottrell"))).Result;
+            }
+            else if (lastName[0] == "Minnes" && firstName[1] == "Mor")
+            {
+                return (GetRequest(ReturnHttpUrl("Mia", "Minnes-Kemp"))).Result;
+            }
+            else if(lastName[0] == "Howden" && firstName[1] == "William")
+            {   // Need to make sure they're the same professor though
+                return (GetRequest(ReturnHttpUrl("Bill", "Howden"))).Result;
+            }
+            /* Can't Find in the RMP page. Just for CSE 1-190
+             * Schulze, Jurgen
+             * Ochoa, Benjamin Lawrence
+             * Nakashole, Ndapandula
+             * Weibel, Nadir
+             * Kumar, Rakesh
+             * Gao, Sicun
+             * Eldon, John
+             * Zhao, Jishen
+             */
+            return "";
+        }
+
+        /// <summary>
+        /// This method returns httpGet Url to receive the Json from the call.
+        /// </summary>
+        /// <param name="firstName">The first name of the professor</param>
+        /// <param name="lastName">The last name of the professor</param>
+        /// <returns>The actual http get URL</returns>
+        private string ReturnHttpUrl(string firstName, string lastName)
+        {
+            return (@"http://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&prefix=" +
+                firstName.ToLower() + "+" + lastName.ToLower() + "&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacher" +
+                "fullname_t%5E2000+teacherfullname_autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=score+desc&defType=edismax&" +
+                 "siteName=rmp&rows=20&group=off&group.field=content_type_s&group.limit=20&fq=content_type_s%3ATEACHER&fq=schoolname_t%3A%" +
+                 "22University+of+California+San+Diego%22");
+
         }
 
         /// <summary>
