@@ -340,7 +340,7 @@ namespace HtmlAgilitySandbox
 
                         // Set date.
                         HtmlNode testDateNode = testTypeTDNode.NextSibling.NextSibling;
-                        string date = testDateNode.InnerText;
+                        string date = testDateNode.InnerText;   // Here is the error, we get date to be A00, when scraping math 3C. 
                         currentMeeting.StartDate = DateTime.ParseExact(date, ActStrings.DateFormat, System.Globalization.CultureInfo.InvariantCulture);
 
                         // Set test day.
@@ -407,7 +407,11 @@ namespace HtmlAgilitySandbox
             {
                 _context.Courses.Add(course);
             }
-            _context.SaveChanges();
+            _context.SaveChanges(); // Getting exception here; somehow the ID for a class becomes this
+                                    // huge negative number, and therefore because its huge, cannot
+                                    // add the number to the database, only happens to class CSE 190-199
+                                    // In courseList, all ID is 0, but once after copying values to course
+                                    // variable we get IF to be -2147482647 for CSE 190
         }
 
         /// <summary>

@@ -16,11 +16,12 @@ namespace ucsdscheduleme.Data
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            // Getting the cource from the act website
-            ClassScrape classScraper = new ClassScrape(context, "WI18", "cse 1-190");
-            classScraper.Update();
+            // Calling the Scraping Controller
+            ScrapeRepo scrapeAll = new ScrapeRepo(context);
+            scrapeAll.Update();
 
-            /*Course CSE20 = new Course()
+            /*
+            Course CSE20 = new Course()
             {
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
@@ -86,14 +87,8 @@ namespace ucsdscheduleme.Data
             context.Courses.Add(CSE20);
 
             context.SaveChanges();
-*/
-            // Scraping the rate my professor page for all professor in the db
-            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(context);
-            scrapeRMP.Update();
 
-            // Scraping the cape website for each professor and course combo in db
-            CapeScrape scrapeCape = new CapeScrape(context);
-            scrapeCape.Update();
+            */
 
             // Making Location objects
             /*Location CENTR115 = new Location()
