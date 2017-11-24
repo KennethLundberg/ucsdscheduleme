@@ -107,49 +107,34 @@ namespace HtmlAgilitySandbox
             var navigationTable = nodes[2];
             var navigationText = navigationTable.SelectSingleNode(ActStrings.NavigationTableNode).InnerText;
 
-            // This will check if there is more than one page. If there is only one, we're done
-            // Otherwise we gotta make a request for each page.
-            if(navigationText.Contains("Last"))
+            // Get the string that states how many pages is the current search result
+            var pageNumberString =  navigationText.Substring(0, navigationText.IndexOf(')'));
+
+            // The last page number of the current search
+            int lastPageNumber = (pageNumberString.ElementAt(pageNumberString.Length - 1) - '0');
+
+            allDocumentsForQuerry.Add(htmlDoc);
+
+            // Start at page 2 because we already grabbed page 1.
+            for(int pageNum = 2; pageNum <= lastPageNumber; pageNum++)
             {
-                // Get the a tag with the last page value
-                var lastPageATag = navigationTable.SelectSingleNode(ActStrings.LastPageNode);
-                // The actual last page is stored as baseUrl?page=[lastPageNumber]
-                string lastPageHref = lastPageATag.GetAttributeValue("href","");
-                // Get the part of the href which is the page, ie the part after the "="
-                var lastPageAsString = lastPageHref.Substring(lastPageHref.LastIndexOf('=') + 1);
+                Uri thisPageUri = new Uri(_baseIndividualResponseUrl + "?page=" + pageNum);
+                HttpRequestMessage thisMessage = new HttpRequestMessage(HttpMethod.Get, thisPageUri);
+                // Tell ucsd that we're always coming from the first response page.
+                thisMessage.Headers.Referrer = new Uri(_baseIndividualResponseUrl);
+                // Pretend we're a browser.
+                thisMessage.Headers.Add(ActStrings.UserAlias, ActStrings.BrowserAlias);
 
-                // If we got here, we know there is a last page, and we know the format only has one = sign,
-                // so this should never fail, BUT, just in case, lets verfiy things are going as well as they should.
-                if (Int32.TryParse(lastPageAsString,out int lastPage))
-                {
-                     allDocumentsForQuerry.Add(htmlDoc);
-                    // Start at page 2 because we already grabbed page 1.
-                    for(int pageNum = 2; pageNum <= lastPage; pageNum++)
-                    {
-                        Uri thisPageUri = new Uri(_baseIndividualResponseUrl + "?page=" + pageNum);
-                        HttpRequestMessage thisMessage = new HttpRequestMessage(HttpMethod.Get, thisPageUri);
-                        // Tell ucsd that we're always coming from the first response page.
-                        thisMessage.Headers.Referrer = new Uri(_baseIndividualResponseUrl);
-                        // Pretend we're a browser.
-                        thisMessage.Headers.Add(ActStrings.UserAlias, ActStrings.BrowserAlias);
+                var pageResponse = client.SendAsync(thisMessage).Result;
 
-                        var pageResponse = client.SendAsync(thisMessage).Result;
+                var pageResponseAsString = pageResponse.Content.ReadAsStringAsync().Result;
 
-                        var pageResponseAsString = pageResponse.Content.ReadAsStringAsync().Result;
+                // Now we have the results for this page of classes
+                var thisHtmlDoc = new HtmlDocument();
+                thisHtmlDoc.LoadHtml(pageResponseAsString);
 
-                        // Now we have the results for this page of classes
-                        var thisHtmlDoc = new HtmlDocument();
-                        thisHtmlDoc.LoadHtml(pageResponseAsString);
-
-                        // Add it to the final return
-                        allDocumentsForQuerry.Add(thisHtmlDoc);
-                    }
-                }
-            }
-            // If we got here there should be only one page, the one we already got.
-            else
-            {
-                allDocumentsForQuerry.Add(htmlDoc);
+                // Add it to the final return
+                allDocumentsForQuerry.Add(thisHtmlDoc);
             }
 
             return allDocumentsForQuerry;
