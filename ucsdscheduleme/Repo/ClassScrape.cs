@@ -296,6 +296,7 @@ namespace HtmlAgilitySandbox
                                     Building = buildingName,
                                     RoomNumber = roomNumber
                                 };
+                                locationDictionary.Add(buildingName + roomNumber, classLocation);
                             }
                             currentMeeting.Location = classLocation;
 
@@ -322,6 +323,7 @@ namespace HtmlAgilitySandbox
                                     Building = "TBA",
                                     RoomNumber = "TBA"
                                 };
+                                locationDictionary.Add("TBATBA", classLocation);
                             }
                             currentMeeting.Location = classLocation;
 
@@ -408,6 +410,7 @@ namespace HtmlAgilitySandbox
                                 Building = testBuilding,
                                 RoomNumber = testRoom
                             };
+                            locationDictionary.Add(testBuilding + testRoom, classLocation);
                         }
                         currentMeeting.Location = classLocation;
 
