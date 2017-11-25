@@ -472,6 +472,22 @@ function insertMeeting(meeting)
     eventInfo.append(sectSpan);
     eventHeader.append(eventInfo);
 
+    // edit button
+    var editButton = document.createElement('div');
+    editButton.className = "edit-button";
+
+    var editSpan = document.createElement('span');
+    editSpan.innerHTML = "Change";
+    editSpan.className = "edit-span";
+    editButton.append(editSpan);
+
+    var editIcon = document.createElement('i');
+    editIcon.className = "fa fa-cog";
+    editIcon.setAttribute("aria-hidden", true); 
+    editButton.append(editIcon);
+
+    event.append(editButton);
+    
     /* add event to day of meeting */
     var dayElem = document.getElementById(meeting.day);
     dayElem.append(event);
@@ -511,4 +527,9 @@ function updateMeetings(meetings)
             }
         }
     }
+}
+
+function changeSchedule(e) {
+    var event = e.target.parentNode.parentNode;
+    console.log(event);
 }

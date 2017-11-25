@@ -10,7 +10,7 @@
                 <div id="monday" class="schedule-group">
                     <div class="schedule-header"><span>Monday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lecture"><div class="class-icon-label">LE</div></div>
                             <div class="event-info">
@@ -25,7 +25,7 @@
                 <div id="tuesday" class="schedule-group">
                     <div class="schedule-header"><span>Tuesday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -40,7 +40,7 @@
                 <div id="wednesday" class="schedule-group">
                     <div class="schedule-header"><span>Wednesday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="discussion"><div class="class-icon-label">DI</div></div>
                             <div class="event-info">
@@ -55,7 +55,7 @@
                 <div id="thursday" class="schedule-group">
                     <div class="schedule-header"><span>Thursday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -70,7 +70,7 @@
                 <div id="friday" class="schedule-group">
                     <div class="schedule-header"><span>Friday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span >Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -268,3 +268,36 @@
         </div>
     </div>
 </div>
+
+<script>
+    var myApp = {
+        urls: {
+            generateSchedule: "@Url.Action("GenerateSchedule","Home")",
+            typeAhead: "@Url.Action("TypeAhead", "Home")"
+        },
+	    coursesToSchedule: [],
+        courses: [],
+        metadata: []
+    };
+
+
+    (function () {
+
+	    document.addEventListener('click',function(e) {
+            console.log(e.target);
+            if(e.target && e.target.classList.contains("courseItem")){
+	            //call addList
+	            addList(e.target);
+	        }
+	        if(e.target && (e.target.classList.contains("fa-cog") || 
+	        				e.target.classList.contains("edit-span") )) {
+	        	console.log("hit\t" + e.target.parentNode.parentNode.classList);
+	        }
+	        if(e.target && e.target.classList.contains("edit-button")) {
+	        	console.log("hit\t" + e.target.parentNode.classList);
+	        }
+	        
+        })
+	
+    })();
+</script>
