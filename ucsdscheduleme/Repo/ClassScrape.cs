@@ -13,8 +13,15 @@ namespace HtmlAgilitySandbox
     {
         // Database context.
         private readonly ScheduleContext _context;
-        // Department the query is woring on (i.e. CSE, MATH).
+        // Department the query is working on (i.e. CSE, MATH).
         private readonly string department;
+
+        // Hash maps for each object needed in database
+        private static Dictionary<string, Course> courseDictionary;
+        private static Dictionary<string, Section> sectionDictionary;
+        private static Dictionary<string, Meeting> meetingDictionary;
+        private static Dictionary<string, Location> locationDictionary;
+        private static Dictionary<string, Professor> professorDictionary;
 
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -57,14 +64,25 @@ namespace HtmlAgilitySandbox
         /// </summary>
         /// <param name="selectedTerm">Usually a four character code that specifies the term you want 
         /// to search from. Ex: "FA17" would return courses from the Fall 2017 quarter.</param>
-        /// <param name="courses">The comma seperated course search parameter. See the ucsd act class 
+        /// <param name="courses">The space seperated course search parameter. See the ucsd act class 
         /// search for full information on how to use this. Ex: "cse 1-199" returns all CSE courses between 
         /// 1 and 199</param>
         public ClassScrape(ScheduleContext context, string selectedTerm, string courses)
         {
             _context = context;
-            department = courses.Split(" ")[0];
             _actFormRequest = new ActFormRequest(selectedTerm, courses);
+
+            // Course abbreviation prefix
+            department = courses.Split(" ")[0].ToUpper();
+
+            // Initialize all hash maps (meeting is unique with its building/room/startingtime).
+            courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
+            sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
+            meetingDictionary = _context?.Meetings.ToDictionary(m => m.Location.Building + m.Location.RoomNumber + m.StartTime.ToString());
+            locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
+            professorDictionary = _context?.Professor.ToDictionary(p => p.Name);
+
+
         }
 
         /// <summary>
@@ -266,11 +284,19 @@ namespace HtmlAgilitySandbox
                             // Set building and classroom.
                             HtmlNode buildingNode = timeNode.NextSibling.NextSibling;
                             HtmlNode roomNode = buildingNode.NextSibling.NextSibling;
-                            Location classLocation = new Location
+                            string buildingName = buildingNode.InnerText;
+                            string roomNumber = roomNode.InnerText;
+
+                            // Check if location exists in database
+                            Location classLocation;
+                            if (!locationDictionary.TryGetValue(buildingName + roomNumber, out classLocation))
                             {
-                                Building = buildingNode.InnerText,
-                                RoomNumber = roomNode.InnerText
-                            };
+                                classLocation = new Location
+                                {
+                                    Building = buildingName,
+                                    RoomNumber = roomNumber
+                                };
+                            }
                             currentMeeting.Location = classLocation;
 
                             // Check if instructor is not determined yet (currently set as "Staff").
@@ -286,11 +312,17 @@ namespace HtmlAgilitySandbox
                         else if (daysNode.InnerText.Contains("TBA"))
                         {
                             currentMeeting.Days = GetDays("TBA");
-                            Location classLocation = new Location
+
+                            // Check if TBA location exists in database
+                            Location classLocation;
+                            if (!locationDictionary.TryGetValue("TBATBA", out classLocation))
                             {
-                                Building = "TBA",
-                                RoomNumber = "TBA"
-                            };
+                                classLocation = new Location
+                                {
+                                    Building = "TBA",
+                                    RoomNumber = "TBA"
+                                };
+                            }
                             currentMeeting.Location = classLocation;
 
                             // Check for edge case where professor field is empty, so we use the previous professor.
@@ -362,17 +394,21 @@ namespace HtmlAgilitySandbox
 
                         // Set test building and room number.
                         HtmlNode testBuildingNode = testTimeNode.NextSibling.NextSibling;
-                        string testBuilding = testBuildingNode.InnerText;
-                       
                         HtmlNode testRoomNode = testBuildingNode.NextSibling.NextSibling;
+
+                        string testBuilding = testBuildingNode.InnerText;
                         string testRoom = testRoomNode.InnerText;
 
-                        // Create new location to insert into meeting.
-                        Location classLocation = new Location
+                        // Check if location exists in database
+                        Location classLocation;
+                        if (!locationDictionary.TryGetValue(testBuilding + testRoom, out classLocation))
                         {
-                            Building = testBuilding,
-                            RoomNumber = testRoom
-                        };
+                            classLocation = new Location
+                            {
+                                Building = testBuilding,
+                                RoomNumber = testRoom
+                            };
+                        }
                         currentMeeting.Location = classLocation;
 
                         // Push to all sections currently in section list.
@@ -405,7 +441,7 @@ namespace HtmlAgilitySandbox
             List<Meeting> dbMeetings = _context.Meetings.ToList();
             List<Location> dbLocations = _context.Locations.ToList();
             List<Professor> dbProfessors = _context.Professor.ToList();*/
-            //_context.Sections.ToDictionary()
+
             // TODO Courses are always gonna be unique between each quarter
             foreach (Course course in courseList)
             {
