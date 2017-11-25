@@ -30,8 +30,12 @@ namespace ucsdscheduleme.Controllers
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
 
-            // Grab schedule from db.
-            List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
+#if DEBUG
+            if (user == null)
+                return View();
+#endif
+                // Grab schedule from db.
+                List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
 
             // Populate model with schedule info.
             if (schedule != null)
@@ -90,57 +94,6 @@ namespace ucsdscheduleme.Controllers
                                     .ToArray();
 
             return Json(suggestions);
-        }
-
-        public IActionResult GetModelSample()
-        {
-            NewScheduleViewModel m = new NewScheduleViewModel
-            {
-                OverallMetadata = new Metadata
-                {
-                    AverageGpaExpected = 3.5M,
-                    AverageGpaReceived = 3.4M,
-                    AverageTotalWorkload = 6.7M
-                }
-            };
-
-            Dictionary<string, CourseViewModel> c = new Dictionary<string, CourseViewModel>();
-            m.Courses = c;
-
-            CalendarEvent ce = new CalendarEvent()
-            {
-                CourseAbbreviation = "CSE110",
-                Day = "Monday",
-                StartTimeInMinutesAfterFirstHour = 30,
-                DurationInMinutes = 60,
-                ProfessorName = "John Cena"
-            };
-
-            List<CalendarEvent> be = new List<CalendarEvent>() { ce };
-
-            Dictionary<string, CalendarEvent> se = new Dictionary<string, CalendarEvent>() { { "1234", ce } };
-
-            BaseViewModel b1 = new BaseViewModel()
-            {
-                BaseElements = be,
-                SectionElements = se
-            };
-
-
-            Dictionary<string, BaseViewModel> b = new Dictionary<string, BaseViewModel>()
-            {
-                { "Gary", b1 }
-            };
-
-
-            CourseViewModel c1 = new CourseViewModel
-            {
-                Bases = b,
-                SelectedBase = "Gary",
-                SelectedSection = "1234"
-            };
-
-            return (Json(m));
         }
     }
 }

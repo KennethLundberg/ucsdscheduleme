@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ucsdscheduleme.Models;
 
 namespace ucsdscheduleme.Repo
@@ -12,63 +11,130 @@ namespace ucsdscheduleme.Repo
         private static readonly int START_MINUTES = 30;
         private static readonly int MINUTES_IN_HOUR = 60;
 
-        public static ScheduleViewModel FormatSectionsToCalendarEvent(List<Section> sections)
+        public static ScheduleViewModel FormatSectionsToCalendarEvent(List<Section> selectedSections)
         {
-
-            ScheduleViewModel model = new ScheduleViewModel();
-            List<CalendarEvent> events = new List<CalendarEvent>();
-            List<OneTimeEvent> oneTimeEvents = new List<OneTimeEvent>();
-            List<Metadata> classMetadata = new List<Metadata>();
-            Metadata overall = new Metadata();
-
-            model.OneTimeEvents = oneTimeEvents;
-            model.Events = events;
-            model.ClassMetadata = classMetadata;
-            model.OverallMetadata = overall;
-
-            decimal numberOfCourses = sections.Count;
-
-            foreach (Section section in sections)
+            ScheduleViewModel model = new ScheduleViewModel
             {
-                string courseAbbreviation = section.Course.CourseAbbreviation;
-                string professorName = section.Professor.Name;
+                Courses = new Dictionary<int, CourseViewModel>()
+            };
+            var coursesSectionPairs = selectedSections.ToDictionary(s => s,s => s.Course);
 
-                AddMetadata(ref classMetadata, ref overall, section, numberOfCourses);
-
-                foreach(Meeting meeting in section.Meetings)
+            foreach (var courseSection in coursesSectionPairs)
+            {
+                var course = courseSection.Value;
+                var selectedSection = courseSection.Key;
+                CourseViewModel thisCourse = new CourseViewModel
                 {
-                    MeetingType type = meeting.MeetingType;
+                    Bases = new Dictionary<char, BaseViewModel>(),
+                    SelectedSection = selectedSection.Id,
+                    // If our sections have no meetings, we're in trouble. Time to abort.
+                    SelectedBase = selectedSection.Meetings?.First().Code[0] ?? 
+                        throw new ArgumentException($"Section with no meeting found: Id'{selectedSection.Id}'")
+                };
 
-                    if (type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm)
-                    {
-                        AddOneTimeEvent(ref oneTimeEvents, courseAbbreviation, meeting);
-                    }
-                    else
-                    {
-                        AddCalendarEvent(ref events, courseAbbreviation, professorName, meeting);
-                    }
+                model.Courses.Add(course.Id,thisCourse);
+
+                var baseSectionGroups = course.Sections.GroupBy(s => s.Meetings.First().Code[0]);
+                foreach (var baseSectionGroup in baseSectionGroups)
+                {
+                    var baseForCourse = PopulateBaseForCourse(selectedSection, baseSectionGroup.ToList());
+                    thisCourse.Bases.Add(baseSectionGroup.Key, baseForCourse);
                 }
             }
 
             return model;
         }
 
-        private static void AddMetadata(ref List<Metadata> classMetadata, ref Metadata overall, Section section, decimal numberOfCourses)
+        private static BaseViewModel PopulateBaseForCourse(Section selectedSection, List<Section> sectionsForBase)
+        {
+            var course = selectedSection.Course;
+
+            BaseViewModel thisBase = new BaseViewModel
+            {
+                Metadata = AddMetadata(sectionsForBase.First())
+            };
+
+            List<OneTimeEvent> oneTimeEvents = PopulateOneTimeEvents(sectionsForBase, course);
+            thisBase.OneTimeEvents = oneTimeEvents;
+
+            List<CalendarEvent> baseEvents = PopulateBaseEvents(selectedSection, sectionsForBase, course);
+            thisBase.BaseEvents = baseEvents;
+
+            Dictionary<int, List<CalendarEvent>> thisBasesSectionEvents = PopulateSectionEventsForBase(sectionsForBase, course);
+            thisBase.SectionEvents = thisBasesSectionEvents;
+
+            return thisBase;
+        }
+
+        private static Dictionary<int, List<CalendarEvent>> PopulateSectionEventsForBase(List<Section> sectionsForBase, Course course)
+        {
+            Dictionary<int, List<CalendarEvent>> thisBasesSectionEvents = new Dictionary<int, List<CalendarEvent>>();
+            foreach (var section in sectionsForBase)
+            {
+                List<CalendarEvent> thisSectionsEvents = new List<CalendarEvent>();
+                var sectionSpecificMeetings = section.Meetings.Where(m => m.SectionId != null);
+                foreach (var meeting in sectionSpecificMeetings)
+                {
+                    AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, section.Professor.Name, meeting);
+                }
+                thisBasesSectionEvents.Add(section.Id, thisSectionsEvents);
+            }
+
+            return thisBasesSectionEvents;
+        }
+
+        private static List<CalendarEvent> PopulateBaseEvents(Section selectedSection, List<Section> sectionsForBase, Course course)
+        {
+            var baseMeetings = sectionsForBase.First()
+                                               .Meetings
+                                               .Where(m => m.SectionId == null);
+
+            List<CalendarEvent> baseEvents = new List<CalendarEvent>();
+            foreach (var baseMeeting in baseMeetings)
+            {
+                var type = baseMeeting.MeetingType;
+
+                if (!IsOneTimeEvent(type))
+                {
+                    AddCalendarEvent(ref baseEvents, course.CourseAbbreviation, selectedSection.Professor.Name, baseMeeting);
+                }
+            }
+
+            return baseEvents;
+        }
+
+        private static List<OneTimeEvent> PopulateOneTimeEvents(List<Section> sectionsForBase, Course course)
+        {
+            var oneTimeMeetings = sectionsForBase.First()
+                                                  .Meetings
+                                                  .Where(m => IsOneTimeEvent(m.MeetingType));
+
+            List<OneTimeEvent> oneTimeEvents = new List<OneTimeEvent>();
+            foreach (var oneTimeMeeting in oneTimeMeetings)
+            {
+                AddOneTimeEvent(ref oneTimeEvents, course.CourseAbbreviation, oneTimeMeeting);
+            }
+
+            return oneTimeEvents;
+        }
+
+        private static bool IsOneTimeEvent(MeetingType type)
+        {
+            return type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm;
+        }
+
+        private static Metadata AddMetadata(Section section)
         {
             var capeForSection = section.Course.Cape.First(ca => ca.Professor == section.Professor);
 
-            overall.AverageGpaExpected += capeForSection.AverageGradeExpected / numberOfCourses;
-            overall.AverageGpaReceived += capeForSection.AverageGradeReceived / numberOfCourses;
-            overall.AverageTotalWorkload += capeForSection.StudyHoursPerWeek;
-
-            classMetadata.Add(new Metadata
+            return new Metadata
             {
                 AverageGpaExpected = capeForSection.AverageGradeExpected,
                 AverageGpaReceived = capeForSection.AverageGradeReceived,
                 AverageTotalWorkload = capeForSection.StudyHoursPerWeek,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
                 ProfessorName = section.Professor.Name
-            });
+            };
         }
 
         private static void AddOneTimeEvent(ref List<OneTimeEvent> oneTimeEvent, string courseAbbreviation, Meeting meeting)

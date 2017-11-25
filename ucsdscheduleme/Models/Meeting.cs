@@ -25,6 +25,7 @@ namespace ucsdscheduleme.Models
     public class Meeting
     {
         public int Id { get; set; }
+        public int? SectionId { get; set; }
         [StringLength(3)]
         public string Code { get; set; }
         public Days Days { get; set; }
@@ -34,5 +35,6 @@ namespace ucsdscheduleme.Models
 
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
+        public Section Section { get; set; }
     }
 }
