@@ -291,10 +291,11 @@
 	        }
 	        if(e.target && (e.target.classList.contains("fa-cog") || 
 	        				e.target.classList.contains("edit-span") )) {
-	        	console.log("hit\t" + e.target.parentNode.parentNode.classList);
+	        	changeSchedule(e.target);
 	        }
 	        if(e.target && e.target.classList.contains("edit-button")) {
-	        	console.log("hit\t" + e.target.parentNode.classList);
+	        	//console.log("hit\t" + e.target.parentNode.classList);
+	        	//changeSchedule(e.target);
 	        }
 	        
         })

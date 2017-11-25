@@ -328,7 +328,7 @@ var courses = {
  **/
 function setup() {
     clearMeetings();
-    console.log("setup()");
+    //console.log("setup()");
     updateMeetings(courses);
 }
 /** END OF DELETE **/
@@ -411,8 +411,12 @@ function calculateMeetingPosition(meeting) {
  * and place the event div.
  *  Each div is assigned the appropriate class and id.
  */
-function insertMeeting(meeting)
+function insertMeeting(meeting, courseId, baseId, sectionId)
 {
+
+    // console.log(meeting);
+    // console.log(meetingId);
+
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
     var top = pos.top;
@@ -487,13 +491,20 @@ function insertMeeting(meeting)
     editButton.append(editIcon);
 
     event.append(editButton);
-    
+
+    courseId = ' _' + courseId;
+    baseId = ' _' + baseId;
+    sectionId = ' _' + sectionId;
+    event.className += courseId;
+    event.className += baseId;
+    event.className += sectionId;
+
     /* add event to day of meeting */
     var dayElem = document.getElementById(meeting.day);
     dayElem.append(event);
 }
 
-/*
+/**
  * Function: updateMeetings(meetings)
  * Param: meetings - the JSON object with a list of selected bases, selections
  *      See global variable TODO for the structure
@@ -504,18 +515,20 @@ function updateMeetings(meetings)
 {
     /* iterate through all the meetings in the JSON */
     for(meeting in meetings) {
+        // console.log("meeting")
+        // console.log(meeting)
 
         /* extract selected base and section - the events to display on calendar */
         var selectedBase = courses[meeting].selectedBase;
         var selectedSection = courses[meeting].selectedSection;
 
-        /* get list of selected base (i.e. lectures) and section elements (i.e. discussions) */
+        /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
         var baseElements = courses[meeting].bases[selectedBase].baseElements;
         var sectionElements = courses[meeting].bases[selectedBase].sectionElements[selectedSection];
 
         /* insert all base elements */
         for(var i = 0; i < baseElements.length; i++) {
-            insertMeeting(baseElements[i]);
+            insertMeeting(baseElements[i], meeting, selectedBase);
         }
 
         /* check if there are any sections */
@@ -523,13 +536,27 @@ function updateMeetings(meetings)
 
             /* insert all section elements */
             for(var i = 0; i < sectionElements.length; i++) {
-                insertMeeting(sectionElements[i]);
+                insertMeeting(sectionElements[i], meeting, selectedBase, selectedSection);
             }
         }
     }
 }
 
 function changeSchedule(e) {
-    var event = e.target.parentNode.parentNode;
-    console.log(event);
+
+    var hid = e.parentNode.parentNode;
+    var courseId = hid.classList[1].substr(1);
+    var baseId = hid.classList[2].substr(1);
+    var sectionId = hid.classList[3].substr(1);
+
+    // base selected
+    if(sectionId.innerHTML == undefined) {
+        console.log(baseId + " base selected");
+    } 
+
+    // section selected
+    else {
+        console.log(sectionId + " section selected");
+    }
+
 }
