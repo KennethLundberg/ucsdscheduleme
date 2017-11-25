@@ -396,6 +396,8 @@ function calculateMeetingPosition(meeting) {
  * Description: Inserts a single meeting into the calendar.
  *  A meeting has the following structure
     <div class="event">
+        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+        <div class="unlock-button"><i class="fa fa-unlock" aria-hidden="true"></i></div>
         <div class="event-header">
             <div class="icon" id="lecture">LE</div>
             <div class="event-info">
@@ -434,6 +436,29 @@ function insertMeeting(meeting)
     icon.className = "class-icon";
     icon.id = meeting.type;
     eventHeader.append(icon);
+
+
+    /* create the Change and edit-button icon and add to event div */
+    var editButtonContainer = document.createElement('div');
+    editButtonContainer.className = "edit-button";
+    event.append(editButtonContainer);
+
+    var editButtonText = document.createElement('span');
+    editButtonText.innerText = "Change";
+    editButtonContainer.append(editButtonText);
+
+    var editButtonIcon = document.createElement('i');
+    editButtonIcon.className = "edit-button fa fa-cog";
+    editButtonContainer.append(editButtonIcon);
+
+    /* create the Change and edit-button icon and add to event div */
+    var unlockButtonContainer = document.createElement('div');
+    unlockButtonContainer.className = "unlock-button";
+    event.append(unlockButtonContainer);
+
+    var unlockButtonIcon = document.createElement('i');
+    unlockButtonIcon.className = "edit-button fa fa-unlock";
+    unlockButtonContainer.append(unlockButtonIcon);
 
     /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
