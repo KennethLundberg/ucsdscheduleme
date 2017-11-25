@@ -11,7 +11,10 @@ namespace HtmlAgilitySandbox
 {
     class ClassScrape
     {
+        // Database context.
         private readonly ScheduleContext _context;
+        // Department the query is woring on (i.e. CSE, MATH).
+        private readonly string department;
 
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -60,6 +63,7 @@ namespace HtmlAgilitySandbox
         public ClassScrape(ScheduleContext context, string selectedTerm, string courses)
         {
             _context = context;
+            department = courses.Split(" ")[0];
             _actFormRequest = new ActFormRequest(selectedTerm, courses);
         }
 
@@ -220,7 +224,7 @@ namespace HtmlAgilitySandbox
                             currentCourse = new Course
                             {
                                 CourseName = classNameTrimmed,
-                                CourseAbbreviation = "CSE " + classNum,       // TODO fix prefix
+                                CourseAbbreviation = department + " " + classNum,
                                 Units = classUnitsTrimmed
                             };
                             courseList.Add(currentCourse);
@@ -401,7 +405,7 @@ namespace HtmlAgilitySandbox
             List<Meeting> dbMeetings = _context.Meetings.ToList();
             List<Location> dbLocations = _context.Locations.ToList();
             List<Professor> dbProfessors = _context.Professor.ToList();*/
-
+            //_context.Sections.ToDictionary()
             // TODO Courses are always gonna be unique between each quarter
             foreach (Course course in courseList)
             {
@@ -504,7 +508,7 @@ namespace HtmlAgilitySandbox
                         daysEnumerated |= Days.Friday;
                         break;
                     default:
-                        throw new FormatException();
+                        throw new FormatException(days);
                 }
             }
 
