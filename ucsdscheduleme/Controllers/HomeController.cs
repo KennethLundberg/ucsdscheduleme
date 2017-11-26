@@ -8,6 +8,7 @@ using ucsdscheduleme.Data;
 using Microsoft.AspNetCore.Identity;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -89,14 +90,24 @@ namespace ucsdscheduleme.Controllers
             return Json(model);
         }
 
-
-        public IActionResult TypeAhead(string input)
+        [HttpPost]
+        public IActionResult TypeAhead([FromBody] TypeAheadSearch search)
         {
-            var suggestions = _context.Courses.AsNoTracking()
-                                      .Where(c => c.CourseAbbreviation.Contains(input))
-                                      .Take(3)
-                                      .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
-                                      .ToArray();
+            var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
+
+            var suggestedCourses = _context.Courses.AsNoTracking()
+                                      .Where(c => c.CourseAbbreviation.ToUpper().Contains(search.Input.ToUpper()));
+
+            if(search.AlreadyAddedCourses != null)
+            {
+                suggestedCourses = suggestedCourses.Where(s => !search.AlreadyAddedCourses.Contains(s.Id) );
+            }
+
+            var suggestions = suggestedCourses.Take(3)
+                                              .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
+                                              .ToArray();
+
+
             return Json(suggestions);
         }
     }

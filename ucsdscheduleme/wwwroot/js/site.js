@@ -338,38 +338,48 @@ document.addEventListener('DOMContentLoaded', function() {
     setup();
 });
 
+function typeAheadCallout(input) {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.typeAhead;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
+    console.log("Payload: " + JSON.stringify(send));
+    xhr.send(JSON.stringify(send));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = JSON.parse(xhr.responseText);
+            clearSearch();
+
+            for (i = 0; i < text.length; i++) {
+                populateSearch(text[i]);
+                console.log(text[i]);
+            }
+        }
+    }
+}
+
+function removeCourse(e) {
+    var course = e.target.parentNode.parentNode;
+    var id = course.id;
+    var index = myApp.coursesToSchedule.indexOf(id);
+    myApp.coursesToSchedule.splice(index, 1);
+    console.log("Courses: " + myApp.coursesToSchedule);
+    course.remove();
+    typeAheadCallout(document.getElementById("search").value);
+}
 
 /**
  * Clears the drop down and populates the drop down with the auto-complete results.
  * @param {String} e The string to search for auto-complete results with.
  */
 function typeAhead(e) {
-    clearSearch();
 
     // Sends the input to the server to get the courses
     var input = e.target.value;
-    var xhr = new XMLHttpRequest();
-    var safeInput = encodeURI(input);
-    var url = myApp.urls.typeAhead + "?input=" + safeInput;
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
-
-    // When the text is edited, it clears the search and populates it
-    xhr.onreadystatechange = function() 
-    {
-        if (xhr.readyState == 4 && xhr.status == 200)
-        {
-            var text = JSON.parse(xhr.responseText);
-            clearSearch();
-
-            for (i = 0; i < text.length; i++)
-            {
-                populateSearch(text[i]);
-                console.log(text[i]);
-            }
-        }
-    }
+    typeAheadCallout(input);
 }
 
 
@@ -432,6 +442,9 @@ function addList(data)
 
     console.log("data.id: " + data.id);
     myApp.coursesToSchedule.push(data.id);
+
+    // Now clear the dropdown and repopulate it
+    typeAheadCallout(document.getElementById("search").value);
 
     var iconContainer = document.createElement('div');
     iconContainer.className = "class-icon";

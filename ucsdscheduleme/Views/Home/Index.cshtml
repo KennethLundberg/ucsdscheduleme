@@ -175,27 +175,12 @@
                 <input type="text" id="search" placeholder="Search classes" name="q" />
                 <button type="submit" value="text" class="search-icon"><i class="fa fa-search"></i></button>
                 <div class="search-result" id="courseItems">
-                    <div class="courseItem">CSE 100</div>
-                    <div class="courseItem">CSE 101</div>
-                    <div class="courseItem">CSE 110</div>
                 </div>
             </div>
         </div>
         <div class="class-list" id="class-list">
-            <!--<div class="class">
-                <span>CSE 100</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>-->
-            <!--<div class="class">
-                <span>CSE 101</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
-            <div class="class">
-                <span>CSE 110</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>-->
         </div>
-        <!--<div class="generate-schedule-container">
+        <div class="generate-schedule-container">
             <select style="width: 100%;">
                 <option selected="selected">Select Optimization</option>
                 <option>Most Gaps</option>
@@ -209,7 +194,7 @@
             </select>
             <div class="generate-schedule-button" onclick="setup()">
             </div>
-        </div>-->
+        </div>
     </div>
 
     <div class="side right-bar">
@@ -316,12 +301,16 @@
 	        }            	
         }
 
-	    document.addEventListener('click',function(e) {
-            if(e.target && e.target.classList.contains("courseItem")){
-	            //call addList
-	            addList(e.target);
-	        }
-        })
+        document.addEventListener('click', function (e) {
+            if (e.target) {
+                if (e.target.classList.contains("courseItem")) {
+                    //call addList
+                    addList(e.target);
+                } else if (e.target.classList.contains("fa-window-close")) {
+                    removeCourse(e);
+                }
+            }
+        });
 	
     })();
 </script>
