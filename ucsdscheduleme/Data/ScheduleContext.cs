@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using ucsdscheduleme.Models;
 
 namespace ucsdscheduleme.Data
 {
-    public class ScheduleContext : DbContext
+    public class ScheduleContext : IdentityDbContext<ApplicationUser>
     {
         public ScheduleContext(DbContextOptions<ScheduleContext> options) : base(options)
         {
@@ -31,6 +32,7 @@ namespace ucsdscheduleme.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Course>().ToTable("Course");
         }
     }

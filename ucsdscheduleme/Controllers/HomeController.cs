@@ -1,58 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
 using ucsdscheduleme.Data;
+using Microsoft.AspNetCore.Identity;
+using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ucsdscheduleme.Controllers
 {
+#if !DEBUG
+    [Authorize]
+#endif
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ScheduleContext context)
+        public HomeController(ScheduleContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
 
-            ScheduleViewModel model = new ScheduleViewModel();
-            /*
+            ScheduleViewModel model;
+            return View(new ScheduleViewModel());
+
+            // Find our user with the auth token.
+            var user = _userManager.GetUserAsync(User).Result;
+
+#if DEBUG
+            if (user == null)
+                return View();
+#endif
+                // Grab schedule from db.
+                List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
+
+            // Populate model with schedule info.
+            if (schedule != null)
             {
-                // This eventually will be replaced with a call to get the User object from the db
-                // and pulling the section info from their user sections.
-                SectionList = _context.UserSections.Select(us => us.Section).ToList(),
-
-                OverallMetadata = new Metadata()
-            };
-            */
-
-            Metadata overallMetadata = model.OverallMetadata;
-
-            decimal numberOfCourses = model.SectionList.Count;
-
-            foreach (var section in model.SectionList)
+                model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+            }
+            else
             {
-                var capeForSection = section.Course.Cape.First(ca => ca.Professor == section.Professor);
-
-                overallMetadata.AverageGpaExpected += capeForSection.AverageGradeExpected / numberOfCourses;
-                overallMetadata.AverageGpaReceived += capeForSection.AverageGradeReceived / numberOfCourses;
-                overallMetadata.AverageTotalWorkload += capeForSection.StudyHoursPerWeek;
-
-                model.ClassMetadata.Add(new Metadata
-                {
-                    AverageGpaExpected = capeForSection.AverageGradeExpected,
-                    AverageGpaReceived = capeForSection.AverageGradeReceived,
-                    AverageTotalWorkload = capeForSection.StudyHoursPerWeek,
-                    CourseAbbreviation = section.Course.CourseAbbreviation,
-                    ProfessorName = section.Professor.Name
-                });
+                model = new ScheduleViewModel();
             }
 
             return View(model);
@@ -84,39 +81,34 @@ namespace ucsdscheduleme.Controllers
             var scheduleRepo = new ScheduleRepo();
 
             // Call the schedule finding algorithm.
-            var data = scheduleRepo.FindScheduleForClasses(courses);
+            PossibleSchedules schedules = scheduleRepo.FindScheduleForClasses(courses);
 
-            List<Section> schedule = data[0];
+            List<Section> schedule = scheduleRepo.Optimize(optimization, schedules);
 
-            switch (optimization)
+            ScheduleViewModel model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public IActionResult TypeAhead([FromBody] TypeAheadSearch search)
+        {
+            var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
+
+            var suggestedCourses = _context.Courses.AsNoTracking()
+                                      .Where(c => c.CourseAbbreviation.ToUpper().Contains(search.Input.ToUpper()));
+
+            if(search.AlreadyAddedCourses != null)
             {
-                case Optimization.HighestGPA:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.HighestRMP:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.EarlyEnd:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LateStart:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.MostDays:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LeastDays:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.MostGaps:
-                    //scheduule = functioin(data);
-                    break;
-                case Optimization.LeastGaps:
-                    //scheduule = functioin(data);
-                    break;
+                suggestedCourses = suggestedCourses.Where(s => !search.AlreadyAddedCourses.Contains(s.Id) );
             }
 
-            return Json(schedule);
+            var suggestions = suggestedCourses.Take(3)
+                                              .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
+                                              .ToArray();
+
+
+            return Json(suggestions);
         }
     }
 }
