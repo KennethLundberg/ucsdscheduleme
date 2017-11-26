@@ -17,8 +17,8 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1400,
-                EndTime = 1520,
+                StartTime = new System.DateTime(1, 1, 1, 14, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 15, 20, 0),
                 Code = "A00"
             };
 
@@ -42,7 +42,7 @@ namespace USM.Test
             {
                 CourseAbbreviation = "CSE20",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE20Section1 = new Section()
@@ -61,15 +61,15 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1400,
-                EndTime = 1520,
+                StartTime = new System.DateTime(1, 1, 1, 14, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 15, 20, 0),
                 Code = "B00"
             };
             Course CSE21 = new Course()
             {
                 CourseAbbreviation = "CSE21",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE21Section1 = new Section()
@@ -83,15 +83,15 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1500,
-                EndTime = 1620,
+                StartTime = new System.DateTime(1, 1, 1, 15, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 16, 20, 0),
                 Code = "B00"
             };
             Course CSE22 = new Course()
             {
                 CourseAbbreviation = "CSE22",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE22Section1 = new Section()
@@ -105,15 +105,15 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 0000,
-                EndTime = 0001,
+                StartTime = new System.DateTime(1, 1, 1, 0, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 1, 20, 0),
                 Code = "C00"
             };
             Course CSE23 = new Course()
             {
                 CourseAbbreviation = "CSE23",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE23Section1 = new Section()
@@ -127,15 +127,15 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Monday | Days.Wednesday | Days.Friday),
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new System.DateTime(1, 1, 1, 10, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 10, 50, 0),
                 Code = "F00"
             };
             Course CSE24 = new Course()
             {
                 CourseAbbreviation = "CSE24",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE24Section1 = new Section()
@@ -149,15 +149,15 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Monday),
-                StartTime = 1500,
-                EndTime = 1620,
+                StartTime = new System.DateTime(1, 1, 1, 15, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 16, 20, 0),
                 Code = "D00"
             };
             Course CSE25 = new Course()
             {
                 CourseAbbreviation = "CSE25",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE25Section1 = new Section()
@@ -170,8 +170,8 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1530,
-                EndTime = 1700,
+                StartTime = new System.DateTime(1, 1, 1, 15, 30, 0),
+                EndTime = new System.DateTime(1, 1, 1, 17, 00, 0),
                 Code = "A00"
             };
 
@@ -179,23 +179,23 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new System.DateTime(1, 1, 1, 10, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 10, 50, 0),
                 Code = "A02"
             };
             Meeting CSE26Discussion2 = new Meeting()
             {
                 MeetingType = MeetingType.Discussion,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1700,
-                EndTime = 1750,
+                StartTime = new System.DateTime(1, 1, 1, 17, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 17, 50, 0),
                 Code = "B02"
             };
             Course CSE26 = new Course()
             {
                 CourseAbbreviation = "CSE26",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE26Section1 = new Section()
@@ -213,8 +213,8 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Lecture,
                 Days = (Days.Monday | Days.Wednesday),
-                StartTime = 1530,
-                EndTime = 1700,
+                StartTime = new System.DateTime(1, 1, 1, 15, 30, 0),
+                EndTime = new System.DateTime(1, 1, 1, 17, 00, 0),
                 Code = "A00"
             };
 
@@ -222,23 +222,23 @@ namespace USM.Test
             {
                 MeetingType = MeetingType.Discussion,
                 Days = Days.Wednesday,
-                StartTime = 1000,
-                EndTime = 1050,
+                StartTime = new System.DateTime(1, 1, 1, 10, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 10, 50, 0),
                 Code = "A02"
             };
             Meeting CSE27Discussion2 = new Meeting()
             {
                 MeetingType = MeetingType.Discussion,
                 Days = (Days.Tuesday | Days.Thursday),
-                StartTime = 1530,
-                EndTime = 1700,
+                StartTime = new System.DateTime(1, 1, 1, 15, 0, 0),
+                EndTime = new System.DateTime(1, 1, 1, 17, 50, 0),
                 Code = "B02"
             };
             Course CSE27 = new Course()
             {
                 CourseAbbreviation = "CSE27",
                 CourseName = "Intro / Discrete Mathematics",
-                Units = 4,
+                Units = "4",
                 Description = ""
             };
             Section CSE27Section1 = new Section()
