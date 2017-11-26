@@ -213,31 +213,46 @@ ul {
 
 .bottom {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    border-top: 4px solid #FFCC03;
-    border-collapse: collapse;
-    height: 30px;
-    overflow-y: scroll;
-    width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;
-    background-color: white;
     font-size: 12px;
-    margin-bottom: 15px;
+    background-color: white;
+    border-top: 4px solid #FFCC03;
+    border-collapse: collapse;
+    width: 100%;
+    display: block;
 }
 
-    .bottom tr th {
+    .bottom thead tr {
         background-color: #203E5F;
-        color: #FEFEFE;
-        font-size: 14px;
-        border: 1px solid black;
-        height: 2em;
     }
 
-    .bottom tr td {
-        border: 1px solid black;
-        text-align: center;
-        color: black;
+        .bottom thead tr th {
+            width: 200px;
+            padding-right: 20px;
+            color: #FEFEFE;
+            font-size: 14px;
+            height: 2em;
+        }
+
+    .bottom tbody {
+        display: block;
+        overflow-y: scroll;
+        width: 100%;
+        height: 100px;
     }
+
+        .bottom tbody tr td {
+            width: 200px;
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            color: black;
+        }
+
+            .bottom tbody tr td:last-of-type {
+                border-right: none;
+            }
 
 .searchbar-container {
     position: relative;
@@ -400,7 +415,7 @@ ul {
         text-align: center;
     }
 
-.button {
+.generate-schedule-button {
     cursor: pointer;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     padding: 15px;
@@ -414,7 +429,7 @@ ul {
     position: relative;
 }
 
-    .button:hover:before {
+    .generate-schedule-button:hover:before {
         content: "";
         width: 100%;
         height: 100%;
@@ -424,7 +439,37 @@ ul {
         background-color: rgba(255, 255, 255, 0.2);
     }
 
-    .button:after {
+    .generate-schedule-button:after {
+        content: "Generate Schedule";
+        color: #151515;
+    }
+
+.logout-button {
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #FFCC03;
+    color: #151515;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+    .logout-button:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .logout-button:after {
+        content: "Logout";
         color: #151515;
     }
 
