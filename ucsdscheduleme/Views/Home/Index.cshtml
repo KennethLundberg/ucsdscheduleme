@@ -285,7 +285,7 @@
 
 	    document.addEventListener('click',function(e) {
             // console.log(e.target);
-            
+
             if(e.target && e.target.classList.contains("courseItem")){
 	            //call addList
 	            addList(e.target);
@@ -298,7 +298,13 @@
 	        	//console.log("hit\t" + e.target.parentNode.classList);
 	        	//changeSchedule(e.target);
 	        }
-	        
+        })
+
+        document.addEventListener('mouseover', function(e) {
+        	if(e.target && e.target.classList.contains("event")) {
+	        	// console.log(e.target)
+	        	console.log("hovering")
+	        }
         })
 	
     })();

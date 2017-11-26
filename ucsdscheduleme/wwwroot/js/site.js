@@ -335,7 +335,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A00",
+                        code: "A001",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -345,7 +345,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A00",
+                        code: "A002",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -355,7 +355,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A00",
+                        code: "A003",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -417,31 +417,21 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A00",
+                        code: "A011",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
-                        day: "monday"
+                        day: "tuesday"
                     },
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A00",
+                        code: "A012",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
-                        day: "wednesday"
-                    },
-                    {
-                        type: "lecture",
-                        courseAbbreviation: "CSE 101",
-                        professor: "Miles, Jones",
-                        code: "A00",
-                        startTimeInMinutesAfterFirstHour: 150,
-                        durationInMinutes: 50,
-                        timespan: "10:00am - 10:50am",
-                        day: "friday"
+                        day: "thursday"
                     }
                 ],
                 "sectionElements": {
@@ -724,6 +714,49 @@ function changeSchedule(e) {
         // console.log("base " + search)
         var s = document.getElementsByClassName(search);
         // console.log(s);
+
+        courseId = courseId.substr(1);
+        baseId = baseId.substr(1);
+        sectionId = sectionId.substr(1);
+
+        var course = courses[courseId];
+        
+        var bases = course.bases
+        // var sectionElements = course.bases[baseId].sectionElements;
+        console.log(bases)
+        console.log(bases["A"])
+        // console.log(bases["A"].baseElements)
+        // console.log(bases["A"].baseElements[0])
+        // console.log(bases["A"].sectionElements)
+        // console.log(bases["A"].sectionElements["90210"][0])
+
+        var baseKeys = Object.keys(bases);
+
+        
+        // insert all bases aka lectures
+        // baseKeys is 'A', 'B'
+        for(var i = 0; i < baseKeys.length; i++) {
+            // for each lecture in each base
+            for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
+                var meeting = bases[baseKeys[i]].baseElements[j];
+                var event = insertMeeting(meeting, courseId, baseId, "_undefined");
+                event.className += " event-activated";
+            }
+            var sectionElements = bases[baseKeys[i]].sectionElements;
+            var sections = Object.keys(sectionElements);
+            sections.forEach(function(section) {
+                var s = sectionElements[section];
+                // console.log(s.length)
+                for(var k = 0; k < s.length; k++) {
+                    // console.log(s[k])
+                    var event = insertMeeting(s[k], courseId, baseId, sectionId);
+                    event.className += " event-activated";
+                }
+                
+            });
+        }
+
+
     } 
     // section selected
     else {
