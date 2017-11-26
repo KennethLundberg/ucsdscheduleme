@@ -730,20 +730,20 @@ function showBaseAndAllSections(ids) {
 }
 
 function changeSchedule(event) {
-    console.log("changeSchedule ")
+    // console.log("changeSchedule ")
     // console.log(event);
 
     var ids = extractIds(event);
-    console.log(ids);
+    // console.log(ids);
 
     // base selected
     if(ids.sectionId === "undefined") {
-        console.log("base")
+        // console.log("base")
         showAllBasesAndAllSections(ids);
     } 
     // section selected
     else {
-        console.log("section")
+        // console.log("section")
         showBaseAndAllSections(ids);
     }
 }
@@ -814,14 +814,12 @@ function extractIds(event) {
  */
 function findOuterDiv(element, className) {
     // console.log(element.classList.length);
-    // if(className.length <= 0 || (typeof element === 'undefined')) {
-    //     return null;
-    // }
-    //if(element.classList.length > 0) {
-        while(!element.classList.contains(className)) {
-            element = element.parentNode;
-        }
-    //}
+    if(element.classList.length <= 0 || (typeof element == undefined) || (typeof element.classList == undefined)) {
+        return null;
+    }
+    while(!element.classList.contains(className)) {
+        element = element.parentNode;
+    }
 
     if(element.classList.contains(className)) { 
         return element;
