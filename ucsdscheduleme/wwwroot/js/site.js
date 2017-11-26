@@ -70,7 +70,7 @@ function clearMetadata()
 function insertMetadata(course)
 { 
 
-    //var selectedBase;
+    // TO DO: check that metadata is properly being brought into these divs
     //outer course stat div
     var metadata = extractMetadata(course);
 
@@ -138,6 +138,8 @@ function updateOverallMetadata(courses)
 
     var tbl = document.createElement("table");
     var tblBody = document.createElement("tbody");
+
+    //IGNORE, just an example I was trying to follow but decided a loop wasn't good for what I wanted to do
 
     /*for (var i = 0; i < 2; i++) {
         // creates a table row
