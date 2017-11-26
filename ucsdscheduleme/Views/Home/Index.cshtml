@@ -299,21 +299,18 @@
 	        		changeSchedule(e.target);
 	        		isEditing = true;
 	        	}
+	        	// currently editing AND event is activated
 	        	if(isEditing && findEventDiv(e.target).classList.contains('event-activated')) {
-					//console.log("isEditing " + isEditing)
         			updateEvent(findEventDiv(e.target));
         			isEditing = false;
         		}	        	
 	        }
-
-			
-
         })
 
         document.addEventListener('mouseover', function(e) {
-        	if(e.target && e.target.classList.contains("event")) {
+        	if(e.target && findEventDiv(e.target) !== null) {
 	        	// console.log(e.target)
-	        	console.log("hovering")
+	        	console.log("hovering " + e.target.classList[3])
 	        }
         })
 	

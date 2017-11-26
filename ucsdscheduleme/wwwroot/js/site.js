@@ -677,74 +677,70 @@ function updateMeetings(meetings)
     }
 }
 
-function changeSchedule(e) {
-    console.log("changeSchedule ")
+function showAllBasesAndAllSections(elm, ids) {
+    var course = courses[ids.courseId];
+    var bases = course.bases;
 
+    // baseKeys is 'A', 'B' // TODO: Replace with proper comments
+    var baseKeys = Object.keys(bases);
 
-    // isEditing = true;
+    for(var i = 0; i < baseKeys.length; i++) {
+        // insert all bases aka lectures
+        for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
+            var meeting = bases[baseKeys[i]].baseElements[j];
 
-    // get the outermost 'event' div
-    var hid = e.parentNode.parentNode;
-
-    var courseId = hid.classList[1];
-    var baseId = hid.classList[2];
-    var sectionId = hid.classList[3];
-
-    // remove underscore from variables
-    courseId = courseId.substr(1);
-    baseId = baseId.substr(1);
-    sectionId = sectionId.substr(1);
-    
-    // base selected
-    if(sectionId === "undefined") {
-
-        var course = courses[courseId];
-        var bases = course.bases;
-
-        // baseKeys is 'A', 'B' // TODO: Replace with proper comments
-        var baseKeys = Object.keys(bases);
-
-        for(var i = 0; i < baseKeys.length; i++) {
-            // insert all bases aka lectures
-            for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
-                var meeting = bases[baseKeys[i]].baseElements[j];
-
-                // insert base and set activated class
-                var event = insertMeeting(meeting, courseId, baseKeys[i], "undefined");
-                event.className += " event-activated";
-            }
-
-            // insert each section
-            var sectionElements = bases[baseKeys[i]].sectionElements;
-            var sectionsKeys = Object.keys(sectionElements);
-            sectionsKeys.forEach(function(key) {
-                var section = sectionElements[key];
-
-                // insert section and set activated class
-                for(var k = 0; k < section.length; k++) {
-                    var event = insertMeeting(section[k], courseId, baseKeys[i], key);
-                    event.className += " event-activated";
-                }
-            });
-        }
-    } 
-    // section selected
-    else {
-        var course = courses[courseId];
-        var baseElements = course.bases[baseId].baseElements;
-        var sectionElements = course.bases[baseId].sectionElements;
-
-        for(var i = 0; i < baseElements.length; i++) {
-            var event = insertMeeting(baseElements[i], courseId, baseId, "undefined");
+            // insert base and set activated class
+            var event = insertMeeting(meeting, ids.courseId, baseKeys[i], "undefined");
             event.className += " event-activated";
         }
 
+        // insert each section
+        var sectionElements = bases[baseKeys[i]].sectionElements;
         var sectionsKeys = Object.keys(sectionElements);
         sectionsKeys.forEach(function(key) {
             var section = sectionElements[key];
-            var event = insertMeeting(section[0], courseId, baseId, key);
-            event.className += " event-activated";
+
+            // insert section and set activated class
+            for(var k = 0; k < section.length; k++) {
+                var event = insertMeeting(section[k], ids.courseId, baseKeys[i], key);
+                event.className += " event-activated";
+            }
         });
+    }
+}
+
+function showBaseAndAllSections(elm, ids) {
+    var course = courses[ids.courseId];
+    var baseElements = course.bases[ids.baseId].baseElements;
+    var sectionElements = course.bases[ids.baseId].sectionElements;
+
+    for(var i = 0; i < baseElements.length; i++) {
+        var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
+        event.className += " event-activated";
+    }
+
+    var sectionsKeys = Object.keys(sectionElements);
+    sectionsKeys.forEach(function(key) {
+        var section = sectionElements[key];
+        var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
+        event.className += " event-activated";
+    });
+}
+
+function changeSchedule(e) {
+    console.log("changeSchedule ")
+
+    // get the outermost 'event' div
+    var hid = e.parentNode.parentNode;
+    var ids = extractIds(hid);
+    
+    // base selected
+    if(ids.sectionId === "undefined") {
+        showAllBasesAndAllSections(hid, ids);
+    } 
+    // section selected
+    else {
+        showBaseAndAllSections(hid, ids);
     }
 }
 /**
@@ -752,10 +748,7 @@ function changeSchedule(e) {
  */
 function updateSelectedSection(event) {
     var ids = extractIds(event);
-    console.log(ids)
-    console.log("updateSelectedSection " + ids.sectionId)
     courses[ids.courseId].selectedSection = ids.sectionId;
-
     clearMeetings();
     updateMeetings(courses);
 }
@@ -765,10 +758,10 @@ function updateSelectedSection(event) {
  */
 function updateSelectedBase(event) {
     var ids = extractIds(event);
-
+    console.log(ids)
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    updateSelectedSection(sectionId)
+    //updateSelectedSection(sectionId);
     console.log("updateSelectedBase " + baseId)
 }
 
@@ -797,11 +790,18 @@ function extractIds(event) {
  * @param: element: DOM element of which you want to find the event div for 
  */
 function findEventDiv(element) {
+    console.log(element)
+    if(element === "undefined") {
+        return null;
+    }
+
     while(!element.classList.contains('event')) {
         element = element.parentNode;
     }
+
     if(element.classList.contains('event')) { 
         return element;
     }
+
     return null;
 }
