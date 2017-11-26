@@ -19,7 +19,7 @@ namespace HtmlAgilitySandbox
         // Hash maps for each object needed in database
         private static Dictionary<string, Course> courseDictionary;
         private static Dictionary<string, Section> sectionDictionary;
-        private static Dictionary<string, Meeting> meetingDictionary;
+        //private static Dictionary<string, Meeting> meetingDictionary;
         private static Dictionary<string, Location> locationDictionary;
         private static Dictionary<string, Professor> professorDictionary;
 
@@ -78,7 +78,7 @@ namespace HtmlAgilitySandbox
             // Initialize all hash maps (meeting is unique with its building/room/startingtime).
             courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
             sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
-            meetingDictionary = _context?.Meetings.ToDictionary(m => m.Location.Building + m.Location.RoomNumber + m.StartTime.ToString());
+            //meetingDictionary = _context?.Meetings.ToDictionary(m => m.Location.Building + m.Location.RoomNumber + m.StartTime.ToString());
             locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
             professorDictionary = _context?.Professor.ToDictionary(p => p.Name);
 
@@ -171,7 +171,7 @@ namespace HtmlAgilitySandbox
             // Vars to keep track of current class number, professor and course.
             string currentClassNum = "";
             string currentProf = "";
-            Course currentCourse = new Course();
+            Course currentCourse = new Course();        // TODO fix maybe necessary
             // Chars to trim from the extracted units.
             char[] unitsTrimChars = { '(', ')' };
 
@@ -237,14 +237,19 @@ namespace HtmlAgilitySandbox
                             string classUnitsTrimUnits = classUnitsTrimSpaces.Replace("Units", "");
                             string classUnitsTrimmed = classUnitsTrimUnits.Trim(unitsTrimChars);
 
-                            // Create new course for course list.
+                            // Create new course for course list after checking for existence in db.
                             currentClassNum = classNum;
-                            currentCourse = new Course
+                            string courseAbbrev = department + " " + classNum;
+
+                            if (!courseDictionary.TryGetValue(courseAbbrev, out currentCourse))
                             {
-                                CourseName = classNameTrimmed,
-                                CourseAbbreviation = department + " " + classNum,
-                                Units = classUnitsTrimmed
-                            };
+                                currentCourse = new Course
+                                {
+                                    CourseName = classNameTrimmed,
+                                    CourseAbbreviation = courseAbbrev,
+                                    Units = classUnitsTrimmed
+                                };
+                            }
                             courseList.Add(currentCourse);
                         }
                     }
@@ -287,7 +292,7 @@ namespace HtmlAgilitySandbox
                             string buildingName = buildingNode.InnerText;
                             string roomNumber = roomNode.InnerText;
 
-                            // Check if location exists in database
+                            // Check if location exists in database.
                             Location classLocation;
                             if (!locationDictionary.TryGetValue(buildingName + roomNumber, out classLocation))
                             {
@@ -314,7 +319,7 @@ namespace HtmlAgilitySandbox
                         {
                             currentMeeting.Days = GetDays("TBA");
 
-                            // Check if TBA location exists in database
+                            // Check if TBA location exists in database.
                             Location classLocation;
                             if (!locationDictionary.TryGetValue("TBATBA", out classLocation))
                             {
@@ -339,17 +344,29 @@ namespace HtmlAgilitySandbox
                         if (!String.IsNullOrEmpty(sectionIDNode.InnerText.Trim()) && !sectionIDNode.InnerText.Trim().Contains("&nbsp"))
                         {
                             // Section ID exists, so create new section and add current meeting to section.
-                            Professor prof = new Professor
+                            // Check if professor exists in database.
+                            Professor prof;
+                            if (!professorDictionary.TryGetValue(currentProf, out prof))
                             {
-                                Name = currentProf
-                            };
+                                prof = new Professor
+                                {
+                                    Name = currentProf
+                                };
+                                professorDictionary.Add(currentProf, prof);
+                            }
 
-                            Section currentSection = new Section
+                            // Check if section exists in database.
+                            int ticket = Int32.Parse(sectionIDNode.InnerText.Trim());
+                            Section currentSection;
+                            if (!sectionDictionary.TryGetValue(ticket.ToString(), out currentSection))
                             {
-                                Ticket = Int32.Parse(sectionIDNode.InnerText.Trim()),
-                                Course = currentCourse,
-                                Professor = prof
-                            };
+                                currentSection = new Section
+                                {
+                                    Ticket = ticket,
+                                    Course = currentCourse,
+                                    Professor = prof
+                                };
+                            }
                             currentSection.Meetings.Add(currentMeeting);
                             sectionList.Add(currentSection);
                         }
@@ -401,7 +418,7 @@ namespace HtmlAgilitySandbox
                         string testBuilding = testBuildingNode.InnerText;
                         string testRoom = testRoomNode.InnerText;
 
-                        // Check if location exists in database
+                        // Check if location exists in database.
                         Location classLocation;
                         if (!locationDictionary.TryGetValue(testBuilding + testRoom, out classLocation))
                         {
