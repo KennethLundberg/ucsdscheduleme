@@ -110,6 +110,13 @@ namespace HtmlAgilitySandbox
 
             // Get the table that contains the number of pages we'll need to get results for.
             var nodes = htmlDoc.DocumentNode.SelectNodes(ActStrings.AllTables);
+
+            // If nodes if empty then the search didn't find any classes to skip this whole method
+            if (nodes == null)
+            {
+                return null;
+            }
+
             // The navigation table is ALWAYS the third table.
             var navigationTable = nodes[2];
             var navigationText = navigationTable.SelectSingleNode(ActStrings.NavigationTableNode).InnerText;
@@ -153,6 +160,13 @@ namespace HtmlAgilitySandbox
         /// <param name="allDocumentsForQuerry">The HTML pages gathered from the course querry.</param>
         private void InsertDataFromHtmlPages(List<HtmlDocument> allDocumentsForQuerry)
         {
+
+            // Check if the list is valid or not
+            if(allDocumentsForQuerry == null)
+            {
+                return;
+            }
+
             // Hash maps for each object needed in database
             Dictionary<string, Course> courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
             Dictionary<string, Section> sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
@@ -176,7 +190,7 @@ namespace HtmlAgilitySandbox
             List<Meeting> meetingList = new List<Meeting>();
 
             // Remove meetings from db
-            var done = _context.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE Meetings").Result;
+            //var done = _context.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE Meetings").Result;
 
             // Loop through all of the documents in the query.
             foreach (HtmlDocument htmlDocument in allDocumentsForQuerry)
@@ -505,6 +519,10 @@ namespace HtmlAgilitySandbox
                     return MeetingType.IndependentStudy;
                 case "ST":
                     return MeetingType.Studio;
+                case "TU":
+                    return MeetingType.Tutorial;
+                case "PB":
+                    return MeetingType.ProblemSession;
                 default:
                     throw new FormatException(meetingType);
 

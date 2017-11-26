@@ -21,9 +21,16 @@ namespace ucsdscheduleme.Repo
 
         public void Update()
         {
-            // Getting the cource from the act website
-            ClassScrape classScraper = new ClassScrape(_context, "WI18", "math 1-190");
-            classScraper.Update();
+            // List of departments that are in UCSD
+            List<string> listOfDepartments = GetAllDepartments();
+
+            // Getting the courses for each department from the act website
+            foreach (string department in listOfDepartments)
+            {
+                // Scrape act for each department for Winter 18 
+                ClassScrape classScraper = new ClassScrape(_context, "WI18", department + " 1-20");
+                classScraper.Update();
+            }
 
             // TODO Now need add the other classes to the DB just like cse 1-190.
 

@@ -24,7 +24,7 @@ namespace ucsdscheduleme
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ScheduleContext>(options =>
-                                                   options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")/*@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"*/));
 
             services.AddMvc();
         }
