@@ -648,8 +648,12 @@ function updateMeetings(meetings)
     }
 }
 
-function updateSchedule(response) {
-
+function updateSchedule(courses) {
+    console.log("------------------------------------------")
+    console.log(JSON.stringify(courses));
+    console.log("------------------------------------------")
+    myApp.courses = courses;
+    updateMeetings(courses);
 }
 
 function generateSchedule() {
@@ -686,10 +690,7 @@ function generateSchedule() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var courses = JSON.parse(xhr.responseText);
-
-            console.log("------------------------------------------")
-            console.log(JSON.stringify(courses));
-            console.log("------------------------------------------")
+            updateSchedule(courses);
         }
     }
 }
