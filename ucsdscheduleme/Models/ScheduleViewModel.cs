@@ -1,13 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CourseId = System.Int32;
+using BaseId = System.Char;
+using SectionId = System.Int32;
 
 namespace ucsdscheduleme.Models
 {
     public class ScheduleViewModel
     {
-        public Metadata OverallMetadata { get; set; }
-        public List<Metadata> ClassMetadata { get; set; } = new List<Metadata>();
-        public List<CalendarEvent> Events { get; set; } = new List<CalendarEvent>();
+        public Dictionary<CourseId, CourseViewModel> Courses { get; set; }
+    }
+
+    public class CourseViewModel
+    {
+        public char SelectedBase { get; set; }
+        public int SelectedSection { get; set; }
+        public Dictionary<BaseId, BaseViewModel> Bases { get; set; }
+    }
+
+    public class BaseViewModel
+    {
+        public List<CalendarEvent> BaseEvents { get; set; }
+        public Dictionary<SectionId, List<CalendarEvent>> SectionEvents { get; set; }
+        public Metadata Metadata { get; set; }
         public List<OneTimeEvent> OneTimeEvents { get; set; }
     }
 

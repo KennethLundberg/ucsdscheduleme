@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
 using ucsdscheduleme.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using ucsdscheduleme.Repo;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 using Microsoft.EntityFrameworkCore;
 
 namespace ucsdscheduleme.Controllers
 {
-  //  [Authorize]
+#if !DEBUG
+    [Authorize]
+#endif
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
@@ -36,8 +34,12 @@ namespace ucsdscheduleme.Controllers
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
 
-            // Grab schedule from db.
-            List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
+#if DEBUG
+            if (user == null)
+                return View();
+#endif
+                // Grab schedule from db.
+                List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
 
             // Populate model with schedule info.
             if (schedule != null)
@@ -97,12 +99,5 @@ namespace ucsdscheduleme.Controllers
                                       .ToArray();
             return Json(suggestions);
         }
-
-        public IActionResult GetSectionsForBase()
-        {
-            return null;
-        }
-
-        //public IActionResult GetSectionsFor
     }
 }
