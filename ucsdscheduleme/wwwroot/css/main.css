@@ -111,7 +111,6 @@ ul {
 
         .schedule .schedule-group:first-of-type {
             margin-left: 4em;
-            border: none;
         }
 
         .schedule .schedule-group:last-of-type {
@@ -203,7 +202,7 @@ ul {
 
 .event-activated {
     box-shadow: 0px 0px 10px black;
-    background-color: #F5D76E;
+    background-color: #C5EFF7;
     z-index: 2;
 }
 
@@ -216,7 +215,8 @@ ul {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     border-top: 4px solid #FFCC03;
     border-collapse: collapse;
-    height: 20%;
+    height: 30px;
+    overflow-y: scroll;
     width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;

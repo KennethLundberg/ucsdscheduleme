@@ -136,7 +136,6 @@ ul {
 
         &:first-of-type {
             margin-left: 4em;
-            border: none;
         }
         /* fix the Friday border due to overflow scroll */
         &:last-of-type {
@@ -230,7 +229,7 @@ ul {
 
 .event-activated {
     box-shadow: 0px 0px 10px rgba(0,0,0, 1);
-    background-color: #F5D76E;
+    background-color: #C5EFF7;
     z-index: 2;
 }
 
@@ -243,7 +242,8 @@ ul {
     @include boxshadow();
     border-top: 4px solid $secondary-color;
     border-collapse: collapse;
-    height: 20%;
+    height: 30px;
+    overflow-y: scroll;
     width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;
