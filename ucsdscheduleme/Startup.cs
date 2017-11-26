@@ -29,28 +29,20 @@ namespace ucsdscheduleme
         {
             services.Configure<MvcOptions>(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+//                options.Filters.Add(new RequireHttpsAttribute());
             });
-
+                
             // Remote database
             services.AddDbContext<ScheduleContext>(options =>
                 options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
-
-            // SqlServer LocalDB
-            //services.AddDbContext<ScheduleContext>(options => 
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+       
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScheduleContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            { 
-                // Max's Google API ids
-                // googleOptions.ClientId = "674220527555-k9cls5f078h61jmg770urecjhun7v4ml.apps.googleusercontent.com";
-                // googleOptions.ClientSecret = "HKLgURgNLWoJS5KXlfjqJ4Kk";
 
-                // Sean's Google API ids
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
                 googleOptions.ClientId = "226496862693-jt3ln0g49bsusoo9h0f1b8hi8u4aee8k.apps.googleusercontent.com";
                 googleOptions.ClientSecret = "ZFKYjlsmqqtsXqiFnHyRglks";
             });
@@ -74,11 +66,11 @@ namespace ucsdscheduleme
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
-            app.UseRewriter(options);
+           // app.UseRewriter(options);
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
+//            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

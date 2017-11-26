@@ -7,10 +7,14 @@ using ucsdscheduleme.Repo;
 using ucsdscheduleme.Data;
 using Microsoft.AspNetCore.Identity;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ucsdscheduleme.Controllers
 {
-    //[Authorize]
+#if !DEBUG
+    [Authorize]
+#endif
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
@@ -26,6 +30,7 @@ namespace ucsdscheduleme.Controllers
         {
 
             ScheduleViewModel model;
+            return View(new ScheduleViewModel());
 
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
@@ -85,13 +90,23 @@ namespace ucsdscheduleme.Controllers
             return Json(model);
         }
 
-        public IActionResult TypeAhead(string input)
+        [HttpPost]
+        public IActionResult TypeAhead([FromBody] TypeAheadSearch search)
         {
-            var suggestions = _context.Courses
-                                    .Where(c => c.CourseAbbreviation.Contains(input))
-                                    .Take(3)
-                                    .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
-                                    .ToArray();
+            var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
+
+            var suggestedCourses = _context.Courses.AsNoTracking()
+                                      .Where(c => c.CourseAbbreviation.ToUpper().Contains(search.Input.ToUpper()));
+
+            if(search.AlreadyAddedCourses != null)
+            {
+                suggestedCourses = suggestedCourses.Where(s => !search.AlreadyAddedCourses.Contains(s.Id) );
+            }
+
+            var suggestions = suggestedCourses.Take(3)
+                                              .Select(c => new { abbreviation = c.CourseAbbreviation, id = c.Id })
+                                              .ToArray();
+
 
             return Json(suggestions);
         }
