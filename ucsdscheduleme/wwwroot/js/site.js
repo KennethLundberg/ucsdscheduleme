@@ -647,3 +647,49 @@ function updateMeetings(meetings)
         }
     }
 }
+
+function updateSchedule(response) {
+
+}
+
+function generateSchedule() {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.generateSchedule;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // TODO check if optimization isn't -1 and also that there is at least one course.
+
+    // Grab optimization from select list.
+    var optimizationSelect = document.getElementById("optimization");
+    var selectedValue = optimizationSelect.options[optimizationSelect.selectedIndex].value;
+
+    if (selectedValue == -1) {
+        return;
+        // TODO Error Message
+    }
+
+    // Grab courses to schedule
+    var courseIds = myApp.coursesToSchedule;
+    if (courseIds.length < 1) {
+        return;
+        // TODO error message
+    }
+
+    var request = { "optimization": selectedValue, "courseIds": courseIds };
+
+    console.log("Payload: " + JSON.stringify(request));
+
+    xhr.send(JSON.stringify(request));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var courses = JSON.parse(xhr.responseText);
+
+            console.log("------------------------------------------")
+            console.log(JSON.stringify(courses));
+            console.log("------------------------------------------")
+        }
+    }
+}

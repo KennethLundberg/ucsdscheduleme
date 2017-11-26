@@ -222,11 +222,12 @@ namespace ucsdscheduleme.Repo
                 endTime = meeting.EndTime.ToString("hh:mmtt");
             }
 
-            string start = $"{startDate} {startTime} - {endTime} ";
+            string time = $"{startTime} - {endTime} ";
             OneTimeEvent final = new OneTimeEvent()
             {
                 CourseAbbreviation = courseAbbreviation,
-                DateAndTime = start,
+                Time = time,
+                Date = startDate,
                 Location = $"{meeting.Location.RoomNumber} {meeting.Location.Building}",
                 Type = meeting.MeetingType.ToString()
             };

@@ -181,16 +181,16 @@
         <div class="class-list" id="class-list">
         </div>
         <div class="generate-schedule-container">
-            <select style="width: 100%;">
-                <option selected="selected">Select Schedule Preference</option>
-                <option>Most Gaps</option>
-                <option>Fewest Gaps</option>
-                <option>Most Days</option>
-                <option>Fewest Days</option>
-                <option>Highest GPA</option>
-                <option>Highest Rate My Professor</option>
-                <option>Earliest Start</option>
-                <option>Latest Start</option>
+            <select id="optimization" style="width: 100%;">
+                <option value="-1" selected="selected">Select Schedule Preference</option>
+                <option value="0">Most Gaps</option>
+                <option value="1">Fewest Gaps</option>
+                <option value="2">Most Days</option>
+                <option value="3">Fewest Days</option>
+                <option value="4">Highest GPA</option>
+                <option value="5">Highest Rate My Professor</option>
+                <option value="6">Earliest End</option>
+                <option value="7">Latest Start</option>
             </select>
             <div class="generate-schedule-button" onclick="setup()">
             </div>
