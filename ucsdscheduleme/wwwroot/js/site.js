@@ -647,3 +647,13 @@ function updateMeetings(meetings)
         }
     }
 }
+
+function visibility_on(id) {
+    var e = document.getElementById(id);
+    e.style.display = 'block';
+}
+
+function visibility_off(id) {
+    var e = document.getElementById(id);
+    e.style.display = 'none';
+}
