@@ -296,7 +296,7 @@
 	        if(e.target && findEventDiv(e.target) !== null) {
 	        	// only allow changes if currently not editing
 	        	if(!isEditing) {
-	        		changeSchedule(e.target);
+	        		changeSchedule(findEventDiv(e.target));
 	        		isEditing = true;
 	        	}
 	        	// currently editing AND event is activated
@@ -308,10 +308,10 @@
         });
 
         document.addEventListener('mouseover', function(e) {
-        	if(e.target && findEventDiv(e.target) !== null) {
-	        	// console.log(e.target)
-	        	// console.log("hovering " + e.target.classList[3])
-	        }
+        	// if(e.target && findEventDiv(e.target) !== null) {
+	        // 	// console.log(e.target)
+	        // 	// console.log("hovering " + e.target.classList[3])
+	        // }
         });
 	
     })();

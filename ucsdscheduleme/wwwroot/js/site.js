@@ -335,7 +335,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A001",
+                        code: "A01",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -345,7 +345,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A002",
+                        code: "A01",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -355,7 +355,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A003",
+                        code: "A01",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -369,7 +369,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A01",
+                            code: "A01-1",
                             startTimeInMinutesAfterFirstHour: 30,
                             durationInMinutes: 50,
                             timespan: "8:00am - 8:50am",
@@ -381,7 +381,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A02",
+                            code: "A01-2",
                             startTimeInMinutesAfterFirstHour: 90,
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -393,7 +393,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A03",
+                            code: "A01-3",
                             startTimeInMinutesAfterFirstHour: 90,
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -417,7 +417,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A011",
+                        code: "A02",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
@@ -427,7 +427,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A012",
+                        code: "A02",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
@@ -441,7 +441,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A01",
+                            code: "A02-1",
                             startTimeInMinutesAfterFirstHour: (1*60+30),
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -453,7 +453,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A01",
+                            code: "A02-2",
                             startTimeInMinutesAfterFirstHour: (1*60+30),
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -727,13 +727,13 @@ function showBaseAndAllSections(ids) {
     });
 }
 
-function changeSchedule(e) {
+function changeSchedule(event) {
     console.log("changeSchedule ")
+    // console.log(event);
 
-    // get the outermost 'event' div
-    var hid = e.parentNode.parentNode;
-    var ids = extractIds(hid);
-    
+    var ids = extractIds(event);
+    console.log(ids);
+
     // base selected
     if(ids.sectionId === "undefined") {
         console.log("base")
@@ -750,10 +750,14 @@ function changeSchedule(e) {
  * @param: sectionId: string
  */
 function updateSelectedSection(event) {
-    console.log("updateSelectedSection");
+    
 
     var ids = extractIds(event);
     courses[ids.courseId].selectedSection = ids.sectionId;
+    courses[ids.courseId].selectedBase = ids.baseId;
+
+    // console.log("updateSelectedSection " + ids.sectionId);
+    // console.log("base id " + ids.baseId);
     clearMeetings();
     updateMeetings(courses);
     isEditing = false;
@@ -764,11 +768,11 @@ function updateSelectedSection(event) {
  */
 function updateSelectedBase(event) {
     var ids = extractIds(event);
-    console.log(ids)
+    // console.log(ids)
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    console.log("updateSelectedBase " + ids.baseId)
-    console.log(courses[ids.courseId].selectedBase)
+    // console.log("updateSelectedBase " + ids.baseId)
+    // console.log(courses[ids.courseId].selectedBase)
     clearMeetings();
     updateMeetings(courses)
     showBaseAndAllSections(ids);    
@@ -784,6 +788,11 @@ function updateEvent(event) {
 }
 
 function extractIds(event) {
+
+    if(event.classList.length <= 0) {
+        return null;
+    }
+
     var courseId = event.classList[1].substr(1);
     var baseId = event.classList[2].substr(1);
     var sectionId = event.classList[3].substr(1);
