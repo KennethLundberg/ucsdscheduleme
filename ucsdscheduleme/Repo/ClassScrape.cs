@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net.Http;
 using ucsdscheduleme.Data;
@@ -15,13 +16,6 @@ namespace HtmlAgilitySandbox
         private readonly ScheduleContext _context;
         // Department the query is working on (i.e. CSE, MATH).
         private readonly string department;
-
-        // Hash maps for each object needed in database
-        private static Dictionary<string, Course> courseDictionary;
-        private static Dictionary<string, Section> sectionDictionary;
-        //private static Dictionary<string, Meeting> meetingDictionary;
-        private static Dictionary<string, Location> locationDictionary;
-        private static Dictionary<string, Professor> professorDictionary;
 
         // C# standard is that you only create one of these.
         private static HttpClient client = new HttpClient();
@@ -74,15 +68,6 @@ namespace HtmlAgilitySandbox
 
             // Course abbreviation prefix
             department = courses.Split(" ")[0].ToUpper();
-
-            // Initialize all hash maps (meeting is unique with its building/room/startingtime).
-            courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
-            sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
-            //meetingDictionary = _context?.Meetings.ToDictionary(m => m.Location.Building + m.Location.RoomNumber + m.StartTime.ToString());
-            locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
-            professorDictionary = _context?.Professor.ToDictionary(p => p.Name);
-
-
         }
 
         /// <summary>
@@ -168,6 +153,12 @@ namespace HtmlAgilitySandbox
         /// <param name="allDocumentsForQuerry">The HTML pages gathered from the course querry.</param>
         private void InsertDataFromHtmlPages(List<HtmlDocument> allDocumentsForQuerry)
         {
+            // Hash maps for each object needed in database
+            Dictionary<string, Course> courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
+            Dictionary<string, Section> sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
+            Dictionary<string, Location> locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
+            Dictionary<string, Professor> professorDictionary = _context?.Professor.ToDictionary(p => p.Name);
+
             // Vars to keep track of current class number, professor and course.
             string currentClassNum = "";
             string currentProf = "";
@@ -183,6 +174,9 @@ namespace HtmlAgilitySandbox
             List<Course> courseList = new List<Course>();
             List<Section> sectionList = new List<Section>();
             List<Meeting> meetingList = new List<Meeting>();
+
+            // Remove meetings from db
+            var done = _context.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE Meetings").Result;
 
             // Loop through all of the documents in the query.
             foreach (HtmlDocument htmlDocument in allDocumentsForQuerry)
@@ -257,8 +251,8 @@ namespace HtmlAgilitySandbox
                                     CourseAbbreviation = courseAbbrev,
                                     Units = classUnitsTrimmed
                                 };
+                                courseList.Add(currentCourse);
                             }
-                            courseList.Add(currentCourse);
                         }
                     }
 
@@ -474,23 +468,12 @@ namespace HtmlAgilitySandbox
                 currentCourse.Sections.Add(section);
             }
 
-            // Pull from db to check for existence later on.
-            /*List<Course> dbCourses = _context.Courses.ToList();
-            List<Section> dbSections = _context.Sections.ToList();
-            List<Meeting> dbMeetings = _context.Meetings.ToList();
-            List<Location> dbLocations = _context.Locations.ToList();
-            List<Professor> dbProfessors = _context.Professor.ToList();*/
-
-            // TODO Courses are always gonna be unique between each quarter
+            // Add courses to db and save.
             foreach (Course course in courseList)
             {
                 _context.Courses.Add(course);
             }
-            _context.SaveChanges(); // Getting exception here; somehow the ID for a class becomes this
-                                    // huge negative number, and therefore because its huge, cannot
-                                    // add the number to the database, only happens to class CSE 190-199
-                                    // In courseList, all ID is 0, but once after copying values to course
-                                    // variable we get IF to be -2147482647 for CSE 190
+            _context.SaveChanges();
         }
 
         /// <summary>
