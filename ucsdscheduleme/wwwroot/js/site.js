@@ -325,8 +325,8 @@ var courses1 = {
 
 var courses = {
     "cse101": {
-        "selectedBase": "A",
-        "selectedSection": "90210",
+        "selectedBase": "B",
+        "selectedSection": "10201",
         "bases": {
             "A": {
                 //Array of base object calenar events here (like lectures)
@@ -442,10 +442,10 @@ var courses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (10*60+30),
-                            durationInMinutes: 110,
-                            timespan: "6:00pm - 7:50pm",
-                            day: "thursday"
+                            startTimeInMinutesAfterFirstHour: (1*60+30),
+                            durationInMinutes: 50,
+                            timespan: "9:00am - 9:50am",
+                            day: "friday"
                         }
                     ],
                     "11023": [
@@ -454,9 +454,9 @@ var courses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            startTimeInMinutesAfterFirstHour: (1*60+30),
                             durationInMinutes: 50,
-                            timespan: "7:00pm - 8:50pm",
+                            timespan: "9:00am - 9:50am",
                             day: "monday"
                         }
                     ]
@@ -474,7 +474,7 @@ var courses = {
  **/
 function setup() {
     clearMeetings();
-    console.log("setup()");
+    //console.log("setup()");
     updateMeetings(courses);
 }
 /** END OF DELETE **/
@@ -699,91 +699,66 @@ function updateMeetings(meetings)
 
 function changeSchedule(e) {
 
+    // get the outermost 'event' div
     var hid = e.parentNode.parentNode;
 
     var courseId = hid.classList[1];
     var baseId = hid.classList[2];
     var sectionId = hid.classList[3];
-    // console.log(courseId)
-    // console.log(baseId)
-    // console.log(sectionId)
 
-    var search = courseId + " " + baseId;
+    // remove underscore from variables
+    courseId = courseId.substr(1);
+    baseId = baseId.substr(1);
+    sectionId = sectionId.substr(1);
+    
     // base selected
-    if(sectionId === "_undefined") {
-        // console.log("base " + search)
-        var s = document.getElementsByClassName(search);
-        // console.log(s);
-
-        courseId = courseId.substr(1);
-        baseId = baseId.substr(1);
-        sectionId = sectionId.substr(1);
+    if(sectionId === "undefined") {
 
         var course = courses[courseId];
-        
-        var bases = course.bases
-        // var sectionElements = course.bases[baseId].sectionElements;
-        console.log(bases)
-        console.log(bases["A"])
-        // console.log(bases["A"].baseElements)
-        // console.log(bases["A"].baseElements[0])
-        // console.log(bases["A"].sectionElements)
-        // console.log(bases["A"].sectionElements["90210"][0])
+        var bases = course.bases;
 
+        // baseKeys is 'A', 'B' // TODO: Replace with proper comments
         var baseKeys = Object.keys(bases);
 
-        
-        // insert all bases aka lectures
-        // baseKeys is 'A', 'B'
         for(var i = 0; i < baseKeys.length; i++) {
-            // for each lecture in each base
+            // insert all bases aka lectures
             for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
                 var meeting = bases[baseKeys[i]].baseElements[j];
-                var event = insertMeeting(meeting, courseId, baseId, "_undefined");
+
+                // insert base and set activated class
+                var event = insertMeeting(meeting, courseId, baseKeys[i], "undefined");
                 event.className += " event-activated";
             }
+
+            // insert each section
             var sectionElements = bases[baseKeys[i]].sectionElements;
-            var sections = Object.keys(sectionElements);
-            sections.forEach(function(section) {
-                var s = sectionElements[section];
-                // console.log(s.length)
-                for(var k = 0; k < s.length; k++) {
-                    // console.log(s[k])
-                    var event = insertMeeting(s[k], courseId, baseId, sectionId);
+            var sectionsKeys = Object.keys(sectionElements);
+            sectionsKeys.forEach(function(key) {
+                var section = sectionElements[key];
+
+                // insert section and set activated class
+                for(var k = 0; k < section.length; k++) {
+                    var event = insertMeeting(section[k], courseId, baseKeys[i], key);
                     event.className += " event-activated";
                 }
-                
             });
         }
-
-
     } 
     // section selected
     else {
-        // console.log("section")
-        // var s = document.getElementsByClassName(search);
-        // console.log(s);   
-        // search = search + " " + sectionId;
-        // s = document.getElementsByClassName(search);
-        // console.log(s);   
-        courseId = courseId.substr(1);
-        baseId = baseId.substr(1);
-        sectionId = sectionId.substr(1);
-
         var course = courses[courseId];
-        
         var baseElements = course.bases[baseId].baseElements;
         var sectionElements = course.bases[baseId].sectionElements;
 
         for(var i = 0; i < baseElements.length; i++) {
-            var event = insertMeeting(baseElements[i], courseId, baseId, sectionId);
-            var activatedClass = " event-activated";
-            event.className += activatedClass;
+            var event = insertMeeting(baseElements[i], courseId, baseId, "undefined");
+            event.className += " event-activated";
         }
-        var sections = Object.keys(sectionElements);
-        sections.forEach(function(section) {
-            var s = sectionElements[section];
-            var event = insertMeeting(s[0], courseId, baseId, sectionId);
+
+        var sectionsKeys = Object.keys(sectionElements);
+        sectionsKeys.forEach(function(key) {
+            var section = sectionElements[key];
+            var event = insertMeeting(section[0], courseId, baseId, key);
             event.className += " event-activated";
         });
     }
