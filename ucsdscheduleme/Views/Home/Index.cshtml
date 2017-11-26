@@ -280,24 +280,34 @@
         metadata: []
     };
 
+    var isEditing = false;
 
     (function () {
 
 	    document.addEventListener('click',function(e) {
-            // console.log(e.target);
+            console.log(e.target);
 
-            if(e.target && e.target.classList.contains("courseItem")){
+            if(e.target && e.target.classList.contains("courseItem")) {
 	            //call addList
 	            addList(e.target);
 	        }
-	        if(e.target && (e.target.classList.contains("fa-cog") || 
-	        				e.target.classList.contains("edit-span") )) {
-	        	changeSchedule(e.target);
+
+	        // clicked on a calendar event
+	        if(e.target && findEventDiv(e.target) !== null) {
+	        	// only allow changes if currently not editing
+	        	if(!isEditing) {
+	        		changeSchedule(e.target);
+	        		isEditing = true;
+	        	}
+	        	if(isEditing && findEventDiv(e.target).classList.contains('event-activated')) {
+					//console.log("isEditing " + isEditing)
+        			updateEvent(findEventDiv(e.target));
+        			isEditing = false;
+        		}	        	
 	        }
-	        if(e.target && e.target.classList.contains("edit-button")) {
-	        	//console.log("hit\t" + e.target.parentNode.classList);
-	        	//changeSchedule(e.target);
-	        }
+
+			
+
         })
 
         document.addEventListener('mouseover', function(e) {

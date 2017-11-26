@@ -477,23 +477,14 @@ function setup() {
     //console.log("setup()");
     updateMeetings(courses);
 }
-/** END OF DELETE **/
 
 /* called when DOM is ready */
 document.addEventListener('DOMContentLoaded', function() {
     setup();
 });
 
-// Write your JavaScript code.
-function updateMetadata(metadataList)
-{
+/** END OF DELETE **/
 
-}
-
-function insertMetadata(metadata)
-{
-
-}
 
 /*
  * Function: clearMeetings()
@@ -582,17 +573,6 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     icon.className = "class-icon";
     icon.id = meeting.type;
     eventHeader.append(icon);
-
-
-    /* create the Change and edit-button icon and add to event div */
-    // var unlockButtonContainer = document.createElement('div');
-    // unlockButtonContainer.className = "unlock-button";
-    // event.append(unlockButtonContainer);
-
-    // var unlockButtonIcon = document.createElement('i');
-    // unlockButtonIcon.className = "edit-button fa fa-unlock";
-    // unlockButtonContainer.append(unlockButtonIcon);
-
 
     /* create the Change and edit-button icon and add to event div */
     var editButton = document.createElement('div');
@@ -698,6 +678,10 @@ function updateMeetings(meetings)
 }
 
 function changeSchedule(e) {
+    console.log("changeSchedule ")
+
+
+    // isEditing = true;
 
     // get the outermost 'event' div
     var hid = e.parentNode.parentNode;
@@ -762,4 +746,62 @@ function changeSchedule(e) {
             event.className += " event-activated";
         });
     }
+}
+/**
+ * @param: sectionId: string
+ */
+function updateSelectedSection(event) {
+    var ids = extractIds(event);
+    console.log(ids)
+    console.log("updateSelectedSection " + ids.sectionId)
+    courses[ids.courseId].selectedSection = ids.sectionId;
+
+    clearMeetings();
+    updateMeetings(courses);
+}
+
+/**
+ * @param: baseId: string, sectionId: string
+ */
+function updateSelectedBase(event) {
+    var ids = extractIds(event);
+
+    courses[ids.courseId].selectedBase = ids.baseId;
+
+    updateSelectedSection(sectionId)
+    console.log("updateSelectedBase " + baseId)
+}
+
+
+function updateEvent(event) {
+    if(!event.classList.contains("_undefined")) {
+        updateSelectedSection(event);
+    } else {
+        updateSelectedBase(event)
+    }
+}
+
+function extractIds(event) {
+    var courseId = event.classList[1].substr(1);
+    var baseId = event.classList[2].substr(1);
+    var sectionId = event.classList[3].substr(1);
+
+    return {
+        courseId: courseId,
+        baseId: baseId,
+        sectionId: sectionId
+    }
+}
+
+/**
+ * @param: element: DOM element of which you want to find the event div for 
+ */
+function findEventDiv(element) {
+    while(!element.classList.contains('event')) {
+        element = element.parentNode;
+    }
+    if(element.classList.contains('event')) { 
+        return element;
+    }
+    return null;
 }
