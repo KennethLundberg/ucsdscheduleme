@@ -716,9 +716,9 @@ function clearOneTimeEvents()
 {
     var oneTimeEvents = document.getElementById('onetime');
 
-    while (oneTimeEvents.children[1])
+    while (oneTimeEvents.firstChild)
     {
-        oneTimeEvents.removeChild(oneTimeEvents.children[1]);
+        oneTimeEvents.removeChild(oneTimeEvents.firstChild);
     } 
 }
 
