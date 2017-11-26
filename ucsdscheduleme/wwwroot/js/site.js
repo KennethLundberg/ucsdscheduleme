@@ -19,6 +19,15 @@ var courses = {
         "bases": {
             "A": {
                 //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 101",
+                        "date": "Monday 11/17",
+                        "time": "11:00AM-3:00PM",
+                        "location": "PETERSON 123",
+                        "type": "FI"
+                    }
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
@@ -89,6 +98,15 @@ var courses = {
                 ]
             },
             "B": {
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 101",
+                        "date": "Friday 11/30",
+                        "time": "8:00AM-12:00PM",
+                        "location": "GALBRAITH 123",
+                        "type": "FI"
+                    },
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
@@ -160,6 +178,22 @@ var courses = {
         "bases": {
             "A": {
                 //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Thursday 12/6",
+                        "time": "7:00PM-10:00PM",
+                        "location": "WARREN LECTURE HALL 123",
+                        "type" : "FI"
+                    },
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Wednesday 10/12",
+                        "time": "5:00PM-7:00PM",
+                        "location": "YORK 123",
+                        "type": "MI"
+                    }
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
@@ -214,6 +248,22 @@ var courses = {
                 ]
             },
             "B": {
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Tuesday 12/7",
+                        "time": "8:00AM-12:00PM",
+                        "location": "PEPPER CANYON 123",
+                        "type": "FI"
+                    },
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Wednesday 10/12",
+                        "time": "9:00AM-1:00PM",
+                        "location": "CENTER 123",
+                        "type": "MI"
+                    }
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
@@ -275,6 +325,15 @@ var courses = {
         "bases": {
             "A": {
                 //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 110",
+                        "date": "Saturday 11/27",
+                        "time": "10:00AM-12:00PM",
+                        "location": "CENTER 420",
+                        "type": "FI"
+                    },
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
@@ -328,8 +387,10 @@ var courses = {
  **/
 function setup() {
     clearMeetings();
+    clearOneTimeEvents();
     console.log("setup()");
     updateMeetings(courses);
+    updateOneTimeEvents(courses);
 }
 /** END OF DELETE **/
 
@@ -509,6 +570,75 @@ function updateMeetings(meetings)
             for(var i = 0; i < sectionElements.length; i++) {
                 insertMeeting(sectionElements[i]);
             }
+        }
+    }
+}
+
+/**
+ * @description Clears the current table of one time events
+ */
+function clearOneTimeEvents()
+{
+    var oneTimeEvents = document.getElementById('onetime');
+
+    while (oneTimeEvents.children[1])
+    {
+        oneTimeEvents.removeChild(oneTimeEvents.children[1]);
+    } 
+}
+
+/**
+ * @description Insersts the one time event data into the view
+ * @param {OneTimeEvent} oneTimeEventData The current one time event object
+ */
+function insertOneTimeEvents(oneTimeEventData)
+{
+    var oneTimeEvent = document.createElement('tr');
+
+    var courseAbbrev = document.createElement('td');
+    courseAbbrev.innerHTML = oneTimeEventData.courseAbbreviation;
+
+    var date = document.createElement('td');
+    date.innerHTML = oneTimeEventData.date;
+
+    var time = document.createElement('td');
+    time.innerHTML = oneTimeEventData.time;
+
+    var location = document.createElement('td');
+    location.innerHTML = oneTimeEventData.location;
+
+    var type = document.createElement('td');
+    type.innerHTML = oneTimeEventData.type;
+
+    oneTimeEvent.append(courseAbbrev);
+    oneTimeEvent.append(type);
+    oneTimeEvent.append(date);
+    oneTimeEvent.append(time);
+    oneTimeEvent.append(location);
+
+    var oneTimeEventTable = document.getElementById('onetime');
+    oneTimeEventTable.append(oneTimeEvent);
+}
+
+/**
+ * @description Updates the one time event table to hold have the current schedule
+ * @param {ScheduleViewModel} courses Dictionary of CourseViewModels
+ */
+function updateOneTimeEvents(courses)
+{
+    /* iterate through all the meetings in the JSON */
+    for (course in courses) {
+
+        /* extract selected base - the events to display on calendar */
+        var selectedBase = courses[course].selectedBase;
+
+        /* get list of one time events (i.e. finals) */
+        var oneTimeEvents = courses[course].bases[selectedBase].oneTimeEvents;
+
+        /* insert all one time events */
+        for (var i = 0; i < oneTimeEvents.length; i++)
+        {
+            insertOneTimeEvents(oneTimeEvents[i]);
         }
     }
 }
