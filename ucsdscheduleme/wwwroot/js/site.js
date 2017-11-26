@@ -12,7 +12,7 @@ var sectionsB = ["10201", "11023"];
 var randomSelection = (randomBaseIndex == 0) ? sectionsA[randomSelectionIndex] : sectionsB[randomSelectionIndex];
 var randomSelectionForOneBase = sectionsA[randomBaseIndex];
 
-var courses = {
+var courses1 = {
     "cse101": {
         "selectedBase": randomBase,
         "selectedSection": randomSelection,
@@ -323,12 +323,168 @@ var courses = {
     
 }
 
+var courses = {
+    "cse101": {
+        "selectedBase": "A",
+        "selectedSection": "90210",
+        "bases": {
+            "A": {
+                //Array of base object calenar events here (like lectures)
+                "baseElements": [
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "monday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "wednesday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 30,
+                        durationInMinutes: 50,
+                        timespan: "8:00am - 8:50am",
+                        day: "friday"
+                    }
+                ],
+                "sectionElements": {
+                    //Array of this section specific courses here
+                    "90210": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: 30,
+                            durationInMinutes: 50,
+                            timespan: "8:00am - 8:50am",
+                            day: "tuesday"
+                        }
+                    ],
+                    "91023": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A02",
+                            startTimeInMinutesAfterFirstHour: 90,
+                            durationInMinutes: 50,
+                            timespan: "9:00am - 9:50am",
+                            day: "thursday"
+                        }
+                    ],
+                    "91047": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A03",
+                            startTimeInMinutesAfterFirstHour: 90,
+                            durationInMinutes: 50,
+                            timespan: "9:00am - 9:50am",
+                            day: "wednesday"
+                        }
+                    ]
+                },
+                "metadata": [
+                    {
+                        courseAbbreviation: "CSE 110",
+                        professor: "Gary Gillespie",
+                        avgWorkload: "Avg. Workload: 69 Hrs/Wk ",
+                        avgGradeExpected: "Avg. Grade Expected: F- (0.00)",
+                        avgGradeReceived: "Avg. Grade Received: F- (0.00)",
+                    }
+                ]
+            },
+            "B": {
+                "baseElements": [
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "monday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "wednesday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "friday"
+                    }
+                ],
+                "sectionElements": {
+                    //Array of this section specific courses here
+                    "10201": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 110,
+                            timespan: "6:00pm - 7:50pm",
+                            day: "thursday"
+                        }
+                    ],
+                    "11023": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            durationInMinutes: 50,
+                            timespan: "7:00pm - 8:50pm",
+                            day: "monday"
+                        }
+                    ]
+                },
+                "metadata" : {
+                    //the actual object here
+                }
+            }
+        }
+    }
+}
+
 /**
  * test adding calendar events, will delete later
  **/
 function setup() {
     clearMeetings();
-    //console.log("setup()");
+    console.log("setup()");
     updateMeetings(courses);
 }
 /** END OF DELETE **/
@@ -415,10 +571,6 @@ function calculateMeetingPosition(meeting) {
  */
 function insertMeeting(meeting, courseId, baseId, sectionId)
 {
-
-    // console.log(meeting);
-    // console.log(meetingId);
-
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
     var top = pos.top;
@@ -443,26 +595,31 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 
 
     /* create the Change and edit-button icon and add to event div */
-    var editButtonContainer = document.createElement('div');
-    editButtonContainer.className = "edit-button";
-    event.append(editButtonContainer);
+    // var unlockButtonContainer = document.createElement('div');
+    // unlockButtonContainer.className = "unlock-button";
+    // event.append(unlockButtonContainer);
 
-    var editButtonText = document.createElement('span');
-    editButtonText.innerText = "Change";
-    editButtonContainer.append(editButtonText);
+    // var unlockButtonIcon = document.createElement('i');
+    // unlockButtonIcon.className = "edit-button fa fa-unlock";
+    // unlockButtonContainer.append(unlockButtonIcon);
 
-    var editButtonIcon = document.createElement('i');
-    editButtonIcon.className = "edit-button fa fa-cog";
-    editButtonContainer.append(editButtonIcon);
 
     /* create the Change and edit-button icon and add to event div */
-    var unlockButtonContainer = document.createElement('div');
-    unlockButtonContainer.className = "unlock-button";
-    event.append(unlockButtonContainer);
+    var editButton = document.createElement('div');
+    editButton.className = "edit-button";
+    event.append(editButton);
 
-    var unlockButtonIcon = document.createElement('i');
-    unlockButtonIcon.className = "edit-button fa fa-unlock";
-    unlockButtonContainer.append(unlockButtonIcon);
+    var editSpan = document.createElement('span');
+    editSpan.innerHTML = "Change";
+    editSpan.className = "edit-span";
+    editButton.append(editSpan);
+
+    var editIcon = document.createElement('i');
+    editIcon.className = "fa fa-cog";
+    editIcon.setAttribute("aria-hidden", true); 
+    editButton.append(editIcon);
+
+    event.append(editButton);
 
     /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
@@ -501,22 +658,6 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     eventInfo.append(sectSpan);
     eventHeader.append(eventInfo);
 
-    // edit button
-    var editButton = document.createElement('div');
-    editButton.className = "edit-button";
-
-    var editSpan = document.createElement('span');
-    editSpan.innerHTML = "Change";
-    editSpan.className = "edit-span";
-    editButton.append(editSpan);
-
-    var editIcon = document.createElement('i');
-    editIcon.className = "fa fa-cog";
-    editIcon.setAttribute("aria-hidden", true); 
-    editButton.append(editIcon);
-
-    event.append(editButton);
-
     courseId = ' _' + courseId;
     baseId = ' _' + baseId;
     sectionId = ' _' + sectionId;
@@ -527,6 +668,8 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     /* add event to day of meeting */
     var dayElem = document.getElementById(meeting.day);
     dayElem.append(event);
+
+    return event;
 }
 
 /**
@@ -540,9 +683,6 @@ function updateMeetings(meetings)
 {
     /* iterate through all the meetings in the JSON */
     for(meeting in meetings) {
-        // console.log("meeting")
-        // console.log(meeting)
-
         /* extract selected base and section - the events to display on calendar */
         var selectedBase = courses[meeting].selectedBase;
         var selectedSection = courses[meeting].selectedSection;
@@ -570,18 +710,48 @@ function updateMeetings(meetings)
 function changeSchedule(e) {
 
     var hid = e.parentNode.parentNode;
-    var courseId = hid.classList[1].substr(1);
-    var baseId = hid.classList[2].substr(1);
-    var sectionId = hid.classList[3].substr(1);
 
+    var courseId = hid.classList[1];
+    var baseId = hid.classList[2];
+    var sectionId = hid.classList[3];
+    // console.log(courseId)
+    // console.log(baseId)
+    // console.log(sectionId)
+
+    var search = courseId + " " + baseId;
     // base selected
-    if(sectionId.innerHTML == undefined) {
-        console.log(baseId + " base selected");
+    if(sectionId === "_undefined") {
+        // console.log("base " + search)
+        var s = document.getElementsByClassName(search);
+        // console.log(s);
     } 
-
     // section selected
     else {
-        console.log(sectionId + " section selected");
-    }
+        // console.log("section")
+        // var s = document.getElementsByClassName(search);
+        // console.log(s);   
+        // search = search + " " + sectionId;
+        // s = document.getElementsByClassName(search);
+        // console.log(s);   
+        courseId = courseId.substr(1);
+        baseId = baseId.substr(1);
+        sectionId = sectionId.substr(1);
 
+        var course = courses[courseId];
+        
+        var baseElements = course.bases[baseId].baseElements;
+        var sectionElements = course.bases[baseId].sectionElements;
+
+        for(var i = 0; i < baseElements.length; i++) {
+            var event = insertMeeting(baseElements[i], courseId, baseId, sectionId);
+            var activatedClass = " event-activated";
+            event.className += activatedClass;
+        }
+        var sections = Object.keys(sectionElements);
+        sections.forEach(function(section) {
+            var s = sectionElements[section];
+            var event = insertMeeting(s[0], courseId, baseId, sectionId);
+            event.className += " event-activated";
+        });
+    }
 }
