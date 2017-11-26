@@ -72,10 +72,18 @@ namespace ucsdscheduleme.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-        public IActionResult GenerateSchedule(CourseInfoToSchedule courseInfo)
+        [HttpPost]
+        public IActionResult GenerateSchedule([FromBody] CourseInfoToSchedule courseInfo)
         {
-            Course[] courses = _context.Courses.Where(c => courseInfo.CourseIds.Contains(c.Id)).ToArray();
+            Course[] courses = _context.Courses
+                .Include(c => c.Sections)
+                    .ThenInclude(s => s.Professor)
+                .Include(c => c.Sections)
+                    .ThenInclude(s => s.Meetings)
+                        .ThenInclude(m => m.Location)
+                .Include(c => c.Cape)
+                    .ThenInclude(ca => ca.Professor)
+                .Where(c => courseInfo.CourseIds.Contains(c.Id)).ToArray();
             Optimization optimization = courseInfo.Optimization;
 
             var scheduleRepo = new ScheduleRepo();
