@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ucsdscheduleme.Models;
+using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 
 namespace ucsdscheduleme.Repo
 {
@@ -172,7 +173,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Courses to schedule.</param>
         /// <param name="Earliest">Earliest time desired.</param>
         /// <param name="Latest">Latest time desired.</param>
-        private List<List<Section>> FindWithTime(List<List<Section>> possibleSchedules, int Earliest, int Latest)
+        private List<List<Section>> FindWithTime(List<List<Section>> possibleSchedules, DateTime Earliest, DateTime Latest)
         {
             List<List<Section>> constraintSchedules = new List<List<Section>>();
             foreach (List<Section> schedule in possibleSchedules)
@@ -192,7 +193,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="schedule">Schedule to check.</param>
         /// <param name="Earliest">Earliest time desired.</param>
         /// <param name="Latest">Latest time desired.</param>
-        private bool IsWithinTime(List<Section> schedule, int Earliest, int Latest)
+        private bool IsWithinTime(List<Section> schedule, DateTime Earliest, DateTime Latest)
         {
             foreach (Section section in schedule)
             {
@@ -219,11 +220,11 @@ namespace ucsdscheduleme.Repo
         public List<Section> HighestGPA(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            float highestGPA = 0;
+            decimal highestGPA = 0;
 
             foreach (List<Section> schedule in possibleSchedules)
             {
-                float currentGPA = 0;
+                decimal currentGPA = 0;
 
                 foreach (Section section in schedule)
                 {
@@ -232,7 +233,7 @@ namespace ucsdscheduleme.Repo
 
                     if (cape != null)
                     {
-                        currentGPA += GetGPA(cape.AverageGradeReceived);
+                        currentGPA += cape.AverageGradeReceived;
                     }
                 }
 
@@ -247,24 +248,6 @@ namespace ucsdscheduleme.Repo
             return result;
         }
 
-
-        /// <summary>
-        /// Converts the GPA strings in Cape as floats
-        /// </summary>
-        /// <param name="capeGrade">String from CAPES data</param>
-        /// <returns>Integer GPA</returns>
-        private float GetGPA(string capeGrade)
-        {
-            string[] tokens = capeGrade.Split('(', ')');
-            string num = tokens[1];
-
-            if (num.Contains("."))
-            {
-                num = num.Replace(".", ",");
-            }
-
-            return System.Convert.ToSingle(num);
-        }
 
         /// <summary>
         /// Returns the schedule with the highest overall quality from RateMyProfessor.
@@ -304,18 +287,18 @@ namespace ucsdscheduleme.Repo
         public List<Section> EarliestEnd(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            int earliestEnd = 2359;
-            
+            DateTime? earliestEnd = new DateTime(0, 0, 0, 23, 59, 0);
+
             // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int lastestScheduleTime = 0000;
-                int lastestClassTime = 0;
+                DateTime? lastestScheduleTime = new DateTime(0,0,0,0,0,0);
+                DateTime? lastestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
 
                 // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    lastestClassTime = 0000;
+                    lastestClassTime = new DateTime(0, 0, 0, 0, 0, 0, 0);
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
@@ -353,18 +336,18 @@ namespace ucsdscheduleme.Repo
         public List<Section> LatestStart(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            int latestStart = 0000;
+            DateTime? latestStart = new DateTime(0, 0, 0, 0, 0, 0);
 
             // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int earliestScheduleTime = 0000;
-                int earliestClassTime = 0000;
+                DateTime? earliestScheduleTime = new DateTime(0, 0, 0, 0, 0, 0);
+                DateTime? earliestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
 
                 // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    earliestClassTime = 0000;
+                    earliestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
@@ -518,12 +501,12 @@ namespace ucsdscheduleme.Repo
                 return null;
             }
             List<Section> leastGapsSchedule = possibleSchedules[0];
-            int leastGap = 99999;
+            TimeSpan leastGap = new TimeSpan(99,59,59);
 
             // Iterate through the possible schedules and separate the times into respective days.
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int currGap = AvgGap(schedule);
+                TimeSpan currGap = TotalGap(schedule);
 
                 // Checks to see if current schedule has less gaps than current least.
                 if (currGap < leastGap)
@@ -547,12 +530,12 @@ namespace ucsdscheduleme.Repo
                 return null;
             }
             List<Section> mostGapsSchedule = possibleSchedules[0];
-            int mostGap = 0;
+            TimeSpan mostGap = new TimeSpan(0,0,0);
 
             // Iterate through the possible schedules and separate the times into respective days.
             foreach (List<Section> schedule in possibleSchedules)
             {
-                int currGap = AvgGap(schedule);
+                TimeSpan currGap = TotalGap(schedule);
 
                 // Checks to see if current schedule has less gaps than current least.
                 if (currGap > mostGap) 
@@ -562,17 +545,56 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return mostGapsSchedule;
-        } 
+        }
+
+        public List<Section> Optimize(Optimization optimization, PossibleSchedules schedules)
+        {
+            List<Section> schedule;
+            switch (optimization)
+            {
+                case Optimization.HighestGPA:
+                    schedule = HighestGPA(schedules);
+                    break;
+                case Optimization.HighestRMP:
+                    schedule = RMPRating(schedules);
+                    break;
+                case Optimization.EarlyEnd:
+                    schedule = EarliestEnd(schedules);
+                    break;
+                case Optimization.LateStart:
+                    schedule = LatestStart(schedules);
+                    break;
+                case Optimization.MostDays:
+                    schedule = MostDays(schedules);
+                    break;
+                case Optimization.LeastDays:
+                    schedule = LeastDays(schedules);
+                    break;
+                case Optimization.MostGaps:
+                    schedule = MostGaps(schedules);
+                    break;
+                case Optimization.LeastGaps:
+                    schedule = LeastGaps(schedules);
+                    break;
+                default:
+                    throw new FormatException();
+            }
+            return schedule;
+        }
 
         /// <summary>
         /// Calculates the average gap size between sections
         /// </summary>
         /// <param name="schedule">Schedule of classes</param>
         /// <returns>The average hours of gaps in the schedule between classes</returns>
-        private int AvgGap(List<Section> schedule)
+        private TimeSpan TotalGap(List<Section> schedule)
         {
-            int gap = 0;
-            List<List<Tuple<int, int>>> week = new List<List<Tuple<int, int>>>();
+            TimeSpan gap;
+            List<DateTime?> Monday = new List<DateTime?>();
+            List<DateTime?> Tuesday = new List<DateTime?>();
+            List<DateTime?> Wednesday = new List<DateTime?>();
+            List<DateTime?> Thursday = new List<DateTime?>();
+            List<DateTime?> Friday = new List<DateTime?>();
 
             foreach (Section section in schedule)
             {
@@ -582,45 +604,66 @@ namespace ucsdscheduleme.Repo
                         meeting.MeetingType != MeetingType.Midterm ||
                         meeting.MeetingType != MeetingType.Review)
                     {
-                        Tuple<int, int> time = new Tuple<int, int>(meeting.StartTime, meeting.EndTime);
-
                         if (meeting.Days.HasFlag(Days.Monday))
                         {
-                            week.ElementAt(0).Add(time);
+                            Monday.Add(meeting.StartTime);
+                            Monday.Add(meeting.EndTime);
                         }
                         if (meeting.Days.HasFlag(Days.Tuesday))
                         {
-                            week.ElementAt(1).Add(time);
+                            Tuesday.Add(meeting.StartTime);
+                            Tuesday.Add(meeting.EndTime);
                         }
                         if (meeting.Days.HasFlag(Days.Wednesday))
                         {
-                            week.ElementAt(2).Add(time);
+                            Wednesday.Add(meeting.StartTime);
+                            Wednesday.Add(meeting.EndTime);
                         }
                         if (meeting.Days.HasFlag(Days.Thursday))
                         {
-                            week.ElementAt(3).Add(time);
+                            Thursday.Add(meeting.StartTime);
+                            Thursday.Add(meeting.EndTime);
                         }
                         if (meeting.Days.HasFlag(Days.Friday))
                         {
-                            week.ElementAt(4).Add(time);
+                            Friday.Add(meeting.StartTime);
+                            Friday.Add(meeting.EndTime);
                         }
                     }
                 }
             }
 
             // Sort the class times in each schedule by start time.
-            foreach (List<Tuple<int, int>> day in week)
-            {
-                day.Sort((time1, time2) => time1.Item1.CompareTo(time2.Item2));
-            }
-           
+            Monday.Sort();
+            Tuesday.Sort();
+            Wednesday.Sort();
+            Thursday.Sort();
+            Friday.Sort();
+            
             // Calculate the gaps in the schedule.
-            foreach (List<Tuple<int, int>> day in week)
+            for (int i = 1; i < Monday.Count() - 1; i += 2)
             {
-                for (int i = 0; i < day.Count() - 1; i++)
-                {
-                    gap = gap + (day.ElementAt(i + 1).Item2 - day.ElementAt(i).Item1);
-                }
+                gap = gap + (Monday.ElementAt(i + 1) - Monday.ElementAt(i)).Value;
+            }
+
+            for (int i = 1; i < Tuesday.Count() - 1; i += 2)
+            {
+                gap = gap + (Tuesday.ElementAt(i + 1) - Tuesday.ElementAt(i)).Value;
+            }
+
+            for (int i = 1; i < Wednesday.Count() - 1; i += 2)
+            {
+                gap = gap + (Wednesday.ElementAt(i + 1) - Wednesday.ElementAt(i)).Value;
+            }
+
+            for (int i = 1; i < Thursday.Count() - 1; i += 2)
+            {
+                gap = gap + (Thursday.ElementAt(i + 1) - Thursday.ElementAt(i)).Value;
+            }
+
+            for (int i = 1; i < Friday.Count() - 1; i += 2)
+            {
+                gap = gap + (Friday.ElementAt(i + 1) - Friday.ElementAt(i)).Value;
             }
 
             return gap;

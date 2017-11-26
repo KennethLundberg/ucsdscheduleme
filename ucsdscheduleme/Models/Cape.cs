@@ -18,10 +18,8 @@ namespace ucsdscheduleme.Models
         public decimal RecommendedClass { get; set; } 
         public decimal RecommendedProfessor { get; set; } 
         public decimal StudyHoursPerWeek { get; set; }
-        [StringLength(10)]
-        public string AverageGradeExpected { get; set; }
-        [StringLength(10)]
-        public string AverageGradeReceived { get; set; }
+        public decimal AverageGradeExpected { get; set; }
+        public decimal AverageGradeReceived { get; set; }
         [StringLength(256)]
         public string URL { get; set; }
 

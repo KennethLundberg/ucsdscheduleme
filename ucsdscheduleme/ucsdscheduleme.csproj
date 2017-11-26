@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,11 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\ScheduleController.cs" />
     <Compile Remove="Models\ScrapeResultRateMyProf.cs" />
     <Folder Include="Views\Schedule\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\TestSchedule\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\Home\index.html" />
   </ItemGroup>
 </Project>
