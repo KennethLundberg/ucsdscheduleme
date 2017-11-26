@@ -120,16 +120,6 @@
         </div>
 
         <table class="bottom" id="examdata">
-            @* foreach (var examData in Model.Finals)
-            {
-                <tr>
-                    course name, final day, final time and final location
-                    <td>@examData.CourseAbbreviation</td>
-                    <td>@examData.Type</td>
-                    <td>@examData.DateAndTime</td>
-                    <td>@examData.Location</td>
-                </tr>
-            }*@
             <thead>
                 <tr>
                     <th>Course</th>
@@ -139,7 +129,7 @@
                     <th>Location</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="onetime">
                 <tr>
                     <td>CSE 100</td>
                     <td>Final</td>
