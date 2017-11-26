@@ -22,7 +22,7 @@ namespace ucsdscheduleme.Repo
         public void Update()
         {
             // Getting the cource from the act website
-            ClassScrape classScraper = new ClassScrape(_context, "WI18", "cse 1-190");
+            ClassScrape classScraper = new ClassScrape(_context, "WI18", "math 1-190");
             classScraper.Update();
 
             // TODO Now need add the other classes to the DB just like cse 1-190.
@@ -36,11 +36,6 @@ namespace ucsdscheduleme.Repo
             scrapeCape.Update();
         }
 
-
-
-
-
-        
         /// <summary>
         /// Get a list of all department codes(i.e. CSE or MAE) from the JSON
         /// </summary>
@@ -57,7 +52,7 @@ namespace ucsdscheduleme.Repo
 
             // Parse the JSON array to get a list of JSON objects(departments) 
             JArray responseObj = JArray.Parse(jsonStringOfDepartments);
-            
+
             // Iterate through the list and get the code name 
             foreach (JObject department in responseObj)
             {

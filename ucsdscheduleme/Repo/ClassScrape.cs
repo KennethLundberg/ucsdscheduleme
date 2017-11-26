@@ -175,6 +175,10 @@ namespace HtmlAgilitySandbox
             // Chars to trim from the extracted units.
             char[] unitsTrimChars = { '(', ')' };
 
+            // Variable to keep track of when we get final and lecture mixed up
+            // with the schedule in act.ucsd.edu
+            bool foundLE = false;
+
             // Lists of each needed object to keep track of each iteration.
             List<Course> courseList = new List<Course>();
             List<Section> sectionList = new List<Section>();
@@ -193,6 +197,10 @@ namespace HtmlAgilitySandbox
 
                     // Check if TR contains children with course name and abbreviation.
                     HtmlNodeCollection trCrsHeaderCheck = node?.SelectNodes(ActStrings.ClassCrsheader);
+
+                    // This label is used when there is a lecture meeting type with final node name in the 
+                    // act website, eg Math 3C, 4c
+                    lectureFinal:
 
                     if (trCrsHeaderCheck != null)
                     {
@@ -255,8 +263,11 @@ namespace HtmlAgilitySandbox
                     }
 
                     // Else check if node is a TR that contains section/meeting data.
-                    else if (nodeClasses != null && nodeClasses.Contains(ActStrings.TRSectionClass))
+                    else if ((nodeClasses != null && nodeClasses.Contains(ActStrings.TRSectionClass)) || foundLE == true)
                     {
+
+                        foundLE = false;
+
                         // Select the meeting type node to begin iterating from.
                         HtmlNode meetingTypeTDNode = node.SelectSingleNode(ActStrings.MeetingTypeNode);
 
@@ -392,6 +403,14 @@ namespace HtmlAgilitySandbox
                         // Set meeting type.
                         string testType = testTypeTDNode.InnerText;
                         currentMeeting.MeetingType = GetMeetingType(testType);
+
+                        // If we get a meeting of type lecture go back to start of if
+                        // statement
+                        if (testType == "LE")
+                        {
+                            foundLE = true;
+                            goto lectureFinal;
+                        }
 
                         // Set date.
                         HtmlNode testDateNode = testTypeTDNode.NextSibling.NextSibling;

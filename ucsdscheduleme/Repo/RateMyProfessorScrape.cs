@@ -14,7 +14,7 @@ namespace ucsdscheduleme.Repo
     public class RateMyProfessorScrape
     {
         private readonly ScheduleContext _context;
-        
+
         // Sending in context to files in repo.
         public RateMyProfessorScrape(ScheduleContext context)
         {
@@ -48,7 +48,7 @@ namespace ucsdscheduleme.Repo
 
             // List of professor whose RMP page couldn't be found
             List<string> profRMPNotFound = new List<string>();
-            
+
             // For each professor in the list from database
             foreach (var professor in professors)
             {
@@ -60,11 +60,11 @@ namespace ucsdscheduleme.Repo
 
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
-                if (rateMyProfURL.Length != 0 )
+                if (rateMyProfURL.Length != 0)
                 {
                     // Scrape the page to get all the information about the professor
                     ScrapeResult scrapedProfessor = InsertDataFromHtmlPage(rateMyProfURL);
-                
+
                     // Updating/Adding information of the professor in database
                     professor.RateMyProfessor.LevelOfDifficulty = scrapedProfessor.LevelOfDifficulty;
                     professor.RateMyProfessor.OverallQuality = scrapedProfessor.OverallQuality;
@@ -74,7 +74,7 @@ namespace ucsdscheduleme.Repo
                 else
                 {
                     profRMPNotFound.Add(professor.Name);
-                }      
+                }
             }
 
             // Save changes made in the database
@@ -91,11 +91,11 @@ namespace ucsdscheduleme.Repo
         {
             // Split the name to get first and last name
             string[] names = ProfName.Split(",");
-            
+
             // If the professor's name is staff, then there is no RMP page!
             if (names[0] == "Staff")
             {
-                return ("");   
+                return ("");
             }
 
             // Get the first word of first name and last name
@@ -116,7 +116,7 @@ namespace ucsdscheduleme.Repo
                 pk_id = CheckUniqueProfessor(firstName, lastName);
 
                 // If can't find the professor's RMP page even in unique case return null
-                if(pk_id.Length == 0)
+                if (pk_id.Length == 0)
                     return ("");
             }
 
@@ -149,9 +149,21 @@ namespace ucsdscheduleme.Repo
             {
                 return (GetRequest(ReturnHttpUrl("Mia", "Minnes-Kemp"))).Result;
             }
-            else if(lastName[0] == "Howden" && firstName[1] == "William")
+            else if (lastName[0] == "Howden" && firstName[1] == "William")
             {   // Need to make sure they're the same professor though
                 return (GetRequest(ReturnHttpUrl("Bill", "Howden"))).Result;
+            }
+            else if (lastName[0] == "Popescu" && firstName[1] == "Cristian")
+            {   // Need to make sure they're the same professor though
+                return (GetRequest(ReturnHttpUrl("Christian", "Popescu"))).Result;
+            }
+            else if (lastName[0] == "Knop" && firstName[1] == "Aleksandr")
+            {   // Need to make sure they're the same professor though
+                return (GetRequest(ReturnHttpUrl("Alexander", "Knop"))).Result;
+            }
+            else if (lastName[0] == "Aghajani" && firstName[1] == "Mohammadreza")
+            {   // Need to make sure they're the same professor though
+                return (GetRequest(ReturnHttpUrl("Reza", "Aghajani"))).Result;
             }
             /* Can't Find in the RMP page. Just for CSE 1-190
              * Schulze, Jurgen
@@ -195,7 +207,7 @@ namespace ucsdscheduleme.Repo
             // Make a request using the given Url
             HttpResponseMessage response = await client.GetAsync(Url);
             // Get the content returned by the request
-            HttpContent content = response.Content; 
+            HttpContent content = response.Content;
             // Get as string the content of the request made
             string myContent = await content.ReadAsStringAsync();
 
@@ -207,15 +219,15 @@ namespace ucsdscheduleme.Repo
             JObject responseObj = JObject.Parse(myContent);
             JObject respondNode = (JObject)responseObj["response"];
             JArray docsNode = (JArray)respondNode["docs"];
-            
+
             // Check the size of the array to check if we received pk_id;
             if (docsNode.Count > 0)
-            {   
+            {
                 JValue pk_id = (JValue)docsNode[0]["pk_id"];
                 // Return the unique professor ID
                 return (pk_id.ToString());
             }
-            
+
             // Return empty string if no pk_id found
             return ("");
         }
@@ -247,7 +259,7 @@ namespace ucsdscheduleme.Repo
             // Converting the string review to decimal for inserting to db
             decimal qualityRateDecimal;
             bool checkError = Decimal.TryParse(qualityRate, out qualityRateDecimal);
-            if(checkError)
+            if (checkError)
                 Console.Error.WriteLine("Error while converting qualityRateDecimal");
 
             // Get Would Take Again Info
@@ -255,12 +267,12 @@ namespace ucsdscheduleme.Repo
             string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
 
             // Converting the string review to decimal for inserting to db
-            wouldTakeAgainRate = wouldTakeAgainRate.Replace("%","");
+            wouldTakeAgainRate = wouldTakeAgainRate.Replace("%", "");
             decimal wouldTakeAgainDecimal;
             checkError = Decimal.TryParse(wouldTakeAgainRate, out wouldTakeAgainDecimal);
-            if(checkError)
+            if (checkError)
                 Console.Error.WriteLine("Error while converting wouldTakeAgainDecimal");
-                                                             
+
             // Get Difficulty Level Info
             HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
             string difficultyLevelRate = (difficultyLevel != null) ? difficultyLevel.InnerText.Trim() : "N/A";
@@ -268,7 +280,7 @@ namespace ucsdscheduleme.Repo
             // Converting the string review to decimal for inserting to db
             decimal difficultyLevelDecimal;
             checkError = Decimal.TryParse(difficultyLevelRate, out difficultyLevelDecimal);
-            if(checkError)
+            if (checkError)
                 Console.Error.WriteLine("Error while converting difficultyLevelRateDecimal");
 
             // Check if professor was rated at all
@@ -279,10 +291,10 @@ namespace ucsdscheduleme.Repo
 
             // Professor's Full Name
             string professorFullName;
-            
+
             // Check to see if this professor has any info available on the page
             if (professorIsRated)
-            {              
+            {
                 // Scrape the professor's full name(if not, leave "N/A" )
                 HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorFirstNamePath);
                 string professorFirstName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
