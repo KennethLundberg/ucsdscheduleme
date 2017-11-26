@@ -677,7 +677,7 @@ function updateMeetings(meetings)
     }
 }
 
-function showAllBasesAndAllSections(elm, ids) {
+function showAllBasesAndAllSections(ids) {
     var course = courses[ids.courseId];
     var bases = course.bases;
 
@@ -709,7 +709,7 @@ function showAllBasesAndAllSections(elm, ids) {
     }
 }
 
-function showBaseAndAllSections(elm, ids) {
+function showBaseAndAllSections(ids) {
     var course = courses[ids.courseId];
     var baseElements = course.bases[ids.baseId].baseElements;
     var sectionElements = course.bases[ids.baseId].sectionElements;
@@ -736,21 +736,27 @@ function changeSchedule(e) {
     
     // base selected
     if(ids.sectionId === "undefined") {
-        showAllBasesAndAllSections(hid, ids);
+        console.log("base")
+        showAllBasesAndAllSections(ids);
     } 
     // section selected
     else {
-        showBaseAndAllSections(hid, ids);
+        console.log("section")
+        showBaseAndAllSections(ids);
     }
 }
 /**
+ * updateSelectedSection
  * @param: sectionId: string
  */
 function updateSelectedSection(event) {
+    console.log("updateSelectedSection");
+
     var ids = extractIds(event);
     courses[ids.courseId].selectedSection = ids.sectionId;
     clearMeetings();
     updateMeetings(courses);
+    isEditing = false;
 }
 
 /**
@@ -761,8 +767,11 @@ function updateSelectedBase(event) {
     console.log(ids)
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    //updateSelectedSection(sectionId);
-    console.log("updateSelectedBase " + baseId)
+    console.log("updateSelectedBase " + ids.baseId)
+    console.log(courses[ids.courseId].selectedBase)
+    clearMeetings();
+    updateMeetings(courses)
+    showBaseAndAllSections(ids);    
 }
 
 
@@ -790,14 +799,13 @@ function extractIds(event) {
  * @param: element: DOM element of which you want to find the event div for 
  */
 function findEventDiv(element) {
-    console.log(element)
-    if(element === "undefined") {
-        return null;
-    }
+    // console.log(element.classList.length);
 
-    while(!element.classList.contains('event')) {
-        element = element.parentNode;
-    }
+    // if(element.classList.length > 0) {
+        while(!element.classList.contains('event')) {
+            element = element.parentNode;
+        }
+    // }
 
     if(element.classList.contains('event')) { 
         return element;
@@ -805,3 +813,5 @@ function findEventDiv(element) {
 
     return null;
 }
+
+

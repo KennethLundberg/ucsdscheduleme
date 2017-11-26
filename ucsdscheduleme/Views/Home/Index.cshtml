@@ -302,17 +302,17 @@
 	        	// currently editing AND event is activated
 	        	if(isEditing && findEventDiv(e.target).classList.contains('event-activated')) {
         			updateEvent(findEventDiv(e.target));
-        			isEditing = false;
+        			// isEditing = false;
         		}	        	
 	        }
-        })
+        });
 
         document.addEventListener('mouseover', function(e) {
         	if(e.target && findEventDiv(e.target) !== null) {
 	        	// console.log(e.target)
-	        	console.log("hovering " + e.target.classList[3])
+	        	// console.log("hovering " + e.target.classList[3])
 	        }
-        })
+        });
 	
     })();
 </script>
