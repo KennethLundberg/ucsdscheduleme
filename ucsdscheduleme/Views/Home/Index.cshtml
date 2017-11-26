@@ -281,11 +281,12 @@
     };
 
     var isEditing = false;
+    const EVENT_CLASS = 'event';
 
     (function () {
 
 	    document.addEventListener('click',function(e) {
-            console.log(e.target);
+            // console.log(e.target);
 
             if(e.target && e.target.classList.contains("courseItem")) {
 	            //call addList
@@ -293,18 +294,26 @@
 	        }
 
 	        // clicked on a calendar event
-	        if(e.target && findEventDiv(e.target) !== null) {
+	        if(e.target && findOuterDiv(e.target, EVENT_CLASS)) {
+	        	// currently editing AND event is activated
+	        	if(isEditing && findOuterDiv(e.target, EVENT_CLASS).classList.contains('event-activated')) {
+        			updateEvent(findOuterDiv(e.target, EVENT_CLASS));
+        		}
+	        }
+
+	        // clicked on change button
+	        //if(e.target && (findOuterDiv(e.target, EDIT_BUTTON_CLASS) || findOuterDiv(e.target, EDIT_BUTTON_CLASS))) {
+	        if(e.target && (e.target.classList.contains('fa-cog') || e.target.classList.contains('edit-span'))) {
 	        	// only allow changes if currently not editing
 	        	if(!isEditing) {
-	        		changeSchedule(findEventDiv(e.target));
+	        		changeSchedule(findOuterDiv(e.target, EVENT_CLASS));
 	        		isEditing = true;
+	        		
+	        		hideEditButtons();
 	        	}
-	        	// currently editing AND event is activated
-	        	if(isEditing && findEventDiv(e.target).classList.contains('event-activated')) {
-        			updateEvent(findEventDiv(e.target));
-        			// isEditing = false;
-        		}	        	
 	        }
+
+	        
         });
 
         document.addEventListener('mouseover', function(e) {
@@ -313,6 +322,5 @@
 	        // 	// console.log("hovering " + e.target.classList[3])
 	        // }
         });
-	
     })();
 </script>

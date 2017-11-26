@@ -725,6 +725,8 @@ function showBaseAndAllSections(ids) {
         var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
         event.className += " event-activated";
     });
+
+    hideEditButtons();
 }
 
 function changeSchedule(event) {
@@ -761,6 +763,8 @@ function updateSelectedSection(event) {
     clearMeetings();
     updateMeetings(courses);
     isEditing = false;
+
+    showEditButtons();
 }
 
 /**
@@ -768,13 +772,14 @@ function updateSelectedSection(event) {
  */
 function updateSelectedBase(event) {
     var ids = extractIds(event);
-    // console.log(ids)
+
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    // console.log("updateSelectedBase " + ids.baseId)
-    // console.log(courses[ids.courseId].selectedBase)
     clearMeetings();
     updateMeetings(courses)
+    
+    hideEditButtons();
+
     showBaseAndAllSections(ids);    
 }
 
@@ -807,16 +812,18 @@ function extractIds(event) {
 /**
  * @param: element: DOM element of which you want to find the event div for 
  */
-function findEventDiv(element) {
+function findOuterDiv(element, className) {
     // console.log(element.classList.length);
-
-    // if(element.classList.length > 0) {
-        while(!element.classList.contains('event')) {
+    // if(className.length <= 0 || (typeof element === 'undefined')) {
+    //     return null;
+    // }
+    //if(element.classList.length > 0) {
+        while(!element.classList.contains(className)) {
             element = element.parentNode;
         }
-    // }
+    //}
 
-    if(element.classList.contains('event')) { 
+    if(element.classList.contains(className)) { 
         return element;
     }
 
@@ -824,3 +831,15 @@ function findEventDiv(element) {
 }
 
 
+function hideEditButtons() {
+    var buttons = document.getElementsByClassName('edit-button');
+    for(var i = 0; i < buttons.length; i++) {
+        buttons[i].style.visibility = 'hidden';
+    }
+}
+function showEditButtons() {
+    var buttons = document.getElementsByClassName('edit-button');
+    for(var i = 0; i < buttons.length; i++) {
+        buttons[i].style.visibility = 'visible';
+    }
+}
