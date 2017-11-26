@@ -35,6 +35,12 @@ ul {
 }
 
 #logo {
+    text-align: center;
+    color: #FFCC03;
+    background-color: #203E5F;
+    padding: 10px;
+    font-size: 1.5em;
+    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -100,11 +106,15 @@ ul {
         border: 1px dashed #E0E0E0;
         border-right: none;
         border-top: none;
+        /* fix the Friday border due to overflow scroll */
     }
 
         .schedule .schedule-group:first-of-type {
             margin-left: 4em;
-            border: none;
+        }
+
+        .schedule .schedule-group:last-of-type {
+            margin-right: 10px;
         }
 
     .schedule .schedule-header {
@@ -144,6 +154,7 @@ ul {
     top: 50px;
     height: 100px;
     z-index: 1;
+    cursor: pointer;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -189,11 +200,23 @@ ul {
                 font-size: 10px;
             }
 
+.event-activated {
+    box-shadow: 0px 0px 10px black;
+    background-color: #C5EFF7;
+    z-index: 2;
+}
+
+.event-deactivated {
+    opacity: 0.75;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
 .bottom {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     border-top: 4px solid #FFCC03;
     border-collapse: collapse;
-    height: 20%;
+    height: 30px;
+    overflow-y: scroll;
     width: 100%;
     margin-top: 15px;
     margin-bottom: 10px;
@@ -207,6 +230,7 @@ ul {
         color: #FEFEFE;
         font-size: 14px;
         border: 1px solid black;
+        height: 2em;
     }
 
     .bottom tr td {
@@ -264,6 +288,7 @@ ul {
             position: absolute;
             background: #FEFEFE;
             width: 100%;
+            z-index: 2;
         }
 
             .searchbar-container .searchbar .search-result .courseItem {
@@ -323,10 +348,59 @@ ul {
     }
 
     .edit-button span {
+        margin-right: 10px;
+    }
+
+.unlock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #666;
+}
+
+    .unlock-button:hover {
+        cursor: pointer;
+        color: #151515;
+    }
+
+    .unlock-button span {
         margin-right: 5px;
     }
 
-.generate-schedule-button {
+.lock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #F22613;
+}
+
+    .lock-button:hover {
+        cursor: pointer;
+        color: red;
+    }
+
+    .lock-button span {
+        margin-right: 5px;
+    }
+
+.generate-schedule-container {
+    position: relative;
+}
+
+    .generate-schedule-container select {
+        width: 100%;
+        height: 50px;
+        margin-top: 15px;
+        text-align: center;
+    }
+
+.button {
     cursor: pointer;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     padding: 15px;
@@ -340,7 +414,7 @@ ul {
     position: relative;
 }
 
-    .generate-schedule-button:hover:before {
+    .button:hover:before {
         content: "";
         width: 100%;
         height: 100%;
@@ -350,8 +424,7 @@ ul {
         background-color: rgba(255, 255, 255, 0.2);
     }
 
-    .generate-schedule-button:after {
-        content: "Generate Schedule";
+    .button:after {
         color: #151515;
     }
 
@@ -452,7 +525,8 @@ ul {
 
 .course-stat-container {
     overflow-y: scroll;
-    height: 57%;
+    margin-top: 15px;
+    height: 435px;
 }
 
 .course-stat {
@@ -461,6 +535,10 @@ ul {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     margin-bottom: 15px;
 }
+
+    .course-stat:last-of-type {
+        margin: 0;
+    }
 
 .course-name {
     font-size: 14px;
@@ -475,7 +553,6 @@ ul {
     font-size: 12px;
     padding: 5px;
     margin-bottom: 5px;
-    background-color: #EAEAEA;
     color: #151515;
 }
 

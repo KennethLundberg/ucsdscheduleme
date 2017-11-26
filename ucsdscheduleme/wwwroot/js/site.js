@@ -399,18 +399,128 @@ document.addEventListener('DOMContentLoaded', function() {
     setup();
 });
 
-// Write your JavaScript code.
-function updateMetadata(metadataList)
-{
+function typeAheadCallout(input) {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.typeAhead;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
+    console.log("Payload: " + JSON.stringify(send));
+    xhr.send(JSON.stringify(send));
 
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = JSON.parse(xhr.responseText);
+            clearSearch();
+
+            for (i = 0; i < text.length; i++) {
+                populateSearch(text[i]);
+                console.log(text[i]);
+            }
+        }
+    }
 }
 
-function insertMetadata(metadata)
-{
-
+function removeCourse(e) {
+    var course = e.target.parentNode.parentNode;
+    var id = course.id;
+    var index = myApp.coursesToSchedule.indexOf(id);
+    myApp.coursesToSchedule.splice(index, 1);
+    console.log("Courses: " + myApp.coursesToSchedule);
+    course.remove();
+    typeAheadCallout(document.getElementById("search").value);
 }
 
-/*
+/**
+ * Clears the drop down and populates the drop down with the auto-complete results.
+ * @param {String} e The string to search for auto-complete results with.
+ */
+function typeAhead(e) {
+
+    // Sends the input to the server to get the courses
+    var input = e.target.value;
+    typeAheadCallout(input);
+}
+
+
+/**
+ * Clears the courses from the drop down.
+ */
+function clearSearch()
+{
+    var courses = document.getElementsByClassName("courseItem");
+    while (courses[0])
+    {
+        courses[0].remove();
+    }
+}
+
+
+/**
+ * Populates the search drop down with the auto-complete results.
+ * @param {Number} data the data to populate the drop down with.
+ */
+function populateSearch(data)
+{
+    // Create the element to populate the search with
+    var courses = document.getElementById("courseItems");
+    var course = document.createElement('div');
+    course.className = "courseItem";
+    course.innerText = data.abbreviation;
+
+    course.id = data.id;
+
+    console.log("populateSearch");
+    console.log(course);
+
+    // Add it to the drop down
+    courses.append(course);
+}
+
+
+/**
+ * Adds the course selected to the class list below the search bar.
+ */
+function addList(data) 
+{
+    console.log("HELLO");
+    console.log(data);
+
+    // Hide dropdown menu
+    var dropdown = document.getElementById("courseItems");
+    dropdown.style.display = "none";
+
+    // Create the element the add to the course list
+    var list = document.getElementById("class-list");
+
+    var course = document.createElement('div');
+    course.className = "class";
+    course.id = data.id;
+
+    var span = document.createElement('span');
+    span.innerText = data.innerText;
+
+    console.log("data.id: " + data.id);
+    myApp.coursesToSchedule.push(data.id);
+
+    // Now clear the dropdown and repopulate it
+    typeAheadCallout(document.getElementById("search").value);
+
+    var iconContainer = document.createElement('div');
+    iconContainer.className = "class-icon";
+    var icon = document.createElement('i');
+    icon.className = "fa fa-window-close";
+    icon.setAttribute("aria-hidden", true);
+    iconContainer.append(icon);
+
+    // Add it to the course list
+    course.append(span);
+    course.append(iconContainer);
+    list.append(course);
+}
+
+/**
  * Function: clearMeetings()
  * Param: none
  * Description: Clears the calendar of events by removing all elements with class 'event'
@@ -426,7 +536,7 @@ function clearMeetings()
     }
 }
 
-/*
+/**
  * Function: calculateMeetingPosition(meeting)
  * Param: meeting - the meeting to insert
  * Description: Based on the time and duration of the event, calculate the top and height of the event element.
@@ -451,12 +561,14 @@ function calculateMeetingPosition(meeting) {
     };
 }
 
-/*
+/**
  * Function: insertMeeting(meeting)
  * Param: meeting - the meeting to insert
  * Description: Inserts a single meeting into the calendar.
  *  A meeting has the following structure
     <div class="event">
+        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+        <div class="unlock-button"><i class="fa fa-unlock" aria-hidden="true"></i></div>
         <div class="event-header">
             <div class="icon" id="lecture">LE</div>
             <div class="event-info">
@@ -495,6 +607,29 @@ function insertMeeting(meeting)
     icon.className = "class-icon";
     icon.id = meeting.type;
     eventHeader.append(icon);
+
+
+    /* create the Change and edit-button icon and add to event div */
+    var editButtonContainer = document.createElement('div');
+    editButtonContainer.className = "edit-button";
+    event.append(editButtonContainer);
+
+    var editButtonText = document.createElement('span');
+    editButtonText.innerText = "Change";
+    editButtonContainer.append(editButtonText);
+
+    var editButtonIcon = document.createElement('i');
+    editButtonIcon.className = "edit-button fa fa-cog";
+    editButtonContainer.append(editButtonIcon);
+
+    /* create the Change and edit-button icon and add to event div */
+    var unlockButtonContainer = document.createElement('div');
+    unlockButtonContainer.className = "unlock-button";
+    event.append(unlockButtonContainer);
+
+    var unlockButtonIcon = document.createElement('i');
+    unlockButtonIcon.className = "edit-button fa fa-unlock";
+    unlockButtonContainer.append(unlockButtonIcon);
 
     /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
@@ -538,7 +673,7 @@ function insertMeeting(meeting)
     dayElem.append(event);
 }
 
-/*
+/**
  * Function: updateMeetings(meetings)
  * Param: meetings - the JSON object with a list of selected bases, selections
  *      See global variable TODO for the structure

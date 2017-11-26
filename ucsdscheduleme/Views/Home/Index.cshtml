@@ -156,7 +156,7 @@
     <div class="side left-bar">
         <div>
             <div id="logo">
-                <img id="logo-image" alt="ucsdschedule.me" src="~/images/logo.svg">
+                <span>ucsdschedule.me</span>
             </div>
         </div>
 
@@ -165,29 +165,14 @@
                 <input type="text" id="search" placeholder="Search classes" name="q" />
                 <button type="submit" value="text" class="search-icon"><i class="fa fa-search"></i></button>
                 <div class="search-result" id="courseItems">
-                    <div class="courseItem">CSE 100</div>
-                    <div class="courseItem">CSE 101</div>
-                    <div class="courseItem">CSE 110</div>
                 </div>
             </div>
         </div>
-        <div class="class-list">
-            <div class="class">
-                <span>CSE 100</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
-            <div class="class">
-                <span>CSE 101</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
-            <div class="class">
-                <span>CSE 110</span>
-                <div class="class-icon"><i class="fa fa-window-close" aria-hidden="true"></i></div>
-            </div>
+        <div class="class-list" id="class-list">
         </div>
         <div class="generate-schedule-container">
             <select style="width: 100%;">
-                <option selected="selected">Select Optimization</option>
+                <option selected="selected">Select Schedule Preference</option>
                 <option>Most Gaps</option>
                 <option>Fewest Gaps</option>
                 <option>Most Days</option>
@@ -262,37 +247,60 @@
 <script>
     var myApp = {
         urls: {
-            generateSchedule: "@Url.Action("GenerateSchedule","HomeController")",
-            typeAhead: "@Url.Action("TypeAhead", "HomeController")"
+            generateSchedule: "@Url.Action("GenerateSchedule","Home")",
+            typeAhead: "@Url.Action("TypeAhead", "Home")"
         },
-        courseList: [],
+	    coursesToSchedule: [],
+        courses: [],
         metadata: []
     };
 
 
     (function () {
-
-
         var search = document.getElementById("search");
+        search.addEventListener("input", typeAhead);
 
-        search.addEventListener("change", typeAhead);
-
+	
         var input = document.getElementById("search");
         var dropdown = document.getElementById("courseItems");
+
+	
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
+
+        dropdown.addEventListener("focusin", fin);
+	    dropdown.addEventListener("focusout", fout);
+	
+	    var isHover;
+        dropdown.onmouseover = function() {
+            isHover = true;
+	    }
+
+	    dropdown.onmouseout = function() {
+	    	isHover = false;
+	    }
 
         function fin() {
             dropdown.style.display = "block";
         }
 
         function fout() {
-            dropdown.style.display = "none";
+	        
+	        if(!isHover) {
+	        	dropdown.style.display = "none";
+	        }            	
         }
 
-        function typeAhead() {
-
-
-        }
+        document.addEventListener('click', function (e) {
+            if (e.target) {
+                if (e.target.classList.contains("courseItem")) {
+                    //call addList
+                    addList(e.target);
+                } else if (e.target.classList.contains("fa-window-close")) {
+                    removeCourse(e);
+                }
+            }
+        });
+	
     })();
 </script>
