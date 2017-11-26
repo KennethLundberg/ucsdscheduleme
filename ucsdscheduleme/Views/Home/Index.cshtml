@@ -294,10 +294,10 @@
 	        }
 
 	        // clicked on a calendar event
-	        if(e.target && findOuterDiv(e.target, EVENT_CLASS)) {
+	        if(e.target && findOuterDiv(e.target, 'event')) {
 	        	// currently editing AND event is activated
-	        	if(isEditing && findOuterDiv(e.target, EVENT_CLASS).classList.contains('event-activated')) {
-        			updateEvent(findOuterDiv(e.target, EVENT_CLASS));
+	        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+        			updateEvent(findOuterDiv(e.target, 'event'));
         		}
 	        }
 
@@ -306,21 +306,37 @@
 	        if(e.target && (e.target.classList.contains('fa-cog') || e.target.classList.contains('edit-span'))) {
 	        	// only allow changes if currently not editing
 	        	if(!isEditing) {
-	        		changeSchedule(findOuterDiv(e.target, EVENT_CLASS));
+	        		changeSchedule(findOuterDiv(e.target, 'event'));
 	        		isEditing = true;
-	        		
 	        		hideEditButtons();
+	       //  		var events = document.getElementsByClassName('event-activated');
+				    // for(var i = 0; i < events.length; i++) {
+				    // 	events.item(i).addEventListener('mouseover', function(e) {
+				    // 		console.log("hovering")
+				    // 	});
+				    // }
 	        	}
 	        }
-
 	        
         });
 
-        document.addEventListener('mouseover', function(e) {
-        	// if(e.target && findEventDiv(e.target) !== null) {
-	        // 	// console.log(e.target)
-	        // 	// console.log("hovering " + e.target.classList[3])
-	        // }
-        });
+	    document.addEventListener('mouseover', function(e) {
+	    	if(e.target && findOuterDiv(e.target, 'event')) {
+	        	// currently editing AND event is activated
+	        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+	        		console.log("mouseover")
+        		}
+	        }
+	    });
+
+	    // document.addEventListener('mouseout', function(e) {
+	    // 	if(e.target && findOuterDiv(e.target, 'event')) {
+	    //     	// currently editing AND event is activated
+	    //     	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+	    //     		console.log("mouseout")
+     //    		}
+	    // 	  }
+	    // });
+
     })();
 </script>
