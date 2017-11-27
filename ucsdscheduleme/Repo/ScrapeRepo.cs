@@ -19,20 +19,25 @@ namespace ucsdscheduleme.Repo
             _context = context;
         }
 
+        /// <summary>
+        /// This method is used as a controller that will call all the other update method
+        /// of the other scrape classes.
+        /// </summary>
         public void Update()
         {
             // List of departments that are in UCSD
             List<string> listOfDepartments = GetAllDepartments();
 
             // Getting the courses for each department from the act website
-            foreach (string department in listOfDepartments)
+            /*foreach (string department in listOfDepartments)
             {
                 // Scrape act for each department for Winter 18 
-                ClassScrape classScraper = new ClassScrape(_context, "WI18", department + " 1-20");
+                ClassScrape classScraper = new ClassScrape(_context, "WI18", department + " 1-10");
                 classScraper.Update();
-            }
+            }*/
 
-            // TODO Now need add the other classes to the DB just like cse 1-190.
+            ClassScrape classScraper = new ClassScrape(_context, "WI18", "cse 1-20");
+            classScraper.Update();
 
             // Scraping the rate my professor page for all professor in the db
             RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(_context);

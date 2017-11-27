@@ -168,7 +168,11 @@ namespace HtmlAgilitySandbox
             }
 
             // Hash maps for each object needed in database
-            Dictionary<string, Course> courseDictionary = _context?.Courses.ToDictionary(c => c.CourseAbbreviation);
+            // For course we're explicitly telling to grab the sections and meeting
+            Dictionary<string, Course> courseDictionary = _context?.Courses
+                                                                   .Include(c => c.Sections)
+                                                                        .ThenInclude(s => s.Meetings)
+                                                                   .ToDictionary(c => c.CourseAbbreviation);
             Dictionary<string, Section> sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
             Dictionary<string, Location> locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
             Dictionary<string, Professor> professorDictionary = _context?.Professor.ToDictionary(p => p.Name);
@@ -208,20 +212,35 @@ namespace HtmlAgilitySandbox
 
                     // This label is used when there is a lecture meeting type with final node name in the 
                     // act website, eg Math 3C, 4c
-                    lectureFinal:
+                    lectureInFinal:
 
+                    // This block will scrape the header of each course offered, 
+                    // Will scrape the name of the course, units, course name
                     if (trCrsHeaderCheck != null)
                     {
                         // Make sure that the "Prerequisites field exists, otherwise this row is empty.
                         HtmlNode prereqNode = node?.SelectSingleNode(ActStrings.PrereqNode);
                         if (prereqNode == null) continue;
 
-                        // Push all static meetings to each section.
+                        // Push all static meetings to each section. Static meeting needs to have sectionID = null
                         foreach (Meeting meeting in meetingList)
                         {
                             foreach (Section section in sectionList)
                             {
-                                section.Meetings.Add(meeting);
+                                // Create new meeting each time so that each section will have correct
+                                // unique meetings.
+                                Meeting staticMeeting = new Meeting()
+                                {
+                                    Code = meeting.Code,
+                                    Days = meeting.Days,
+                                    StartTime = meeting.StartTime,
+                                    EndTime = meeting.EndTime,
+                                    StartDate = meeting.StartDate,
+                                    MeetingType = meeting.MeetingType,
+                                    Location = meeting.Location,
+                                    IsUnique = true
+                                };
+                                section.Meetings.Add(staticMeeting);
                             }
                         }
 
@@ -257,6 +276,7 @@ namespace HtmlAgilitySandbox
                             currentClassNum = classNum;
                             string courseAbbrev = department + " " + classNum;
 
+                            // Find the course in the db or make new course object
                             if (!courseDictionary.TryGetValue(courseAbbrev, out currentCourse))
                             {
                                 currentCourse = new Course
@@ -267,14 +287,29 @@ namespace HtmlAgilitySandbox
                                 };
                                 courseList.Add(currentCourse);
                             }
+                            else
+                            {
+                                // Delete all the meetings of the course which was found from the database 
+                                // and later we'll repopulate it.
+                                var meetingsToDelete = currentCourse.Sections.SelectMany(s => s.Meetings);
+                                _context.Meetings.RemoveRange(meetingsToDelete);
+                                _context.SaveChanges();
+                            }
+
                         }
                     }
 
                     // Else check if node is a TR that contains section/meeting data.
+                    // This block will scrape the lecture/dicsussion/lab part
                     else if ((nodeClasses != null && nodeClasses.Contains(ActStrings.TRSectionClass)) || foundLE == true)
                     {
 
                         foundLE = false;
+
+                        /*****
+                         Scraping meeting type and the code of the meetingtype, all meeting type
+                         will have these information.
+                         ******/
 
                         // Select the meeting type node to begin iterating from.
                         HtmlNode meetingTypeTDNode = node.SelectSingleNode(ActStrings.MeetingTypeNode);
@@ -284,13 +319,21 @@ namespace HtmlAgilitySandbox
                         string meetingType = meetingTypeTDNode.InnerText;
                         currentMeeting.MeetingType = GetMeetingType(meetingType);
 
+                        // Set it to false as default, if the meeting is unique, like final and lecture,
+                        // we're changing it later.
+                        currentMeeting.IsUnique = false;
+
                         // Set code.
                         HtmlNode codeNode = meetingTypeTDNode.NextSibling.NextSibling;
                         string code = codeNode.InnerText;
                         currentMeeting.Code = code;
 
-                        // Check if class times are TBA, or if class is cancelled.
+                        /*****
+                         Scraping Days, Time, Location, and Professor of the meeting type
+                         *****/
+                        
                         HtmlNode daysNode = codeNode.NextSibling.NextSibling;
+                        // Check if class times are not TBA, and if class is not cancelled.
                         if (!daysNode.InnerText.Contains("TBA") && !daysNode.InnerText.Contains("Cancelled"))
                         {
                             // Set days.
@@ -358,6 +401,10 @@ namespace HtmlAgilitySandbox
                         // Class is cancelled so continue to next node.
                         else if (daysNode.InnerText.Contains("Cancelled")) continue;
 
+                        /*****
+                         Scraping the section Id (ticket) if present, and assign professor to the section. 
+                         *****/
+
                         // Check if the section ID exists for this row.
                         HtmlNode sectionIDNode = meetingTypeTDNode.PreviousSibling.PreviousSibling;
                         if (!String.IsNullOrEmpty(sectionIDNode.InnerText.Trim()) && !sectionIDNode.InnerText.Trim().Contains("&nbsp"))
@@ -417,7 +464,7 @@ namespace HtmlAgilitySandbox
                         if (testType == "LE")
                         {
                             foundLE = true;
-                            goto lectureFinal;
+                            goto lectureInFinal;
                         }
 
                         // Set date.
@@ -461,7 +508,20 @@ namespace HtmlAgilitySandbox
                         // Push to all sections currently in section list.
                         foreach (Section section in sectionList)
                         {
-                            section.Meetings.Add(currentMeeting);
+                            // Create new final meeting each time so that each section will have correct
+                            // unique meetings. Static meeting needs to have sectionID = null
+                            Meeting finalMeeting = new Meeting()
+                            {
+                                Code = currentMeeting.Code,
+                                Days = currentMeeting.Days,
+                                StartTime = currentMeeting.StartTime,
+                                EndTime = currentMeeting.EndTime,
+                                StartDate = currentMeeting.StartDate,
+                                MeetingType = currentMeeting.MeetingType,
+                                Location = currentMeeting.Location,
+                                IsUnique = true
+                            };
+                            section.Meetings.Add(finalMeeting);
                         }
                     }
                 }
@@ -472,7 +532,20 @@ namespace HtmlAgilitySandbox
             {
                 foreach (Section section in sectionList)
                 {
-                    section.Meetings.Add(meeting);
+                    // Create new meeting each time so that each section will have correct
+                    // unique meetings. Static meeting needs to have sectionID = null
+                    Meeting staticMeeting = new Meeting()
+                    {
+                        Code = meeting.Code,
+                        Days = meeting.Days,
+                        StartTime = meeting.StartTime,
+                        EndTime = meeting.EndTime,
+                        StartDate = meeting.StartDate,
+                        MeetingType = meeting.MeetingType,
+                        Location = meeting.Location,
+                        IsUnique = true
+                    };
+                    section.Meetings.Add(staticMeeting);
                 }
             }
 
