@@ -306,49 +306,51 @@
 <div style="display:none; position:absolute; left:20%; top:20%; width:60%; height:60%; min-height:10px; min-width:10px; z-index:9; background-color:pink;" id="friend-form">
     <div>
         <span>Event Name: </span>
-        <input type="text" name="customeventname" placeholder="i.e. Work" />
+        <input type="text" placeholder="i.e. Work" id="custom-event-name" />
     </div>
     <div>
         <div>Days: </div>
         <div>
-            <input type="checkbox" name="monday" />
+            <input type="checkbox" id="custom-event-monday" />
             <span>Monday</span>
         </div>
         <div>
-            <input type="checkbox" name="tuesday" />
+            <input type="checkbox" id="custom-event-tuesday" />
             <span>Tueday</span>
         </div>
         <div>
-            <input type="checkbox" name="wednesday" />
+            <input type="checkbox" id="custom-event-wednesday" />
             <span>Wednesday</span>
         </div>
         <div>
-            <input type="checkbox" name="thursday" />
+            <input type="checkbox" id="custom-event-thursday" />
             <span>Thursday</span>
         </div>
         <div>
-            <input type="checkbox" name="friday" />
+            <input type="checkbox" id="custom-event-friday" />
             <span>Friday</span>
         </div>
     </div>
     <div>
         <div>
             <span>Start Time: </span>
-            <input type="time" name="customeventstarttime" min="07:30" />
+            <input type="time" id="custom-event-starttime" min="07:30" />
         </div>
         <div>
             <span>End Time: </span>
-            <input type="time" name="customeventendtime" max="23:00" />
+            <input type="time" id="custom-event-endtime" max="23:00" />
         </div>
     </div>
-    <div class="logout-button" onclick="visibility_off('friend-form');">Close</div>
+    <div class="logout-button" onclick="saveCustomEvent();">Save</div>
+    <div class="logout-button" onclick="cancelCustomEvent();">Cancel</div>
 </div>
 
 <script>
     var myApp = {
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
-            typeAhead: "@Url.Action("TypeAhead", "Home")"
+            typeAhead: "@Url.Action("TypeAhead", "Home")",
+            @*customEvent: "@Url.Action("CreateCustomEvent", "Home")"*@
         },
 	    coursesToSchedule: [],
         courses: [],

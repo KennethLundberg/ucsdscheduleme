@@ -110,5 +110,11 @@ namespace ucsdscheduleme.Controllers
 
             return Json(suggestions);
         }
+
+        //public IActionResult CreateCustomEvent()
+        //{
+
+        //    return;
+        //}
     }
 }

@@ -772,3 +772,41 @@ function visibility_off(id) {
     var e = document.getElementById(id);
     e.style.display = 'none';
 }
+
+function customEventCallout() {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.customEvent;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
+    console.log("Payload: " + JSON.stringify(send));
+    xhr.send(JSON.stringify(send));
+}
+
+function saveCustomEvent() {
+    var name = document.getElementById('custom-event-name').value;
+    var monday = document.getElementById('custom-event-monday').value;
+    var tuesday = document.getElementById('custom-event-tuesday').value;
+    var wednesday = document.getElementById('custom-event-wednesday').value;
+    var thursday = document.getElementById('custom-event-thursday').value;
+    var friday = document.getElementById('custom-event-friday').value;
+    var startTime = document.getElementById('custom-event-starttime').value;
+    var endTime = document.getElementById('custom-event-endtime').value;
+
+    /*callout function*/
+
+    cancelCustomEvent();
+}
+
+function cancelCustomEvent() {
+    visibility_off('friend-form');
+
+    document.getElementById('custom-event-name').value = document.getElementById('custom-event-name').defaultValue;
+    document.getElementById('custom-event-monday').checked = false;
+    document.getElementById('custom-event-tuesday').checked = false;
+    document.getElementById('custom-event-wednesday').checked = false;
+    document.getElementById('custom-event-thursday').checked = false;
+    document.getElementById('custom-event-friday').checked = false;
+    document.getElementById('custom-event-starttime').value = document.getElementById('custom-event-starttime').defaultValue;
+    document.getElementById('custom-event-endtime').value = document.getElementById('custom-event-endtime').defaultValue;
+}
