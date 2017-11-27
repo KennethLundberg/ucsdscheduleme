@@ -94,7 +94,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A02",
+                        code: "B00",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
@@ -104,7 +104,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A02",
+                        code: "B00",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
@@ -118,7 +118,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A02-1",
+                            code: "B01",
                             startTimeInMinutesAfterFirstHour: (1*60+30),
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -130,7 +130,7 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A02-2",
+                            code: "B02",
                             startTimeInMinutesAfterFirstHour: (1*60+30),
                             durationInMinutes: 50,
                             timespan: "9:00am - 9:50am",
@@ -361,6 +361,8 @@ function showAllBasesAndAllSections(ids) {
     // baseKeys is 'A', 'B' // TODO: Replace with proper comments
     var baseKeys = Object.keys(bases);
 
+    clearMeetings();
+
     for(var i = 0; i < baseKeys.length; i++) {
         // insert all bases aka lectures
         for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
@@ -390,7 +392,7 @@ function showBaseAndAllSections(ids) {
     var course = courses[ids.courseId];
     var baseElements = course.bases[ids.baseId].baseElements;
     var sectionElements = course.bases[ids.baseId].sectionElements;
-
+    clearMeetings();
     for(var i = 0; i < baseElements.length; i++) {
         var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
         event.className += " event-activated";
@@ -407,11 +409,7 @@ function showBaseAndAllSections(ids) {
 }
 
 function changeSchedule(event) {
-    // console.log("changeSchedule ")
-    // console.log(event);
-
-    var ids = extractIds(event);
-    // console.log(ids);
+   var ids = extractIds(event);
 
     // base selected
     if(ids.sectionId === "undefined") {
@@ -429,8 +427,6 @@ function changeSchedule(event) {
  * @param: sectionId: string
  */
 function updateSelectedSection(event) {
-    
-
     var ids = extractIds(event);
     courses[ids.courseId].selectedSection = ids.sectionId;
     courses[ids.courseId].selectedBase = ids.baseId;
@@ -470,26 +466,38 @@ function updateEvent(event) {
 
 
 function activateSelectedBasesAndSections(event) {
-    var ids = extractIds(event);
+    var ids = extractIds(event, false);
     console.log("activateAllBasesAndAllSections")
-
-    ids.courseId = '_' + ids.courseId;
-    ids.baseId = '_' + ids.baseId;
+    console.log(ids)
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
-   
 
-    if(ids.sectionId !== "undefined") {
+    if(ids.sectionId !== "_undefined") {
+
         for(var j = 0; j < allActivatedEvents.length; j++) {
-            if(!allActivatedEvents[j].classList.contains(ids.sectionId) || !allActivatedEvents[j].classList.contains(ids.courseId) || !allActivatedEvents[j].classList.contains(ids.baseId)) {
-                allActivatedEvents[j].className += ' event-deactivated';
-                allActivatedEvents[j].classList.remove('event-activated');    
+            var classList = allActivatedEvents[j].classList
+
+            if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
+                if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
+                    console.log("section ids or is base match")
+                } else {
+                    classList.add('event-deactivated');
+                    classList.remove('event-activated');
+                }
+                console.log("course and base ids match")
+            } else {
+                classList.add('event-deactivated');
+                classList.remove('event-activated');
             }
         }
+
     } else {
+        // console.log("allActivatedEvents.length = " + allActivatedEvents.length);
+        console.log("hover over lecture")
+        console.log(ids)
         for(var j = 0; j < allActivatedEvents.length; j++) {
             if(!allActivatedEvents[j].classList.contains(ids.courseId) || !allActivatedEvents[j].classList.contains(ids.baseId)) {
-                allActivatedEvents[j].className += ' event-deactivated';
+                allActivatedEvents[j].classList.add('event-deactivated');
                 allActivatedEvents[j].classList.remove('event-activated');    
             }
         }
@@ -497,35 +505,37 @@ function activateSelectedBasesAndSections(event) {
 }
 
 function reactivateAllBasesAndAllSections(event) {
-    var ids = extractIds(event);
-    console.log("deactivateAllBasesAndAllSections")
+    var ids = extractIds(event, false);
+    console.log("reactivateAllBasesAndAllSections")
 
-    ids.courseId = '_' + ids.courseId;
-    ids.baseId = '_' + ids.baseId;
+    // ids.courseId = '_' + ids.courseId;
+    // ids.baseId = '_' + ids.baseId;
 
     var allActivatedEvents = document.getElementsByClassName('event-deactivated');
-    // for(var j = 0; j < allActivatedEvents.length; j++) {
-    //     allActivatedEvents[j].className += ' event-activated';
-    //     allActivatedEvents[j].classList.remove('event-deactivated');
-    // }
-
     while(allActivatedEvents.length > 0) {
-        console.log("allActivatedEvents.length = " + allActivatedEvents.length)
+        // console.log("allActivatedEvents.length = " + allActivatedEvents.length)
         allActivatedEvents[0].className += ' event-activated';
         allActivatedEvents[0].classList.remove('event-deactivated');
     }
 }
 
-
-function extractIds(event) {
+// TODO: Replace comments
+// default: returns no underscores
+function extractIds(event, noUnderscore = true) {
 
     if(event.classList.length <= 0) {
         return null;
     }
 
-    var courseId = event.classList[1].substr(1);
-    var baseId = event.classList[2].substr(1);
-    var sectionId = event.classList[3].substr(1);
+    var courseId = event.classList[1];
+    var baseId = event.classList[2];
+    var sectionId = event.classList[3];
+
+    if(noUnderscore) {
+        courseId = event.classList[1].substr(1);
+        baseId = event.classList[2].substr(1);
+        sectionId = event.classList[3].substr(1);
+    }
 
     return {
         courseId: courseId,
@@ -565,4 +575,16 @@ function showEditButtons() {
     for(var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'visible';
     }
+}
+
+
+function debug() {
+    console.log("# of events: " + document.getElementsByClassName('event').length)
+    console.log(document.getElementsByClassName('event'))
+    console.log("# of event-activated: " + document.getElementsByClassName('event-activated').length)
+    console.log(document.getElementsByClassName('event-activated'))
+    console.log("# of event-deactivated: " + document.getElementsByClassName('event-deactivated').length)
+    console.log(document.getElementsByClassName('event-deactivated'))
+    
+    
 }

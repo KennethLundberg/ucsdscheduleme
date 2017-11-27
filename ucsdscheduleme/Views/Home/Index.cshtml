@@ -284,6 +284,7 @@
     const EVENT_CLASS = 'event';
 
     (function () {
+    	
 
 	    document.addEventListener('click',function(e) {
             // console.log(e.target);
@@ -315,24 +316,27 @@
 	        	var activatedEvents = document.getElementsByClassName('event-activated');
 	        	for(var i = 0; i < activatedEvents.length; i++) {
 	        		var activatedEvent = activatedEvents.item(i);
-		        	activatedEvent.addEventListener('mouseover', function(e) {
+		        	activatedEvent.addEventListener('mouseenter', function(e) {
 				    	if(e.target && findOuterDiv(e.target, 'event')) {
 				        	// currently editing AND event is activated
 				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-				        		console.log("mouseover")
+				        		console.log("mouseenter")
 				        		activateSelectedBasesAndSections(findOuterDiv(e.target, 'event'));
 			        		}
 				        }
+
+				        // debug();
 				    });
 
-				    activatedEvent.addEventListener('mouseout', function(e) {
+				    activatedEvent.addEventListener('mouseleave', function(e) {
 				    	if(e.target && findOuterDiv(e.target, 'event')) {
 				        	// currently editing AND event is activated
 				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-				        		console.log("mouseout")
+				        		console.log("mouseleave")
 				        		reactivateAllBasesAndAllSections(findOuterDiv(e.target, 'event'));
 			        		}
-				    	  }
+				    	}
+				    	// debug();
 				    });
 		        }
 		    }
