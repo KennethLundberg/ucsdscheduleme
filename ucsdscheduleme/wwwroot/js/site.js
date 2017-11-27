@@ -143,22 +143,80 @@ var courses = {
                 }
             }
         }
+    },
+    "cse110": {
+        "selectedBase": "A",
+        "selectedSection": "1",
+        "bases": {
+            "A": {
+                "baseElements": [
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 110",
+                        professor: "Gillespie, Gary",
+                        code: "C00",
+                        startTimeInMinutesAfterFirstHour: 5*60,
+                        durationInMinutes: 110,
+                        timespan: "12:30pm - 1:50pm",
+                        day: "tuesday"
+                    }
+                ],
+                "sectionElements": {
+                    //Array of this section specific courses here
+                    "90210": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 101",
+                            professor: "Miles, Jones",
+                            code: "A01-1",
+                            startTimeInMinutesAfterFirstHour: 30,
+                            durationInMinutes: 50,
+                            timespan: "8:00am - 8:50am",
+                            day: "tuesday"
+                        }
+                    ]
+                }
+            }
+        }
     }
 }
+/**
+ * test adding calendar events, will delete later
+ **/
+function setup() {
+    clearAllMeetings();
+    //console.log("setup()");
+    updateMeetings(courses);
+}
+ 
+/* called when DOM is ready */
+document.addEventListener('DOMContentLoaded', function() {
+    setup();
+});
 
 
 /** END OF DELETE **/
 
 
 /*
- * Function: clearMeetings()
+ * Function: clearAllMeetings()
  * Param: none
  * Description: Clears the calendar of events by removing all elements with class 'event'
  */
-function clearMeetings()
+function clearAllMeetings()
 {
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName('event');
+
+    /* remove first element in resulting list until all children are deleted*/
+    while(elements[0]) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
+function clearMeetings(className)
+{
+    /* retrieve elements with class 'event' */
+    var elements = document.getElementsByClassName(className);
 
     /* remove first element in resulting list until all children are deleted*/
     while(elements[0]) {
@@ -347,7 +405,7 @@ function showAllBasesAndAllSections(ids) {
 
     var baseKeys = Object.keys(bases);
 
-    clearMeetings();
+    clearMeetings(ids.courseId);
 
     for(var i = 0; i < baseKeys.length; i++) {
         // insert all bases aka lectures
@@ -378,7 +436,7 @@ function showBaseAndAllSections(ids) {
     var course = courses[ids.courseId];
     var baseElements = course.bases[ids.baseId].baseElements;
     var sectionElements = course.bases[ids.baseId].sectionElements;
-    clearMeetings();
+    clearMeetings(ids.courseId);
     for(var i = 0; i < baseElements.length; i++) {
         var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
         event.className += " event-activated";
@@ -415,7 +473,7 @@ function updateSelectedSection(event) {
     courses[ids.courseId].selectedSection = ids.sectionId;
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    clearMeetings();
+    clearAllMeetings();
     updateMeetings(courses);
     isEditing = false;
 
@@ -430,7 +488,7 @@ function updateSelectedBase(event) {
 
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    clearMeetings();
+    clearAllMeetings();
     updateMeetings(courses)
     
     hideEditButtons();
