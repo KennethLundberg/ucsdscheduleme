@@ -296,8 +296,6 @@
 
 	        // clicked on a calendar event
 	        var outerDiv = findOuterDiv(e.target, 'event'); 
-	        console.log("outerDiv");
-	        console.log(outerDiv);
 	        if(e.target && outerDiv) {
 	        	// currently editing AND event is activated
 	        	if(isEditing && outerDiv.classList.contains('event-activated')) {
@@ -324,12 +322,9 @@
 				    	if(e.target && hoverEvent) {
 				        	// currently editing AND event is activated
 				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
-				        		console.log("mouseenter")
 				        		activateSelectedBasesAndSections(hoverEvent);
 			        		}
 				        }
-
-				        // debug();
 				    });
 
 				    activatedEvent.addEventListener('mouseleave', function(e) {
@@ -337,36 +332,14 @@
 				        	// currently editing AND event is activated
 				        	var hoverEvent = findOuterDiv(e.target, 'event');
 				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
-				        		console.log("mouseleave")
 				        		reactivateAllBasesAndAllSections(hoverEvent);
 			        		}
 				    	}
-				    	// debug();
 				    });
 		        }
 		    }
 	        
         });
-
-	    // document.addEventListener('mouseover', function(e) {
-	    // 	if(e.target && findOuterDiv(e.target, 'event')) {
-	    //     	// currently editing AND event is activated
-	    //     	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-	    //     		console.log("mouseover")
-	    //     		activateSelectedBasesAndSections(findOuterDiv(e.target, 'event'));
-     //    		}
-	    //     }
-	    // });
-
-	    // document.addEventListener('mouseout', function(e) {
-	    // 	if(e.target && findOuterDiv(e.target, 'event')) {
-	    //     	// currently editing AND event is activated
-	    //     	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-	    //     		console.log("mouseout")
-	    //     		reactivateAllBasesAndAllSections(findOuterDiv(e.target, 'event'));
-     //    		}
-	    // 	  }
-	    // });
 
 
     })();

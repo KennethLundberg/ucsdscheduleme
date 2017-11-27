@@ -146,19 +146,6 @@ var courses = {
     }
 }
 
-/**
- * test adding calendar events, will delete later
- **/
-function setup() {
-    clearMeetings();
-    //console.log("setup()");
-    updateMeetings(courses);
-}
-
-/* called when DOM is ready */
-document.addEventListener('DOMContentLoaded', function() {
-    setup();
-});
 
 /** END OF DELETE **/
 
@@ -358,7 +345,6 @@ function showAllBasesAndAllSections(ids) {
     var course = courses[ids.courseId];
     var bases = course.bases;
 
-    // baseKeys is 'A', 'B' // TODO: Replace with proper comments
     var baseKeys = Object.keys(bases);
 
     clearMeetings();
@@ -475,25 +461,20 @@ function activateSelectedBasesAndSections(event) {
 
             if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
                 if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
-                    // console.log("section ids or is base match")
                 } else {
                     toDeactivate.push(allActivatedEvents[j]);
                 }
-                // console.log("course and base ids match")
             } else {
                 toDeactivate.push(allActivatedEvents[j]);
             }
         }
-        
+
         for(var k = 0; k < toDeactivate.length; k++) {
             toDeactivate[k].classList.add('event-deactivated');
             toDeactivate[k].classList.remove('event-activated');
         }
 
     } else {
-        // console.log("allActivatedEvents.length = " + allActivatedEvents.length);
-        // console.log("hover over lecture")
-
         var toDeactivate = [];
 
         for(var j = 0; j < allActivatedEvents.length; j++) {
@@ -513,12 +494,8 @@ function activateSelectedBasesAndSections(event) {
 
 function reactivateAllBasesAndAllSections(event) {
     var ids = extractIds(event, false);
-    // console.log("reactivateAllBasesAndAllSections")
-
-
     var allActivatedEvents = document.getElementsByClassName('event-deactivated');
     while(allActivatedEvents.length > 0) {
-        // console.log("allActivatedEvents.length = " + allActivatedEvents.length)
         allActivatedEvents[0].className += ' event-activated';
         allActivatedEvents[0].classList.remove('event-deactivated');
     }
@@ -555,16 +532,10 @@ function extractIds(event, noUnderscore = true) {
 function findOuterDiv(element, className) {
     // console.log(element.classList.length);
     if(typeof element == undefined) {
-        console.log("bad element")
-        console.log(element)
         return null;
     }
-    console.log("findOuterDiv before loop")
-    console.log(element);
 
     while(!element.classList.contains(className)) {
-        console.log("findOuterDiv in loop")
-        console.log(element);
         element = element.parentNode;
     }
 
