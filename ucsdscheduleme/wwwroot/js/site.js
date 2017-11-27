@@ -1,21 +1,7 @@
-﻿/** START OF DELETE **/
-/* Randomly select from demo data - TODO Delete later! */
-var bases = ["A", "B"];
-var randomBaseIndex = Math.floor(Math.random() * 2);
-var randomSelectionIndex = Math.floor(Math.random() * 2);
-
-var randomBase = bases[randomBaseIndex];
-
-var sectionsA = ["90210", "91023"];
-var sectionsB = ["10201", "11023"];
-
-var randomSelection = (randomBaseIndex == 0) ? sectionsA[randomSelectionIndex] : sectionsB[randomSelectionIndex];
-var randomSelectionForOneBase = sectionsA[randomBaseIndex];
-
-var courses = {
+﻿var courses = {
     "cse101": {
-        "selectedBase": randomBase,
-        "selectedSection": randomSelection,
+        "selectedBase": "A",
+        "selectedSection": "90210",
         "bases": {
             "A": {
                 //Array of base object calenar events here (like lectures)
@@ -204,48 +190,19 @@ var courses = {
                         durationInMinutes: 80,
                         timespan: "11:0am-12:20pm",
                         day: "tuesday"
+
                     },
-                    {
-                        type: "lecture",
-                        courseAbbreviation: "CSE 100",
-                        professor: "Alvarado, Christine",
-                        code: "A00",
-                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
-                        durationInMinutes: 80,
-                        timespan: "11:0am-12:20pm",
-                        day: "thursday"
+                    "91023": {
+                        //Array of this section specific courses here
                     }
-                ],
-                "sectionElements": {
-                    //Array of this section specific courses here
-                    "90210": [
-                        {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 100",
-                            professor: "Alvarado, Christine",
-                            code: "A01",
-                            startTimeInMinutesAfterFirstHour: (10*60+30),
-                            durationInMinutes: 50,
-                            timespan: "6:00pm - 6:50pm",
-                            day: "friday"
-                        }
-                    ],
-                    "91023": [
-                        {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 100",
-                            professor: "Alvarado, Christine",
-                            code: "A01",
-                            startTimeInMinutesAfterFirstHour: (11*60+30),
-                            durationInMinutes: 50,
-                            timespan: "7:00pm - 8:50pm",
-                            day: "monday"
-                        }
-                    ]
                 },
-                "metadata": [
-                
-                ]
+                "metadata": {
+                    "class": "cse 110",
+                    "professor": "Gary",
+                    "avgWorkload": 10,
+                    "avgGpaExpected": 3.5,
+                    "avgGpaRecieved": 2.9
+                }
             },
             "B": {
                 "oneTimeEvents": [
@@ -265,55 +222,19 @@ var courses = {
                     }
                 ],
                 "baseElements": [
-                    {
-                        type: "lecture",
-                        courseAbbreviation: "CSE 100",
-                        professor: "Alvarado, Christine",
-                        code: "A00",
-                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
-                        durationInMinutes: 80,
-                        timespan: "12:00pm-1:20pm",
-                        day: "tuesday"
-                    },
-                    {
-                        type: "lecture",
-                        courseAbbreviation: "CSE 100",
-                        professor: "Alvarado, Christine",
-                        code: "A00",
-                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
-                        durationInMinutes: 80,
-                        timespan: "12:00pm-1:20pm",
-                        day: "thursday"
-                    }
+                    "calendarEventObject1",
+                    "calendarEventObject2",
+                    "calendarEventObject2",
                 ],
                 "sectionElements": {
-                    //Array of this section specific courses here
-                    "10201": [
-                        {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 100",
-                            professor: "Alvarado, Christine",
-                            code: "A01",
-                            startTimeInMinutesAfterFirstHour: (9*60+30),
-                            durationInMinutes: 50,
-                            timespan: "5:00pm - 5:50pm",
-                            day: "thursday"
-                        }
-                    ],
-                    "11023": [
-                        {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 100",
-                            professor: "Alvarado, Christine",
-                            code: "A01",
-                            startTimeInMinutesAfterFirstHour: (8*60+30),
-                            durationInMinutes: 50,
-                            timespan: "4:00pm - 4:50pm",
-                            day: "monday"
-                        }
-                    ]
+                    "10210": {
+                        //Array of this section specific courses here
+                    },
+                    "11023": {
+                        //Array of this section specific courses here
+                    }
                 },
-                "metadata" : {
+                "metadata": {
                     //the actual object here
                 }
             }
@@ -421,143 +342,169 @@ function typeAheadCallout(input) {
         }
     }
 }
+console.log("courses");
+console.log(courses["cse101"].bases["A"].metadata);
 
-function removeCourse(e) {
-    var course = e.target.parentNode.parentNode;
-    var id = course.id;
-    var index = myApp.coursesToSchedule.indexOf(id);
-    myApp.coursesToSchedule.splice(index, 1);
-    console.log("Courses: " + myApp.coursesToSchedule);
-    course.remove();
-    typeAheadCallout(document.getElementById("search").value);
-}
+// Write your JavaScript code.
 
-/**
- * Clears the drop down and populates the drop down with the auto-complete results.
- * @param {String} e The string to search for auto-complete results with.
- */
-function typeAhead(e) {
-
-    // Sends the input to the server to get the courses
-    var input = e.target.value;
-    typeAheadCallout(input);
-}
-
-
-/**
- * Clears the courses from the drop down.
- */
-function clearSearch()
+//clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
+function clearMetadata()
 {
-    var courses = document.getElementsByClassName("courseItem");
+    //clear metadata of course-stat-container
+    var courses = document.getElementById("course-stat-container");
     while (courses[0])
     {
-        courses[0].remove();
+        courses[0].parentNode.removeChild(courses[0]);
     }
 }
 
+//a function that takes in a metadata object for an individual course and adds it to the view.
+function insertMetadata(course)
+{ 
 
-/**
- * Populates the search drop down with the auto-complete results.
- * @param {Number} data the data to populate the drop down with.
- */
-function populateSearch(data)
-{
-    // Create the element to populate the search with
-    var courses = document.getElementById("courseItems");
-    var course = document.createElement('div');
-    course.className = "courseItem";
-    course.innerText = data.abbreviation;
+    // TO DO: check that metadata is properly being brought into these divs
+    //outer course stat div
+    var metadata = extractMetadata(course);
 
-    course.id = data.id;
+    var courseMetadata = document.createElement('div');
+    courseMetadata.className = "course-stat";
 
-    console.log("populateSearch");
-    console.log(course);
+    //class name
+    var courseName = document.createElement('div');
+    courseName.className = "course-stat";
+    courseName.innerHTML = metadata.className;
 
-    // Add it to the drop down
-    courses.append(course);
+    //professor name
+    var professorName = document.createElement('div');
+    professorName.className = "professor-name";
+    professorName.innerHTML = metadata.professorName;
+
+    //average work load
+    var avgWorkload = document.createElement('div');
+    avgWorkload.className = "class-info";
+    avgWorkload.innerHTML = metadata.averageTotalWorkload;
+
+    //average expected
+    var avgExpected = document.createElement('div');
+    avgExpected.className = "class-info";
+    avgExpected.innerHTML = metadata.averageGpaExpected;
+
+    //average recieved
+    var avgRecieved = document.createElement('div');
+    avgRecieved.className = "class-info";
+    avgRecieved.innerHTML = metadata.averageGpaRecieved;
+
+    //attaching all class information to course div
+    courseMetadata.append(courseName);
+    courseMetadata.append(professorName);
+    courseMetadata.append(avgWorkload);
+    courseMetadata.append(avgExpected);
+    courseMetadata.append(avgRecieved);
+
+    //retrieving course-stat-container
+    var courseGoesHere = document.getElementById("course-stat-container");
+
+    //insert course container to right side bar
+    courseGoesHere.append(courseMetadata);
 }
 
 
-/**
- * Adds the course selected to the class list below the search bar.
- */
-function addList(data) 
+//a function that updates the metadata by calling the InsertMetadata function for each course metadata
+function updateMetadata(metadataList)
 {
-    console.log("HELLO");
-    console.log(data);
-
-    // Hide dropdown menu
-    var dropdown = document.getElementById("courseItems");
-    dropdown.style.display = "none";
-
-    // Create the element the add to the course list
-    var list = document.getElementById("class-list");
-
-    var course = document.createElement('div');
-    course.className = "class";
-    course.id = data.id;
-
-    var span = document.createElement('span');
-    span.innerText = data.innerText;
-
-    console.log("data.id: " + data.id);
-    myApp.coursesToSchedule.push(data.id);
-
-    // Now clear the dropdown and repopulate it
-    typeAheadCallout(document.getElementById("search").value);
-
-    var iconContainer = document.createElement('div');
-    iconContainer.className = "class-icon";
-    var icon = document.createElement('i');
-    icon.className = "fa fa-window-close";
-    icon.setAttribute("aria-hidden", true);
-    iconContainer.append(icon);
-
-    // Add it to the course list
-    course.append(span);
-    course.append(iconContainer);
-    list.append(course);
-}
-
-/**
- * Function: clearMeetings()
- * Param: none
- * Description: Clears the calendar of events by removing all elements with class 'event'
- */
-function clearMeetings()
-{
-    /* retrieve elements with class 'event' */
-    var elements = document.getElementsByClassName('event');
-
-    /* remove first element in resulting list until all children are deleted*/
-    while(elements[0]) {
-        elements[0].parentNode.removeChild(elements[0]);
+    for (var i = 0; i < metadataList.length; i++)
+    {
+        insertMetadata(metadataList[i]);
     }
 }
 
-/**
- * Function: calculateMeetingPosition(meeting)
- * Param: meeting - the meeting to insert
- * Description: Based on the time and duration of the event, calculate the top and height of the event element.
- *      This can be done because the height of any 30 minute increment is fixed, so a calculation of the top is just
- *      (# half hour increments after 7:30 am) * (height of individual 30 min increment) in px.
- *      Then height is just (duration of event in minutes) * (height of 30 min section) / 30.
- * Return: returns the top and height values
- */
-function calculateMeetingPosition(meeting) {
+// a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
+function updateOverallMetadata(courses)
+{
+    var overallWorkload;
+    var overallExpectedGpa;
+    var overallRecievedGpa;
 
-    /* calculate top and height based on number of half hour increments after 7:30am and duration */
-    var numHalfHourInc = (meeting.startTimeInMinutesAfterFirstHour) / 30;
-    var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
-    var timeOffSet = 50;
+    //div that holds table. table will be appended to this.
+    var overallStat = document.getElementById("overall-stat");
 
-    var top = (numHalfHourInc * height30MinInc + timeOffSet) + "px";
-    var height = ((meeting.durationInMinutes) * (height30MinInc) / 30) + "px";
+    var tbl = document.createElement("table");
+    var tblBody = document.createElement("tbody");
 
+    //IGNORE, just an example I was trying to follow but decided a loop wasn't good for what I wanted to do
+
+    /*for (var i = 0; i < 2; i++) {
+        // creates a table row
+        var row = document.createElement("tr");
+
+        for (var j = 0; j < 2; j++) {
+            // Create a <td> element and a text node, make the text
+            // node the contents of the <td>, and put the <td> at
+            // the end of the table row
+            var cell = document.createElement("td");
+            var cellText = document.createTextNode("cell in row " + i + ", column " + j);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
+
+        // add the row to the end of the table body
+        tblBody.appendChild(row);
+    }*/
+
+    //create table rows
+    var workloadRow = document.createElement("tr");
+    var expectedRow = document.createElement("tr");
+    var recievedRow = document.createElement("tr");
+
+    //workload row
+    var workloadLabelCell = document.createElement("td");
+    var workloadLabelCellText = document.createTextNode("Overall Avg. Workload");
+    workloadLabelCell.appendChild(workloadLabelCellText);
+    workloadRow.appendChild(workloadLabelCell);
+
+
+
+    // put the <tbody> in the <table>
+    tbl.appendChild(tblBody);
+    // appends <table> into <body>
+    overallStat.appendChild(tbl);
+    //iterate through all the metadata in the JSON
+    /*for (course in courses)
+    {
+        var metadata = extractMetadata(course);
+        overallWorkload = overallWorkload + metadata.overallWorkload;
+        overallExpectedGpa = overallExpectedGpa + metadata.averageGpaExpected;
+        overallRecievedGpa = overallRecievedGpa + metadata.averageGpaRecieved;
+    }*/
+}
+
+//metadata extraction helper function
+function extractMetadata(course)
+{
+
+    // extract selected base - classes to update
+    var selectedBase = course.selectedBase;
+
+    // the specific class you're interested in
+    var base = course.bases[selectedBase];
+
+    // the metadata for that class
+    var metadata = base.metadata;
+
+    // the individual elements of the metadata
+    var className = metadata.courseAbbreviation;
+    var profName = metadata.professorName;
+    var avgTotalWorkload = metadata.averageTotalWorkload;
+    var avgGpaExpected = metadata.averageGpaExpected;
+    var avgGpaRecieved = metadata.averageGpaRecieved;
+
+    // return object with metadata for class
     return {
-        top: top,
-        height: height
+        className: className,
+        professorName: profName,
+        averageTotalWorkload: avgTotalWorkload,
+        averageGpaExpected: avgGpaExpected,
+        averageGpaRecieved: avgGpaRecieved
     };
 }
 
@@ -777,3 +724,4 @@ function updateOneTimeEvents(courses)
         }
     }
 }
+
