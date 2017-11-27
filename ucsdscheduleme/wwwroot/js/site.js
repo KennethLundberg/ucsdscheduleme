@@ -1,5 +1,5 @@
 ﻿/** START OF DELETE **/
-/* Randomly select from demo data - TODO Delete later! */
+
 var bases = ["A", "B"];
 var randomBaseIndex = Math.floor(Math.random() * 2);
 var randomSelectionIndex = Math.floor(Math.random() * 2);
@@ -381,23 +381,26 @@ var testCourses = {
     }
     
 }
-
 /**
  * test adding calendar events, will delete later
  **/
 function setup() {
-    clearMeetings();
+    clearAllMeetings();   
     clearOneTimeEvents();
     console.log("setup()");
     updateMeetings(testCourses);
     updateOneTimeEvents(testCourses);
 }
-/** END OF DELETE **/
-
+ 
 /* called when DOM is ready */
 document.addEventListener('DOMContentLoaded', function() {
     setup();
 });
+
+
+/** END OF DELETE **/
+
+
 
 function typeAheadCallout(input) {
     var xhr = new XMLHttpRequest();
@@ -521,14 +524,24 @@ function addList(data)
 }
 
 /**
- * Function: clearMeetings()
+ * Function: clearAllMeetings()
  * Param: none
  * Description: Clears the calendar of events by removing all elements with class 'event'
  */
-function clearMeetings()
+function clearAllMeetings()
 {
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName('event');
+
+    /* remove first element in resulting list until all children are deleted*/
+    while(elements[0]) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
+function clearMeetings(className)
+{
+    /* retrieve elements with class 'event' */
+    var elements = document.getElementsByClassName(className);
 
     /* remove first element in resulting list until all children are deleted*/
     while(elements[0]) {
@@ -584,7 +597,7 @@ function calculateMeetingPosition(meeting) {
  * and place the event div.
  *  Each div is assigned the appropriate class and id.
  */
-function insertMeeting(meeting)
+function insertMeeting(meeting, courseId, baseId, sectionId)
 {
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
@@ -608,28 +621,22 @@ function insertMeeting(meeting)
     icon.id = meeting.type.toLowerCase();
     eventHeader.append(icon);
 
-
     /* create the Change and edit-button icon and add to event div */
-    var editButtonContainer = document.createElement('div');
-    editButtonContainer.className = "edit-button";
-    event.append(editButtonContainer);
+    var editButton = document.createElement('div');
+    editButton.className = "edit-button";
+    event.append(editButton);
 
-    var editButtonText = document.createElement('span');
-    editButtonText.innerText = "Change";
-    editButtonContainer.append(editButtonText);
+    var editSpan = document.createElement('span');
+    editSpan.innerHTML = "Change";
+    editSpan.className = "edit-span";
+    editButton.append(editSpan);
 
-    var editButtonIcon = document.createElement('i');
-    editButtonIcon.className = "edit-button fa fa-cog";
-    editButtonContainer.append(editButtonIcon);
+    var editIcon = document.createElement('i');
+    editIcon.className = "fa fa-cog";
+    editIcon.setAttribute("aria-hidden", true); 
+    editButton.append(editIcon);
 
-    /* create the Change and edit-button icon and add to event div */
-    var unlockButtonContainer = document.createElement('div');
-    unlockButtonContainer.className = "unlock-button";
-    event.append(unlockButtonContainer);
-
-    var unlockButtonIcon = document.createElement('i');
-    unlockButtonIcon.className = "edit-button fa fa-unlock";
-    unlockButtonContainer.append(unlockButtonIcon);
+    event.append(editButton);
 
     /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
@@ -671,9 +678,18 @@ function insertMeeting(meeting)
     eventInfo.append(sectSpan);
     eventHeader.append(eventInfo);
 
+    courseId = ' _' + courseId;
+    baseId = ' _' + baseId;
+    sectionId = ' _' + sectionId;
+    event.className += courseId;
+    event.className += baseId;
+    event.className += sectionId;
+
     /* add event to day of meeting */
     var dayElem = document.getElementById(meeting.day.toLowerCase());
     dayElem.append(event);
+
+    return event;
 }
 
 /**
@@ -686,34 +702,262 @@ function insertMeeting(meeting)
 function updateMeetings(meetings)
 {
     /* iterate through all the meetings in the JSON */
-    for(meetingId in meetings) {
-
-        var meeting = meetings[meetingId];
-
+    for(meeting in meetings) {
         /* extract selected base and section - the events to display on calendar */
-        var selectedBase = meeting.selectedBase;
-        var selectedSection = meeting.selectedSection;
+        var selectedBase = meetings[meeting].selectedBase;
+        var selectedSection = meetings[meeting].selectedSection;
 
-        /* get list of selected base (i.e. lectures) and section elements (i.e. discussions) */
-        var baseEvents = meeting.bases[selectedBase].baseEvents;
-        var sectionEvents = meeting.bases[selectedBase].sectionEvents[selectedSection];
+        /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
+        var baseElements = meetings[meeting].bases[selectedBase].baseElements;
+        var sectionElements = meetings[meeting].bases[selectedBase].sectionElements[selectedSection];
 
         /* insert all base elements */
-        for (var i = 0; i < baseEvents.length; i++) {
-            insertMeeting(baseEvents[i]);
+        for(var i = 0; i < baseElements.length; i++) {
+            insertMeeting(baseElements[i], meeting, selectedBase);
         }
 
         /* check if there are any sections */
         if (sectionEvents != null) {
 
             /* insert all section elements */
-            for (var i = 0; i < sectionEvents.length; i++) {
-                insertMeeting(sectionEvents[i]);
+            for(var i = 0; i < sectionElements.length; i++) {
+                insertMeeting(sectionElements[i], meeting, selectedBase, selectedSection);
             }
         }
     }
 }
 
+function showAllBasesAndAllSections(ids) {
+
+    var course = myApp.courses[ids.courseId];
+    var bases = course.bases;
+
+    var baseKeys = Object.keys(bases);
+
+    clearMeetings(ids.courseId);
+
+    for(var i = 0; i < baseKeys.length; i++) {
+        // insert all bases aka lectures
+        for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
+            var meeting = bases[baseKeys[i]].baseElements[j];
+
+            // insert base and set activated class
+            var event = insertMeeting(meeting, ids.courseId, baseKeys[i], "undefined");
+            event.className += " event-activated";
+        }
+
+        // insert each section
+        var sectionElements = bases[baseKeys[i]].sectionElements;
+        var sectionsKeys = Object.keys(sectionElements);
+        sectionsKeys.forEach(function(key) {
+            var section = sectionElements[key];
+
+            // insert section and set activated class
+            for(var k = 0; k < section.length; k++) {
+                var event = insertMeeting(section[k], ids.courseId, baseKeys[i], key);
+                event.className += " event-activated";
+            }
+        });
+    }
+}
+
+function showBaseAndAllSections(ids) {
+    var course = myApp.courses[ids.courseId];
+    var baseElements = course.bases[ids.baseId].baseElements;
+    var sectionElements = course.bases[ids.baseId].sectionElements;
+    
+    clearMeetings(ids.courseId);
+
+    for(var i = 0; i < baseElements.length; i++) {
+        var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
+        event.className += " event-activated";
+    }
+
+    var sectionsKeys = Object.keys(sectionElements);
+    sectionsKeys.forEach(function(key) {
+        var section = sectionElements[key];
+        var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
+        event.className += " event-activated";
+    });
+
+    hideEditButtons();
+}
+
+function changeSchedule(event) {
+   var ids = extractIds(event);
+
+    // base selected
+    if(ids.sectionId === "undefined") {
+        showAllBasesAndAllSections(ids);
+    } 
+    // section selected
+    else {
+        showBaseAndAllSections(ids);
+    }
+}
+/**
+ * updateSelectedSection
+ * @param: sectionId: string
+ */
+function updateSelectedSection(event) {
+    var ids = extractIds(event);
+
+    // update the base and section IDs in the global object
+    myApp.courses[ids.courseId].selectedSection = ids.sectionId;
+    myApp.courses[ids.courseId].selectedBase = ids.baseId;
+
+    clearAllMeetings();
+    updateMeetings(myApp.courses);
+
+    isEditing = false;
+    showEditButtons();
+}
+
+/**
+ * @param: baseId: string, sectionId: string
+ */
+function updateSelectedBase(event) {
+    var ids = extractIds(event);
+
+    // update the base ID in the global object
+    myApp.courses[ids.courseId].selectedBase = ids.baseId;
+
+    clearAllMeetings();
+    updateMeetings(myApp.courses)
+    
+    hideEditButtons();
+
+    // showBaseAndAllSections(ids);
+    var baseElements = myApp.courses[ids.courseId].bases[ids.baseId].baseElements;
+    var sectionElements = myApp.courses[ids.courseId].bases[ids.baseId].sectionElements;
+
+    showBaseAndAllSections(ids);
+}
+
+// clicked on section or base, know because bases have "_undefined" as sectionId
+function updateEvent(event) {
+
+    if(!event.classList.contains("_undefined")) {
+        // selected a section
+        updateSelectedSection(event);
+    } else {
+        // selected a base
+        updateSelectedBase(event)
+    }
+}
+
+
+function activateSelectedBasesAndSections(event) {
+    var ids = extractIds(event, false);
+
+    var allActivatedEvents = document.getElementsByClassName('event-activated');
+
+    if(ids.sectionId !== "_undefined") {
+        var toDeactivate = [];
+        for(var j = 0; j < allActivatedEvents.length; j++) {
+            var classList = allActivatedEvents[j].classList;
+
+            if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
+                if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
+                } else {
+                    toDeactivate.push(allActivatedEvents[j]);
+                }
+            } else {
+                toDeactivate.push(allActivatedEvents[j]);
+            }
+        }
+
+        for(var k = 0; k < toDeactivate.length; k++) {
+            toDeactivate[k].classList.add('event-deactivated');
+            toDeactivate[k].classList.remove('event-activated');
+        }
+
+    } else {
+        var toDeactivate = [];
+
+        for(var j = 0; j < allActivatedEvents.length; j++) {
+            var classList = allActivatedEvents[j].classList;
+
+            if(!classList.contains(ids.courseId) || !classList.contains(ids.baseId)) {
+                toDeactivate.push(allActivatedEvents[j]);   
+            }
+        }
+
+        for(var k = 0; k < toDeactivate.length; k++) {
+            toDeactivate[k].classList.add('event-deactivated');
+            toDeactivate[k].classList.remove('event-activated');
+        }
+    }
+}
+
+function reactivateAllBasesAndAllSections(event) {
+    var ids = extractIds(event, false);
+    var allActivatedEvents = document.getElementsByClassName('event-deactivated');
+    while(allActivatedEvents.length > 0) {
+        allActivatedEvents[0].className += ' event-activated';
+        allActivatedEvents[0].classList.remove('event-deactivated');
+    }
+}
+
+// TODO: Replace comments
+// default: returns no underscores
+function extractIds(event, noUnderscore = true) {
+
+    if(event.classList.length <= 0) {
+        return null;
+    }
+    var classListLength = event.classList.length;
+
+    var courseId = event.classList[1];
+    var baseId = event.classList[2];
+    var sectionId = event.classList[3];
+
+    if(noUnderscore) {
+        courseId = event.classList[1].substr(1);
+        baseId = event.classList[2].substr(1);
+        sectionId = event.classList[3].substr(1);
+    }
+
+    return {
+        courseId: courseId,
+        baseId: baseId,
+        sectionId: sectionId
+    }
+}
+
+/**
+ * @param: element: DOM element of which you want to find the event div for 
+ */
+function findOuterDiv(element, className) {
+
+    if(typeof element == undefined) {
+        return null;
+    }
+
+    while(!element.classList.contains(className)) {
+        element = element.parentNode;
+    }
+
+    if(element.classList.contains(className)) { 
+        return element;
+    }
+
+    return null;
+}
+
+
+function hideEditButtons() {
+    var buttons = document.getElementsByClassName('edit-button');
+    for(var i = 0; i < buttons.length; i++) {
+        buttons[i].style.visibility = 'hidden';
+    }
+}
+function showEditButtons() {
+    var buttons = document.getElementsByClassName('edit-button');
+    for(var i = 0; i < buttons.length; i++) {
+        buttons[i].style.visibility = 'visible';
+    }
+}
 /**
  * @description Clears the current table of one time events
  */
