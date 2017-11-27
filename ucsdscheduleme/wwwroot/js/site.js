@@ -605,7 +605,7 @@ function insertMeeting(meeting)
     /* create an icon and add to event header div */
     var icon = document.createElement('div');
     icon.className = "class-icon";
-    icon.id = meeting.type;
+    icon.id = meeting.type.toLowerCase();
     eventHeader.append(icon);
 
 
