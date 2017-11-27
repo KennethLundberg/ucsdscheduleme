@@ -1,17 +1,39 @@
 ﻿/** START OF DELETE **/
 
+var bases = ["A", "B"];
+var randomBaseIndex = Math.floor(Math.random() * 2);
+var randomSelectionIndex = Math.floor(Math.random() * 2);
+
+var randomBase = bases[randomBaseIndex];
+
+var sectionsA = ["90210", "91023"];
+var sectionsB = ["10201", "11023"];
+
+var randomSelection = (randomBaseIndex == 0) ? sectionsA[randomSelectionIndex] : sectionsB[randomSelectionIndex];
+var randomSelectionForOneBase = sectionsA[randomBaseIndex];
+
 var courses = {
     "cse101": {
-        "selectedBase": "B",
-        "selectedSection": "10201",
+        "selectedBase": randomBase,
+        "selectedSection": randomSelection,
         "bases": {
             "A": {
+                //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 101",
+                        "date": "Monday 11/17",
+                        "time": "11:00AM-3:00PM",
+                        "location": "PETERSON 123",
+                        "type": "FI"
+                    }
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A01",
+                        code: "A00",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -21,7 +43,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A01",
+                        code: "A00",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -31,7 +53,7 @@ var courses = {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "A01",
+                        code: "A00",
                         startTimeInMinutesAfterFirstHour: 30,
                         durationInMinutes: 50,
                         timespan: "8:00am - 8:50am",
@@ -39,15 +61,16 @@ var courses = {
                     }
                 ],
                 "sectionElements": {
+                    //Array of this section specific courses here
                     "90210": [
                         {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A01-1",
-                            startTimeInMinutesAfterFirstHour: 30,
-                            durationInMinutes: 50,
-                            timespan: "8:00am - 8:50am",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 110,
+                            timespan: "6:00pm - 7:50pm",
                             day: "tuesday"
                         }
                     ],
@@ -56,23 +79,11 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "A01-2",
-                            startTimeInMinutesAfterFirstHour: 90,
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
                             durationInMinutes: 50,
-                            timespan: "9:00am - 9:50am",
-                            day: "thursday"
-                        }
-                    ],
-                    "92047": [
-                        {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 101",
-                            professor: "Miles, Jones",
-                            code: "A01-3",
-                            startTimeInMinutesAfterFirstHour: 90,
-                            durationInMinutes: 50,
-                            timespan: "9:00am - 9:50am",
-                            day: "wednesday"
+                            timespan: "7:00pm - 8:50pm",
+                            day: "tuesday"
                         }
                     ]
                 },
@@ -87,39 +98,59 @@ var courses = {
                 ]
             },
             "B": {
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 101",
+                        "date": "Friday 11/30",
+                        "time": "8:00AM-12:00PM",
+                        "location": "GALBRAITH 123",
+                        "type": "FI"
+                    },
+                ],
                 "baseElements": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "B00",
+                        code: "A00",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
-                        day: "tuesday"
+                        day: "monday"
                     },
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
                         professor: "Miles, Jones",
-                        code: "B00",
+                        code: "A00",
                         startTimeInMinutesAfterFirstHour: 150,
                         durationInMinutes: 50,
                         timespan: "10:00am - 10:50am",
-                        day: "thursday"
+                        day: "wednesday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 101",
+                        professor: "Miles, Jones",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: 150,
+                        durationInMinutes: 50,
+                        timespan: "10:00am - 10:50am",
+                        day: "friday"
                     }
                 ],
                 "sectionElements": {
+                    //Array of this section specific courses here
                     "10201": [
                         {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "B01",
-                            startTimeInMinutesAfterFirstHour: (1*60+30),
-                            durationInMinutes: 50,
-                            timespan: "9:00am - 9:50am",
-                            day: "friday"
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 110,
+                            timespan: "6:00pm - 7:50pm",
+                            day: "thursday"
                         }
                     ],
                     "11023": [
@@ -127,10 +158,157 @@ var courses = {
                             type: "discussion",
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
-                            code: "B02",
-                            startTimeInMinutesAfterFirstHour: (1*60+30),
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
                             durationInMinutes: 50,
-                            timespan: "9:00am - 9:50am",
+                            timespan: "7:00pm - 8:50pm",
+                            day: "monday"
+                        }
+                    ]
+                },
+                "metadata" : {
+                    //the actual object here
+                }
+            }
+        }
+    },
+    "cse100": {
+        "selectedBase": randomBase,
+        "selectedSection": randomSelection,
+        "bases": {
+            "A": {
+                //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Thursday 12/6",
+                        "time": "7:00PM-10:00PM",
+                        "location": "WARREN LECTURE HALL 123",
+                        "type" : "FI"
+                    },
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Wednesday 10/12",
+                        "time": "5:00PM-7:00PM",
+                        "location": "YORK 123",
+                        "type": "MI"
+                    }
+                ],
+                "baseElements": [
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "11:0am-12:20pm",
+                        day: "tuesday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "11:0am-12:20pm",
+                        day: "thursday"
+                    }
+                ],
+                "sectionElements": {
+                    //Array of this section specific courses here
+                    "90210": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            durationInMinutes: 50,
+                            timespan: "6:00pm - 6:50pm",
+                            day: "friday"
+                        }
+                    ],
+                    "91023": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            durationInMinutes: 50,
+                            timespan: "7:00pm - 8:50pm",
+                            day: "monday"
+                        }
+                    ]
+                },
+                "metadata": [
+                
+                ]
+            },
+            "B": {
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Tuesday 12/7",
+                        "time": "8:00AM-12:00PM",
+                        "location": "PEPPER CANYON 123",
+                        "type": "FI"
+                    },
+                    {
+                        "courseAbbreviation": "CSE 100",
+                        "date": "Wednesday 10/12",
+                        "time": "9:00AM-1:00PM",
+                        "location": "CENTER 123",
+                        "type": "MI"
+                    }
+                ],
+                "baseElements": [
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "12:00pm-1:20pm",
+                        day: "tuesday"
+                    },
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Alvarado, Christine",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        durationInMinutes: 80,
+                        timespan: "12:00pm-1:20pm",
+                        day: "thursday"
+                    }
+                ],
+                "sectionElements": {
+                    //Array of this section specific courses here
+                    "10201": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (9*60+30),
+                            durationInMinutes: 50,
+                            timespan: "5:00pm - 5:50pm",
+                            day: "thursday"
+                        }
+                    ],
+                    "11023": [
+                        {
+                            type: "discussion",
+                            courseAbbreviation: "CSE 100",
+                            professor: "Alvarado, Christine",
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (8*60+30),
+                            durationInMinutes: 50,
+                            timespan: "4:00pm - 4:50pm",
                             day: "monday"
                         }
                     ]
@@ -142,56 +320,76 @@ var courses = {
         }
     },
     "cse110": {
-        "selectedBase": "C",
-        "selectedSection": "C0",
+        "selectedBase": "A",
+        "selectedSection": randomSelectionForOneBase,
         "bases": {
-            "C": {
+            "A": {
+                //Array of base object calenar events here (like lectures)
+                "oneTimeEvents": [
+                    {
+                        "courseAbbreviation": "CSE 110",
+                        "date": "Saturday 11/27",
+                        "time": "10:00AM-12:00PM",
+                        "location": "CENTER 420",
+                        "type": "FI"
+                    },
+                ],
                 "baseElements": [
-
+                    {
+                        type: "lecture",
+                        courseAbbreviation: "CSE 100",
+                        professor: "Gillespie, Gary",
+                        code: "A00",
+                        startTimeInMinutesAfterFirstHour: (9*60+1*30),
+                        durationInMinutes: 170,
+                        timespan: "5:00pm-7:50pm",
+                        day: "tuesday"
+                    }
                 ],
                 "sectionElements": {
-                    "C0": [
+                    //Array of this section specific courses here
+                    "90210": [
                         {
-                            type: "lecture",
-                            courseAbbreviation: "CSE 110",
+                            type: "lab",
+                            courseAbbreviation: "CSE 100",
                             professor: "Gillespie, Gary",
-                            code: "C00",
-                            startTimeInMinutesAfterFirstHour: 5*60,
-                            durationInMinutes: 110,
-                            timespan: "12:30pm - 1:50pm",
-                            day: "tuesday"
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (5*60+30),
+                            durationInMinutes: 170,
+                            timespan: "5:00pm - 7:50pm",
+                            day: "wednesday"
                         }
                     ],
-                }
-            },
-            "D": {
-                "baseElements": [
-                ],
-                "sectionElements": {
-                    "D00": [
+                    "91023": [
                         {
-                            type: "lecture",
-                            courseAbbreviation: "CSE 110",
+                            type: "lab",
+                            courseAbbreviation: "CSE 100",
                             professor: "Gillespie, Gary",
-                            code: "D00",
-                            startTimeInMinutesAfterFirstHour: 3*60,
-                            durationInMinutes: 110,
-                            timespan: "10:30am - 11:50am",
-                            day: "thursday"
+                            code: "A01",
+                            startTimeInMinutesAfterFirstHour: (1*60+30),
+                            durationInMinutes: 170,
+                            timespan: "9:00am - 11:50am",
+                            day: "monday"
                         }
                     ]
-                }
+                },
+                "metadata": [
+                
+                ]
             }
         }
     }
+    
 }
 /**
  * test adding calendar events, will delete later
  **/
 function setup() {
-    clearAllMeetings();
-    //console.log("setup()");
+    clearAllMeetings();   
+    clearOneTimeEvents();
+    console.log("setup()");
     updateMeetings(courses);
+    updateOneTimeEvents(courses);
 }
  
 /* called when DOM is ready */
@@ -203,7 +401,129 @@ document.addEventListener('DOMContentLoaded', function() {
 /** END OF DELETE **/
 
 
-/*
+
+function typeAheadCallout(input) {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.typeAhead;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
+    console.log("Payload: " + JSON.stringify(send));
+    xhr.send(JSON.stringify(send));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = JSON.parse(xhr.responseText);
+            clearSearch();
+
+            for (i = 0; i < text.length; i++) {
+                populateSearch(text[i]);
+                console.log(text[i]);
+            }
+        }
+    }
+}
+
+function removeCourse(e) {
+    var course = e.target.parentNode.parentNode;
+    var id = course.id;
+    var index = myApp.coursesToSchedule.indexOf(id);
+    myApp.coursesToSchedule.splice(index, 1);
+    console.log("Courses: " + myApp.coursesToSchedule);
+    course.remove();
+    typeAheadCallout(document.getElementById("search").value);
+}
+
+/**
+ * Clears the drop down and populates the drop down with the auto-complete results.
+ * @param {String} e The string to search for auto-complete results with.
+ */
+function typeAhead(e) {
+
+    // Sends the input to the server to get the courses
+    var input = e.target.value;
+    typeAheadCallout(input);
+}
+
+
+/**
+ * Clears the courses from the drop down.
+ */
+function clearSearch()
+{
+    var courses = document.getElementsByClassName("courseItem");
+    while (courses[0])
+    {
+        courses[0].remove();
+    }
+}
+
+
+/**
+ * Populates the search drop down with the auto-complete results.
+ * @param {Number} data the data to populate the drop down with.
+ */
+function populateSearch(data)
+{
+    // Create the element to populate the search with
+    var courses = document.getElementById("courseItems");
+    var course = document.createElement('div');
+    course.className = "courseItem";
+    course.innerText = data.abbreviation;
+
+    course.id = data.id;
+
+    console.log("populateSearch");
+    console.log(course);
+
+    // Add it to the drop down
+    courses.append(course);
+}
+
+
+/**
+ * Adds the course selected to the class list below the search bar.
+ */
+function addList(data) 
+{
+    console.log("HELLO");
+    console.log(data);
+
+    // Hide dropdown menu
+    var dropdown = document.getElementById("courseItems");
+    dropdown.style.display = "none";
+
+    // Create the element the add to the course list
+    var list = document.getElementById("class-list");
+
+    var course = document.createElement('div');
+    course.className = "class";
+    course.id = data.id;
+
+    var span = document.createElement('span');
+    span.innerText = data.innerText;
+
+    console.log("data.id: " + data.id);
+    myApp.coursesToSchedule.push(data.id);
+
+    // Now clear the dropdown and repopulate it
+    typeAheadCallout(document.getElementById("search").value);
+
+    var iconContainer = document.createElement('div');
+    iconContainer.className = "class-icon";
+    var icon = document.createElement('i');
+    icon.className = "fa fa-window-close";
+    icon.setAttribute("aria-hidden", true);
+    iconContainer.append(icon);
+
+    // Add it to the course list
+    course.append(span);
+    course.append(iconContainer);
+    list.append(course);
+}
+
+/**
  * Function: clearAllMeetings()
  * Param: none
  * Description: Clears the calendar of events by removing all elements with class 'event'
@@ -229,7 +549,7 @@ function clearMeetings(className)
     }
 }
 
-/*
+/**
  * Function: calculateMeetingPosition(meeting)
  * Param: meeting - the meeting to insert
  * Description: Based on the time and duration of the event, calculate the top and height of the event element.
@@ -254,7 +574,7 @@ function calculateMeetingPosition(meeting) {
     };
 }
 
-/*
+/**
  * Function: insertMeeting(meeting)
  * Param: meeting - the meeting to insert
  * Description: Inserts a single meeting into the calendar.
@@ -386,7 +706,7 @@ function updateMeetings(meetings)
 
         /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
         var baseElements = meetings[meeting].bases[selectedBase].baseElements;
-        var sectionElements = meeting[meeting].bases[selectedBase].sectionElements[selectedSection];
+        var sectionElements = meetings[meeting].bases[selectedBase].sectionElements[selectedSection];
 
         /* insert all base elements */
         for(var i = 0; i < baseElements.length; i++) {
@@ -633,5 +953,73 @@ function showEditButtons() {
     var buttons = document.getElementsByClassName('edit-button');
     for(var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'visible';
+    }
+}
+/**
+ * @description Clears the current table of one time events
+ */
+function clearOneTimeEvents()
+{
+    var oneTimeEvents = document.getElementById('onetime');
+
+    while (oneTimeEvents.firstChild)
+    {
+        oneTimeEvents.removeChild(oneTimeEvents.firstChild);
+    } 
+}
+
+/**
+ * @description Insersts the one time event data into the view
+ * @param {OneTimeEvent} oneTimeEventData The current one time event object
+ */
+function insertOneTimeEvents(oneTimeEventData)
+{
+    var oneTimeEvent = document.createElement('tr');
+
+    var courseAbbrev = document.createElement('td');
+    courseAbbrev.innerHTML = oneTimeEventData.courseAbbreviation;
+
+    var date = document.createElement('td');
+    date.innerHTML = oneTimeEventData.date;
+
+    var time = document.createElement('td');
+    time.innerHTML = oneTimeEventData.time;
+
+    var location = document.createElement('td');
+    location.innerHTML = oneTimeEventData.location;
+
+    var type = document.createElement('td');
+    type.innerHTML = oneTimeEventData.type;
+
+    oneTimeEvent.append(courseAbbrev);
+    oneTimeEvent.append(type);
+    oneTimeEvent.append(date);
+    oneTimeEvent.append(time);
+    oneTimeEvent.append(location);
+
+    var oneTimeEventTable = document.getElementById('onetime');
+    oneTimeEventTable.append(oneTimeEvent);
+}
+
+/**
+ * @description Updates the one time event table to hold have the current schedule
+ * @param {ScheduleViewModel} courses Dictionary of CourseViewModels
+ */
+function updateOneTimeEvents(courses)
+{
+    /* iterate through all the meetings in the JSON */
+    for (course in courses) {
+
+        /* extract selected base - the events to display on calendar */
+        var selectedBase = courses[course].selectedBase;
+
+        /* get list of one time events (i.e. finals) */
+        var oneTimeEvents = courses[course].bases[selectedBase].oneTimeEvents;
+
+        /* insert all one time events */
+        for (var i = 0; i < oneTimeEvents.length; i++)
+        {
+            insertOneTimeEvents(oneTimeEvents[i]);
+        }
     }
 }
