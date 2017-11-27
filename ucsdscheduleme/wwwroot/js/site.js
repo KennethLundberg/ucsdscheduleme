@@ -28,7 +28,7 @@ var testCourses = {
                         "type": "FI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
@@ -60,7 +60,7 @@ var testCourses = {
                         day: "friday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -107,7 +107,7 @@ var testCourses = {
                         "type": "FI"
                     },
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
@@ -139,7 +139,7 @@ var testCourses = {
                         day: "friday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "10201": [
                         {
@@ -194,7 +194,7 @@ var testCourses = {
                         "type": "MI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -216,7 +216,7 @@ var testCourses = {
                         day: "thursday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -264,7 +264,7 @@ var testCourses = {
                         "type": "MI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -286,7 +286,7 @@ var testCourses = {
                         day: "thursday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "10201": [
                         {
@@ -334,7 +334,7 @@ var testCourses = {
                         "type": "FI"
                     },
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -346,7 +346,7 @@ var testCourses = {
                         day: "tuesday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -388,8 +388,8 @@ function setup() {
     clearAllMeetings();   
     clearOneTimeEvents();
     console.log("setup()");
-    updateMeetings(testCourses);
-    updateOneTimeEvents(testCourses);
+    //updateMeetings(testCourses);
+    //updateOneTimeEvents(testCourses);
 }
  
 /* called when DOM is ready */
@@ -708,20 +708,20 @@ function updateMeetings(meetings)
         var selectedSection = meetings[meeting].selectedSection;
 
         /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
-        var baseElements = meetings[meeting].bases[selectedBase].baseElements;
-        var sectionElements = meetings[meeting].bases[selectedBase].sectionElements[selectedSection];
+        var baseEvents = meetings[meeting].bases[selectedBase].baseEvents;
+        var sectionEvents = meetings[meeting].bases[selectedBase].sectionEvents[selectedSection];
 
         /* insert all base elements */
-        for(var i = 0; i < baseElements.length; i++) {
-            insertMeeting(baseElements[i], meeting, selectedBase);
+        for(var i = 0; i < baseEvents.length; i++) {
+            insertMeeting(baseEvents[i], meeting, selectedBase);
         }
 
         /* check if there are any sections */
         if (sectionEvents != null) {
 
             /* insert all section elements */
-            for(var i = 0; i < sectionElements.length; i++) {
-                insertMeeting(sectionElements[i], meeting, selectedBase, selectedSection);
+            for(var i = 0; i < sectionEvents.length; i++) {
+                insertMeeting(sectionEvents[i], meeting, selectedBase, selectedSection);
             }
         }
     }
@@ -738,8 +738,8 @@ function showAllBasesAndAllSections(ids) {
 
     for(var i = 0; i < baseKeys.length; i++) {
         // insert all bases aka lectures
-        for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
-            var meeting = bases[baseKeys[i]].baseElements[j];
+        for(var j = 0; j < bases[baseKeys[i]].baseEvents.length; j++) {
+            var meeting = bases[baseKeys[i]].baseEvents[j];
 
             // insert base and set activated class
             var event = insertMeeting(meeting, ids.courseId, baseKeys[i], "undefined");
@@ -747,10 +747,10 @@ function showAllBasesAndAllSections(ids) {
         }
 
         // insert each section
-        var sectionElements = bases[baseKeys[i]].sectionElements;
-        var sectionsKeys = Object.keys(sectionElements);
+        var sectionEvents = bases[baseKeys[i]].sectionEvents;
+        var sectionsKeys = Object.keys(sectionEvents);
         sectionsKeys.forEach(function(key) {
-            var section = sectionElements[key];
+            var section = sectionEvents[key];
 
             // insert section and set activated class
             for(var k = 0; k < section.length; k++) {
@@ -763,19 +763,19 @@ function showAllBasesAndAllSections(ids) {
 
 function showBaseAndAllSections(ids) {
     var course = myApp.courses[ids.courseId];
-    var baseElements = course.bases[ids.baseId].baseElements;
-    var sectionElements = course.bases[ids.baseId].sectionElements;
+    var baseEvents = course.bases[ids.baseId].baseEvents;
+    var sectionEvents = course.bases[ids.baseId].sectionEvents;
     
     clearMeetings(ids.courseId);
 
-    for(var i = 0; i < baseElements.length; i++) {
-        var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
+    for(var i = 0; i < baseEvents.length; i++) {
+        var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, "undefined");
         event.className += " event-activated";
     }
 
-    var sectionsKeys = Object.keys(sectionElements);
+    var sectionsKeys = Object.keys(sectionEvents);
     sectionsKeys.forEach(function(key) {
-        var section = sectionElements[key];
+        var section = sectionEvents[key];
         var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
         event.className += " event-activated";
     });
@@ -828,8 +828,8 @@ function updateSelectedBase(event) {
     hideEditButtons();
 
     // showBaseAndAllSections(ids);
-    var baseElements = myApp.courses[ids.courseId].bases[ids.baseId].baseElements;
-    var sectionElements = myApp.courses[ids.courseId].bases[ids.baseId].sectionElements;
+    var baseEvents = myApp.courses[ids.courseId].bases[ids.baseId].baseEvents;
+    var sectionEvents = myApp.courses[ids.courseId].bases[ids.baseId].sectionEvents;
 
     showBaseAndAllSections(ids);
 }
