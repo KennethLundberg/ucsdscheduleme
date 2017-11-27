@@ -238,7 +238,7 @@ namespace HtmlAgilitySandbox
                                     StartDate = meeting.StartDate,
                                     MeetingType = meeting.MeetingType,
                                     Location = meeting.Location,
-                                    IsUnique = true
+                                    IsUnique = false
                                 };
                                 section.Meetings.Add(staticMeeting);
                             }
@@ -319,9 +319,9 @@ namespace HtmlAgilitySandbox
                         string meetingType = meetingTypeTDNode.InnerText;
                         currentMeeting.MeetingType = GetMeetingType(meetingType);
 
-                        // Set it to false as default, if the meeting is unique, like final and lecture,
+                        // Set it to true as default, if the meeting is unique, like final and lecture,
                         // we're changing it later.
-                        currentMeeting.IsUnique = false;
+                        currentMeeting.IsUnique = true;
 
                         // Set code.
                         HtmlNode codeNode = meetingTypeTDNode.NextSibling.NextSibling;
@@ -519,7 +519,7 @@ namespace HtmlAgilitySandbox
                                 StartDate = currentMeeting.StartDate,
                                 MeetingType = currentMeeting.MeetingType,
                                 Location = currentMeeting.Location,
-                                IsUnique = true
+                                IsUnique = false
                             };
                             section.Meetings.Add(finalMeeting);
                         }
@@ -543,7 +543,7 @@ namespace HtmlAgilitySandbox
                         StartDate = meeting.StartDate,
                         MeetingType = meeting.MeetingType,
                         Location = meeting.Location,
-                        IsUnique = true
+                        IsUnique = false
                     };
                     section.Meetings.Add(staticMeeting);
                 }
