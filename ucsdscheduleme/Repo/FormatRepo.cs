@@ -92,7 +92,7 @@ namespace ucsdscheduleme.Repo
             foreach (var section in sectionsForBase)
             {
                 List<CalendarEvent> thisSectionsEvents = new List<CalendarEvent>();
-                var sectionSpecificMeetings = section.Meetings.Where(m => m.SectionId != null);
+                var sectionSpecificMeetings = section.Meetings.Where(m => m.IsUnique);
                 foreach (var meeting in sectionSpecificMeetings)
                 {
                     AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, section.Professor.Name, meeting);
@@ -115,7 +115,7 @@ namespace ucsdscheduleme.Repo
             // by all classes in this base.
             var baseMeetings = firstSection
                                     .Meetings
-                                    .Where(m => m.SectionId == null);
+                                    .Where(m => !m.IsUnique);
 
             List<CalendarEvent> baseEvents = new List<CalendarEvent>();
             foreach (var baseMeeting in baseMeetings)
