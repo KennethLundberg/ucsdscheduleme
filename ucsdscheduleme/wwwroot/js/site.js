@@ -469,7 +469,7 @@ function activateSelectedBasesAndSections(event) {
     var allActivatedEvents = document.getElementsByClassName('event-activated');
 
     if(ids.sectionId !== "_undefined") {
-
+        var toDeactivate = [];
         for(var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
 
@@ -477,14 +477,17 @@ function activateSelectedBasesAndSections(event) {
                 if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
                     // console.log("section ids or is base match")
                 } else {
-                    classList.add('event-deactivated');
-                    classList.remove('event-activated');
+                    toDeactivate.push(allActivatedEvents[j]);
                 }
                 // console.log("course and base ids match")
             } else {
-                classList.add('event-deactivated');
-                classList.remove('event-activated');
+                toDeactivate.push(allActivatedEvents[j]);
             }
+        }
+        
+        for(var k = 0; k < toDeactivate.length; k++) {
+            toDeactivate[k].classList.add('event-deactivated');
+            toDeactivate[k].classList.remove('event-activated');
         }
 
     } else {
