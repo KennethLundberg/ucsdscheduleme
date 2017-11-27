@@ -111,10 +111,58 @@ namespace ucsdscheduleme.Controllers
             return Json(suggestions);
         }
 
-        //public IActionResult CreateCustomEvent()
-        //{
+        [HttpPost]
+        public IActionResult CreateCustomEvent([FromBody] CustomEvent data)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
 
-        //    return;
-        //}
+            Days days = 0;
+
+            if(data.monday == true) {
+                days = days & Days.Monday;
+            }
+            if (data.tuesday == true)
+            {
+                days = days & Days.Tuesday;
+            }
+            if (data.wednesday == true)
+            {
+                days = days & Days.Wednesday;
+            }
+            if (data.thursday == true)
+            {
+                days = days & Days.Thursday;
+            }
+            if (data.friday == true)
+            {
+                days = days & Days.Friday;
+            }
+
+            string[] startTokens = data.startTime.Split(':');
+            string[] endTokens = data.endTime.Split(':');
+
+            var startHr = Int32.Parse(startTokens[0]);
+            var startMin = Int32.Parse(startTokens[1]);
+            var endHr = Int32.Parse(endTokens[0]);
+            var endMin = Int32.Parse(endTokens[1]);
+
+            var course = new Course() {
+                CourseAbbreviation = data.name,
+                UserId = user.Id,
+                User = user
+            };
+
+            var section = new Section();
+
+            var meeting = new Meeting() {
+                Days = days,
+                StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
+                EndTime = new DateTime(1, 1, 1, endHr, endMin, 0)
+            };
+
+            //add to db
+
+            return View();
+        }
     }
 }

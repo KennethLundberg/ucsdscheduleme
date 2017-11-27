@@ -306,7 +306,7 @@
 <div style="display:none; position:absolute; left:20%; top:20%; width:60%; height:60%; min-height:10px; min-width:10px; z-index:9; background-color:pink;" id="friend-form">
     <div>
         <span>Event Name: </span>
-        <input type="text" placeholder="i.e. Work" id="custom-event-name" />
+        <input type="text" maxlength="10" placeholder="i.e. Work" id="custom-event-name" />
     </div>
     <div>
         <div>Days: </div>
@@ -350,7 +350,7 @@
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
             typeAhead: "@Url.Action("TypeAhead", "Home")",
-            @*customEvent: "@Url.Action("CreateCustomEvent", "Home")"*@
+            customEvent: "@Url.Action("CreateCustomEvent", "Home")"
         },
 	    coursesToSchedule: [],
         courses: [],

@@ -9,7 +9,7 @@ namespace ucsdscheduleme.Models
     public class Course
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [StringLength(10)]
         public string CourseAbbreviation { get; set; }
         [StringLength(50)]

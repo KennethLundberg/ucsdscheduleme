@@ -773,27 +773,50 @@ function visibility_off(id) {
     e.style.display = 'none';
 }
 
-function customEventCallout() {
+function customEventCallout(n, m, tu, w, th, f, st, et) {
     var xhr = new XMLHttpRequest();
     var url = myApp.urls.customEvent;
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
+    var send = {
+        "name": n,
+        "monday": m,
+        "tuesday": tu,
+        "wednesday": w,
+        "thursday": th,
+        "friday": f,
+        "startTime": st,
+        "endTime": et
+    };
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = JSON.parse(xhr.responseText);
+            //clearSearch();
+
+            for (i = 0; i < text.length; i++) {
+                //populateSearch(text[i]);
+                console.log(text[i]);
+            }
+        }
+    }
 }
 
 function saveCustomEvent() {
     var name = document.getElementById('custom-event-name').value;
-    var monday = document.getElementById('custom-event-monday').value;
-    var tuesday = document.getElementById('custom-event-tuesday').value;
-    var wednesday = document.getElementById('custom-event-wednesday').value;
-    var thursday = document.getElementById('custom-event-thursday').value;
-    var friday = document.getElementById('custom-event-friday').value;
+    var monday = document.getElementById('custom-event-monday').checked;
+    var tuesday = document.getElementById('custom-event-tuesday').checked;
+    var wednesday = document.getElementById('custom-event-wednesday').checked;
+    var thursday = document.getElementById('custom-event-thursday').checked;
+    var friday = document.getElementById('custom-event-friday').checked;
     var startTime = document.getElementById('custom-event-starttime').value;
     var endTime = document.getElementById('custom-event-endtime').value;
 
     /*callout function*/
+    //customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
     cancelCustomEvent();
 }
