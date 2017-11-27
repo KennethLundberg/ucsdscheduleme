@@ -9,9 +9,9 @@ namespace ucsdscheduleme.Models
     public class RateMyProfessor
     {
         public int Id { get; set; }
-        public decimal OverallQuality { get; set; }
-        public int WouldTakeAgain { get; set; } // Percentage
-        public decimal LevelOfDifficulty { get; set; }
+        public decimal OverallQuality { get; set; } 
+        public decimal WouldTakeAgain { get; set; } 
+        public decimal LevelOfDifficulty { get; set; } 
         [StringLength(256)]
         public string URL { get; set; }
     }

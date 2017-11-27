@@ -30,7 +30,6 @@ namespace ucsdscheduleme.Controllers
         {
 
             ScheduleViewModel model;
-            return View(new ScheduleViewModel());
 
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;

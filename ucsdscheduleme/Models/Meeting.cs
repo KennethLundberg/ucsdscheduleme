@@ -20,21 +20,20 @@ namespace ucsdscheduleme.Models
     }
     public enum MeetingType
     {
-        Lecture, Discussion, Lab, Review, Final, Midterm
+        Lecture, Discussion, Lab, Review, Final, Midterm, Seminar, Practicum, IndependentStudy, Studio, Tutorial, ProblemSession
     }
     public class Meeting
     {
         public int Id { get; set; }
-        public int? SectionId { get; set; }
         [StringLength(3)]
         public string Code { get; set; }
         public Days Days { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public DateTime? StartDate { get; set; }
+        public bool IsUnique { get; set; }
 
         public MeetingType MeetingType { get; set; }
         public Location Location { get; set; }
-        public Section Section { get; set; }
     }
 }
