@@ -304,21 +304,43 @@
 </div>
 
 <div style="display:none; position:absolute; left:20%; top:20%; width:60%; height:60%; min-height:10px; min-width:10px; z-index:9; background-color:pink;" id="friend-form">
-    <p>Event Name: </p>
-    <input type="text" name="customeventname" placeholder="i.e. Work" />
-    <p>Days: </p>
-    <input type="checkbox" name="monday" />
-    <p>Monday</p>
-    <input type="checkbox" name="tuesday" />
-    <p>Tueday</p>
-    <input type="checkbox" name="wednesday" />
-    <p>Wednesday</p>
-    <input type="checkbox" name="thursday" />
-    <p>Thursday</p>
-    <input type="checkbox" name="friday" />
-    <p>Friday</p>
-    <p>Time: </p>
-    <input type="time" name="customeventtime" />
+    <div>
+        <span>Event Name: </span>
+        <input type="text" name="customeventname" placeholder="i.e. Work" />
+    </div>
+    <div>
+        <div>Days: </div>
+        <div>
+            <input type="checkbox" name="monday" />
+            <span>Monday</span>
+        </div>
+        <div>
+            <input type="checkbox" name="tuesday" />
+            <span>Tueday</span>
+        </div>
+        <div>
+            <input type="checkbox" name="wednesday" />
+            <span>Wednesday</span>
+        </div>
+        <div>
+            <input type="checkbox" name="thursday" />
+            <span>Thursday</span>
+        </div>
+        <div>
+            <input type="checkbox" name="friday" />
+            <span>Friday</span>
+        </div>
+    </div>
+    <div>
+        <div>
+            <span>Start Time: </span>
+            <input type="time" name="customeventstarttime" min="07:30" />
+        </div>
+        <div>
+            <span>End Time: </span>
+            <input type="time" name="customeventendtime" max="23:00" />
+        </div>
+    </div>
     <div class="logout-button" onclick="visibility_off('friend-form');">Close</div>
 </div>
 
@@ -338,17 +360,17 @@
         var search = document.getElementById("search");
         search.addEventListener("input", typeAhead);
 
-	
+
         var input = document.getElementById("search");
         var dropdown = document.getElementById("courseItems");
 
-	
+
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
 
         dropdown.addEventListener("focusin", fin);
 	    dropdown.addEventListener("focusout", fout);
-	
+
 	    var isHover;
         dropdown.onmouseover = function() {
             isHover = true;
@@ -363,10 +385,10 @@
         }
 
         function fout() {
-	        
+
 	        if(!isHover) {
 	        	dropdown.style.display = "none";
-	        }            	
+	        }
         }
 
         document.addEventListener('click', function (e) {
@@ -379,6 +401,6 @@
                 }
             }
         });
-	
+
     })();
 </script>
