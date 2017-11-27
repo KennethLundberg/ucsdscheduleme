@@ -475,7 +475,7 @@ function activateSelectedBasesAndSections(event) {
     if(ids.sectionId !== "_undefined") {
 
         for(var j = 0; j < allActivatedEvents.length; j++) {
-            var classList = allActivatedEvents[j].classList
+            var classList = allActivatedEvents[j].classList;
 
             if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
                 if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
@@ -494,12 +494,26 @@ function activateSelectedBasesAndSections(event) {
     } else {
         // console.log("allActivatedEvents.length = " + allActivatedEvents.length);
         console.log("hover over lecture")
-        console.log(ids)
+        console.log(allActivatedEvents)
+        console.log(allActivatedEvents.length)
+
+        var toDeactivate = [];
+
         for(var j = 0; j < allActivatedEvents.length; j++) {
-            if(!allActivatedEvents[j].classList.contains(ids.courseId) || !allActivatedEvents[j].classList.contains(ids.baseId)) {
-                allActivatedEvents[j].classList.add('event-deactivated');
-                allActivatedEvents[j].classList.remove('event-activated');    
+            var classList = allActivatedEvents[j].classList;
+
+
+            console.log(allActivatedEvents[j].className);
+
+
+            if(!classList.contains(ids.courseId) || !classList.contains(ids.baseId)) {
+                toDeactivate.push(allActivatedEvents[j]);   
             }
+        }
+
+        for(var k = 0; k < toDeactivate.length; k++) {
+            toDeactivate[k].classList.add('event-deactivated');
+            toDeactivate[k].classList.remove('event-activated');
         }
     }
 }
