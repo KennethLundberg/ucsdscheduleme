@@ -413,12 +413,10 @@ function changeSchedule(event) {
 
     // base selected
     if(ids.sectionId === "undefined") {
-        // console.log("base")
         showAllBasesAndAllSections(ids);
     } 
     // section selected
     else {
-        // console.log("section")
         showBaseAndAllSections(ids);
     }
 }
@@ -431,8 +429,6 @@ function updateSelectedSection(event) {
     courses[ids.courseId].selectedSection = ids.sectionId;
     courses[ids.courseId].selectedBase = ids.baseId;
 
-    // console.log("updateSelectedSection " + ids.sectionId);
-    // console.log("base id " + ids.baseId);
     clearMeetings();
     updateMeetings(courses);
     isEditing = false;
@@ -467,8 +463,8 @@ function updateEvent(event) {
 
 function activateSelectedBasesAndSections(event) {
     var ids = extractIds(event, false);
-    console.log("activateAllBasesAndAllSections")
-    console.log(ids)
+    // console.log("activateAllBasesAndAllSections")
+    // console.log(ids)
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
 
@@ -479,12 +475,12 @@ function activateSelectedBasesAndSections(event) {
 
             if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
                 if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
-                    console.log("section ids or is base match")
+                    // console.log("section ids or is base match")
                 } else {
                     classList.add('event-deactivated');
                     classList.remove('event-activated');
                 }
-                console.log("course and base ids match")
+                // console.log("course and base ids match")
             } else {
                 classList.add('event-deactivated');
                 classList.remove('event-activated');
@@ -493,18 +489,12 @@ function activateSelectedBasesAndSections(event) {
 
     } else {
         // console.log("allActivatedEvents.length = " + allActivatedEvents.length);
-        console.log("hover over lecture")
-        console.log(allActivatedEvents)
-        console.log(allActivatedEvents.length)
+        // console.log("hover over lecture")
 
         var toDeactivate = [];
 
         for(var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
-
-
-            console.log(allActivatedEvents[j].className);
-
 
             if(!classList.contains(ids.courseId) || !classList.contains(ids.baseId)) {
                 toDeactivate.push(allActivatedEvents[j]);   
@@ -520,10 +510,8 @@ function activateSelectedBasesAndSections(event) {
 
 function reactivateAllBasesAndAllSections(event) {
     var ids = extractIds(event, false);
-    console.log("reactivateAllBasesAndAllSections")
+    // console.log("reactivateAllBasesAndAllSections")
 
-    // ids.courseId = '_' + ids.courseId;
-    // ids.baseId = '_' + ids.baseId;
 
     var allActivatedEvents = document.getElementsByClassName('event-deactivated');
     while(allActivatedEvents.length > 0) {
@@ -563,10 +551,17 @@ function extractIds(event, noUnderscore = true) {
  */
 function findOuterDiv(element, className) {
     // console.log(element.classList.length);
-    if(element.classList.length <= 0 || (typeof element == undefined) || (typeof element.classList == undefined)) {
+    if(typeof element == undefined) {
+        console.log("bad element")
+        console.log(element)
         return null;
     }
+    console.log("findOuterDiv before loop")
+    console.log(element);
+
     while(!element.classList.contains(className)) {
+        console.log("findOuterDiv in loop")
+        console.log(element);
         element = element.parentNode;
     }
 
@@ -589,16 +584,4 @@ function showEditButtons() {
     for(var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'visible';
     }
-}
-
-
-function debug() {
-    console.log("# of events: " + document.getElementsByClassName('event').length)
-    console.log(document.getElementsByClassName('event'))
-    console.log("# of event-activated: " + document.getElementsByClassName('event-activated').length)
-    console.log(document.getElementsByClassName('event-activated'))
-    console.log("# of event-deactivated: " + document.getElementsByClassName('event-deactivated').length)
-    console.log(document.getElementsByClassName('event-deactivated'))
-    
-    
 }

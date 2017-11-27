@@ -295,10 +295,13 @@
 	        }
 
 	        // clicked on a calendar event
-	        if(e.target && findOuterDiv(e.target, 'event')) {
+	        var outerDiv = findOuterDiv(e.target, 'event'); 
+	        console.log("outerDiv");
+	        console.log(outerDiv);
+	        if(e.target && outerDiv) {
 	        	// currently editing AND event is activated
-	        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-        			updateEvent(findOuterDiv(e.target, 'event'));
+	        	if(isEditing && outerDiv.classList.contains('event-activated')) {
+        			updateEvent(outerDiv);
         		}
 	        }
 
@@ -306,7 +309,7 @@
 	        if(e.target && (e.target.classList.contains('fa-cog') || e.target.classList.contains('edit-span'))) {
 	        	// only allow changes if currently not editing
 	        	if(!isEditing) {
-	        		changeSchedule(findOuterDiv(e.target, 'event'));
+	        		changeSchedule(outerDiv);
 	        		isEditing = true;
 	        		hideEditButtons();
 	        	}
@@ -317,11 +320,12 @@
 	        	for(var i = 0; i < activatedEvents.length; i++) {
 	        		var activatedEvent = activatedEvents.item(i);
 		        	activatedEvent.addEventListener('mouseenter', function(e) {
-				    	if(e.target && findOuterDiv(e.target, 'event')) {
+		        		var hoverEvent = findOuterDiv(e.target, 'event');
+				    	if(e.target && hoverEvent) {
 				        	// currently editing AND event is activated
-				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
 				        		console.log("mouseenter")
-				        		activateSelectedBasesAndSections(findOuterDiv(e.target, 'event'));
+				        		activateSelectedBasesAndSections(hoverEvent);
 			        		}
 				        }
 
@@ -331,9 +335,10 @@
 				    activatedEvent.addEventListener('mouseleave', function(e) {
 				    	if(e.target && findOuterDiv(e.target, 'event')) {
 				        	// currently editing AND event is activated
-				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+				        	var hoverEvent = findOuterDiv(e.target, 'event');
+				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
 				        		console.log("mouseleave")
-				        		reactivateAllBasesAndAllSections(findOuterDiv(e.target, 'event'));
+				        		reactivateAllBasesAndAllSections(hoverEvent);
 			        		}
 				    	}
 				    	// debug();
