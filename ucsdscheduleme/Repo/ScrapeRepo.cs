@@ -1,225 +1,101 @@
-﻿using System;
+﻿using HtmlAgilitySandbox;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using ucsdscheduleme.Models;
-using HtmlAgilityPack;
+using ucsdscheduleme.Data;
 
 namespace ucsdscheduleme.Repo
 {
     public class ScrapeRepo
     {
-        #region Cape
+        ScheduleContext _context;
 
-        /// <summary>
-        /// Contains XPaths used in scraping data from Cape
-        /// </summary>
-        struct CapeXPaths
+        // Settin up the Db Context
+        public ScrapeRepo(ScheduleContext context)
         {
-            public static readonly string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
-            public static readonly string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
-            public static readonly string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
-            public static readonly string EvalsSubmittedPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEvaluationsSubmitted')]";
-            public static readonly string RecommendClassTblRow = "//span[contains(., 'Do you recommend this course overall?')]/../.. " +
-                                                     "| //span[contains(., 'Do you recommend this seminar overall?')]/../.." +
-                                                     "| //span[contains(., 'Do you recommend this lab overall?')]/../..";
-            public static readonly string RecommendProfTblRow = "//span[contains(., 'Do you recommend this professor overall?')]/../..";
-            public static readonly string HoursPerWeekTblRow = "//span[contains(., 'How many hours a week do you spend studying outside of class on average?')]/../..";
-            public static readonly string TblRowToMean = ".//span[contains(@id, 'Mean')]";
-            public static readonly string AvgGradeExpectedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeExpected']";
-            public static readonly string AvgGradeReceivedNode = "//span[@id = 'ctl00_ContentPlaceHolder1_lblAverageGradeReceived']";
+            _context = context;
         }
 
         /// <summary>
-        /// Scrapes a single Cape page specified by the URL input parameter.
-        /// Note that this works only for FA12 term to the present
+        /// This method is used as a controller that will call all the other update method
+        /// of the other scrape classes.
         /// </summary>
-        /// <returns>A List of ScrapeResult objects containing the data</returns>
-        /// <param name="Url">URL of single Cape page to scrape</param>
-        public List<ScrapeResult> ScrapeCape(string Url)
+        public void Update()
         {
-            // Check for null or empty URL
-            if (String.IsNullOrEmpty(Url))
+            // List of departments that are in UCSD
+            List<string> listOfDepartments = GetAllDepartments();
+
+            // Getting the courses for each department from the act website
+            /*foreach (string department in listOfDepartments)
             {
-                throw new ArgumentNullException(Url);
-            }
+                // Scrape act for each department for Winter 18 
+                ClassScrape classScraper = new ClassScrape(_context, "WI18", department + " 1-10");
+                classScraper.Update();
+            }*/
 
-            // HTML read from url and assign into var htmlDoc
-            HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(Url);
+            ClassScrape classScraper = new ClassScrape(_context, "WI18", "cse 1-190");
+            classScraper.Update();
 
-            // Gather professor and check for null return
-            HtmlNode instrNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.InstrNamePath);
-            string instructorName = (instrNameNode != null) ? instrNameNode.InnerText : "N/A";
+            // Scraping the rate my professor page for all professor in the db
+            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(_context);
+            scrapeRMP.Update();
 
-            // Gather term and check for null return
-            HtmlNode termNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.TermPath);
-            string term = (termNode != null) ? termNode.InnerText : "N/A";
-
-            // Gather enrollment and check for null return
-            HtmlNode enrollmentNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.EnrollmentPath);
-            string enrollment = (enrollmentNode != null) ? enrollmentNode.InnerText : "0";
-
-            // Gather number of evalulations and check for null return
-            HtmlNode evalsSubmittedNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.EvalsSubmittedPath);
-            string evalsSubmitted = (enrollmentNode != null) ? evalsSubmittedNode.InnerText : "0";
-
-            // Gather percentage of enrolled students that recommend course and check for null return
-            HtmlNode recCourseRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.RecommendClassTblRow);
-            HtmlNode recCourseNode = recCourseRow.SelectSingleNode(CapeXPaths.TblRowToMean);
-            string recCourseMean = (recCourseNode != null) ? recCourseNode.InnerText : "0";
-
-            // Gather percentage of enrolled students that recommend professor and check for null return
-            HtmlNode recProfRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.RecommendProfTblRow);
-            HtmlNode recProfNode = recProfRow.SelectSingleNode(CapeXPaths.TblRowToMean);
-            string recProfMean = (recProfNode != null) ? recProfNode.InnerText : "0";
-
-            // Gather average hours of studying per week and check for null return
-            HtmlNode studyHoursRow = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.HoursPerWeekTblRow);
-            HtmlNode studyHoursNode = studyHoursRow.SelectSingleNode(CapeXPaths.TblRowToMean);
-            string studyHoursMean = (studyHoursNode != null) ? studyHoursNode.InnerText : "0";
-
-            // Gather average grade expected, if valid only grabs letter grade portion of string
-            string avgGradeExpected = "";
-            string avgGradeExpectedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeExpectedNode)?.InnerText;
-            if (String.IsNullOrEmpty(avgGradeExpectedCheck))
-            {
-                avgGradeExpected = "N/A";
-            }
-            else
-            {
-                avgGradeExpected = (avgGradeExpectedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
-            }
-
-            // Gather average grade received, if valid only grabs letter grade portion of string
-            string avgGradeReceived = "";
-            string avgGradeReceivedCheck = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.AvgGradeReceivedNode)?.InnerText;
-            if (String.IsNullOrEmpty(avgGradeReceivedCheck))
-            {
-                avgGradeReceived = ("N/A");
-            }
-            else
-            {
-                avgGradeReceived = (avgGradeReceivedCheck.Substring(0, avgGradeExpectedCheck.IndexOf(' ')));
-            }
-
-            // Insert the results into their proper member and return
-            List<ScrapeResult> retList = new List<ScrapeResult>()
-            {
-                new ScrapeResult
-                    { InstructorName = instructorName,
-                      Term = term,
-                      StudentsEnrolled = Convert.ToInt32(enrollment),
-                      NumberOfEvaluation = Convert.ToInt32(evalsSubmitted),
-                      RecommendedClass = Convert.ToDecimal(recCourseMean),
-                      RecommendedProfessor = Convert.ToDecimal(recProfMean),
-                      StudyHoursPerWeek = Convert.ToDecimal(studyHoursMean),
-                      AverageGradeExpected = avgGradeExpected,
-                      AverageGradeReceived = avgGradeReceived }
-            };
-            return retList;
-        }
-
-        #endregion
-
-        #region Ratemyprofessors
-
-        /// <summary>
-        /// Contains XPaths used in scraping data from RateMyProfessors
-        /// </summary>
-        struct RateMyProfXPaths
-        {
-            public static readonly string ProfessorFirstNamePath = "//div[@class='result-name']//span[@class='pfname'][1]";
-            public static readonly string ProfessorMidNamePath = "//div[@class='result-name']//span[@class='pfname'][2]";
-            public static readonly string ProfessorLastNamePath = "//div[@class='result-name']//span[@class='plname']";
-            public static readonly string ProfessorNotRatedNamePath = "//div[@class='name']";
-
-            public static readonly string OverallQualityPath = "//div[contains(.,'Overall Quality')]/div[@class='grade']";
-            public static readonly string WouldTakeAgainPath = "//div[contains(.,'Would Take Again')]/div[@class='grade']";
-            public static readonly string DifficultyLevelPath = "//div[contains(.,'Level of Difficulty')]/div[@class='grade']";
-
+            // Scraping the cape website for each professor and course combo in db
+            CapeScrape scrapeCape = new CapeScrape(_context);
+            scrapeCape.Update();
         }
 
         /// <summary>
-        /// Scrapes a single RateMyProf page specified by the URL input parameter.
+        /// Get a list of all department codes(i.e. CSE or MAE) from the JSON
         /// </summary>
-        /// <returns>A List of ScrapeResultRateMyProf objects containing the data</returns>
-        /// <param name="Url">URL of single RateMyProf page to scrape</param>
-        public List<ScrapeResult> ScrapeRateMyProf(string Url)
+        /// <returns> List of strings containing code names of all departments
+        /// </returns>
+        private static List<string> GetAllDepartments()
         {
-            // Check for null or empty URL
-            if (String.IsNullOrEmpty(Url))
+            List<string> departmentsList = new List<string>();
+
+            string httpURL = @"https://act.ucsd.edu/scheduleOfClasses/department-list.json?selectedTerm=WI18";
+
+            // Make a request and get the JSON containing the code names 
+            string jsonStringOfDepartments = GetRequest(httpURL).Result;
+
+            // Parse the JSON array to get a list of JSON objects(departments) 
+            JArray responseObj = JArray.Parse(jsonStringOfDepartments);
+
+            // Iterate through the list and get the code name 
+            foreach (JObject department in responseObj)
             {
-                throw new ArgumentNullException(Url);
+                JValue deptCode = (JValue)department["code"];
+                // Add the code name to the list of department code names
+                departmentsList.Add(deptCode.ToString());
             }
 
-            // HTML read from url and assign into var htmlDoc
-            HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(Url);
-
-            // Rating Availabilty Indicator
-            bool professorIsRated = true;
-
-            // Get Overall Quality Info
-            HtmlNode quality = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.OverallQualityPath);
-            string qualityRate = (quality != null) ? quality.InnerText : "N/A";
-
-            // Get Would Take Again Info
-            HtmlNode wouldTakeAgain = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.WouldTakeAgainPath);
-            string wouldTakeAgainRate = (wouldTakeAgain != null) ? wouldTakeAgain.InnerText.Trim() : "N/A";
-
-            // Get Difficulty Level Info
-            HtmlNode difficultyLevel = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.DifficultyLevelPath);
-            string difficultyLevelRate = (difficultyLevel != null) ? difficultyLevel.InnerText.Trim() : "N/A";
-
-
-            // Check if professor was rated at all
-            if (quality == null && wouldTakeAgain == null && difficultyLevel == null)
-            {
-                professorIsRated = false;
-            }
-
-            // Professor's Full Name
-            string professorFullName;
-            if (professorIsRated)
-            {
-                HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorFirstNamePath);
-                string professorFirstName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
-                professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorMidNamePath);
-                string professorMiddleName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
-                professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorLastNamePath);
-                string professorLastName = (professorNode != null) ? professorNode.InnerText.Trim() : "N/A";
-
-                if (string.IsNullOrEmpty(professorMiddleName))
-                {
-                    professorFullName = professorFirstName + " " + professorLastName;
-                }
-                else
-                {
-                    professorFullName = professorFirstName + " " + professorMiddleName + " " + professorLastName;
-                }
-
-            }
-            else
-            {
-                HtmlNode professorNode = htmlDoc.DocumentNode.SelectSingleNode(RateMyProfXPaths.ProfessorNotRatedNamePath);
-                professorFullName = (professorNode != null) ? professorNode.InnerText : "Professor Not Found";
-            }
-
-            // Insert the results into their proper member and return
-            List<ScrapeResult> rateMyProfessorResult = new List<ScrapeResult>()
-            {
-                new ScrapeResult
-                {
-                    InstructorName = professorFullName,
-                    OverallQuality = qualityRate,
-                    WouldTakeAgain = wouldTakeAgainRate,
-                    LevelOfDifficulty = difficultyLevelRate
-                }
-            };
-            return rateMyProfessorResult;
+            return departmentsList;
         }
 
-        #endregion
+        /// <summary>
+        /// Make a Get request to get list of all departments
+        /// </summary>
+        /// <param name="URL"></param>
+        /// <returns> JSON array of all department names</returns>
+        async static Task<string> GetRequest(string URL)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpResponseMessage response = await client.GetAsync(URL);
+
+            HttpContent content = response.Content;
+
+            string myContent = await content.ReadAsStringAsync();
+
+            return myContent;
+        }
+
+        // Get a list of all departments code names 
+        List<string> listOfDepartments = GetAllDepartments();
+
     }
 }
