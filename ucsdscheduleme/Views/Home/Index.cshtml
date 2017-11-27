@@ -302,41 +302,63 @@
 	        }
 
 	        // clicked on change button
-	        //if(e.target && (findOuterDiv(e.target, EDIT_BUTTON_CLASS) || findOuterDiv(e.target, EDIT_BUTTON_CLASS))) {
 	        if(e.target && (e.target.classList.contains('fa-cog') || e.target.classList.contains('edit-span'))) {
 	        	// only allow changes if currently not editing
 	        	if(!isEditing) {
 	        		changeSchedule(findOuterDiv(e.target, 'event'));
 	        		isEditing = true;
 	        		hideEditButtons();
-	       //  		var events = document.getElementsByClassName('event-activated');
-				    // for(var i = 0; i < events.length; i++) {
-				    // 	events.item(i).addEventListener('mouseover', function(e) {
-				    // 		console.log("hovering")
-				    // 	});
-				    // }
 	        	}
 	        }
+
+	        if(isEditing) {
+	        	var activatedEvents = document.getElementsByClassName('event-activated');
+	        	for(var i = 0; i < activatedEvents.length; i++) {
+	        		var activatedEvent = activatedEvents.item(i);
+		        	activatedEvent.addEventListener('mouseover', function(e) {
+				    	if(e.target && findOuterDiv(e.target, 'event')) {
+				        	// currently editing AND event is activated
+				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+				        		console.log("mouseover")
+				        		activateSelectedBasesAndSections(findOuterDiv(e.target, 'event'));
+			        		}
+				        }
+				    });
+
+				    activatedEvent.addEventListener('mouseout', function(e) {
+				    	if(e.target && findOuterDiv(e.target, 'event')) {
+				        	// currently editing AND event is activated
+				        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+				        		console.log("mouseout")
+				        		reactivateAllBasesAndAllSections(findOuterDiv(e.target, 'event'));
+			        		}
+				    	  }
+				    });
+		        }
+		    }
 	        
         });
 
-	    document.addEventListener('mouseover', function(e) {
-	    	if(e.target && findOuterDiv(e.target, 'event')) {
-	        	// currently editing AND event is activated
-	        	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
-	        		console.log("mouseover")
-        		}
-	        }
-	    });
+	    // document.addEventListener('mouseover', function(e) {
+	    // 	if(e.target && findOuterDiv(e.target, 'event')) {
+	    //     	// currently editing AND event is activated
+	    //     	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
+	    //     		console.log("mouseover")
+	    //     		activateSelectedBasesAndSections(findOuterDiv(e.target, 'event'));
+     //    		}
+	    //     }
+	    // });
 
 	    // document.addEventListener('mouseout', function(e) {
 	    // 	if(e.target && findOuterDiv(e.target, 'event')) {
 	    //     	// currently editing AND event is activated
 	    //     	if(isEditing && findOuterDiv(e.target, 'event').classList.contains('event-activated')) {
 	    //     		console.log("mouseout")
+	    //     		reactivateAllBasesAndAllSections(findOuterDiv(e.target, 'event'));
      //    		}
 	    // 	  }
 	    // });
+
 
     })();
 </script>
