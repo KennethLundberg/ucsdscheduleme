@@ -12,7 +12,7 @@ var sectionsB = ["10201", "11023"];
 var randomSelection = (randomBaseIndex == 0) ? sectionsA[randomSelectionIndex] : sectionsB[randomSelectionIndex];
 var randomSelectionForOneBase = sectionsA[randomBaseIndex];
 
-var courses = {
+var testCourses = {
     "cse101": {
         "selectedBase": randomBase,
         "selectedSection": randomSelection,
@@ -389,8 +389,8 @@ function setup() {
     clearMeetings();
     clearOneTimeEvents();
     console.log("setup()");
-    updateMeetings(courses);
-    updateOneTimeEvents(courses);
+    updateMeetings(testCourses);
+    updateOneTimeEvents(testCourses);
 }
 /** END OF DELETE **/
 
@@ -638,7 +638,10 @@ function insertMeeting(meeting)
     icon.append(iconLabel);
 
     // Use first two letters as text
-    iconLabel.innerText = meeting.type.toUpperCase().substr(0,2);
+    iconLabel.innerText = meeting.type.toUpperCase().substr(0, 2);
+    console.log("----------");
+    console.log("Meeting type: " + meeting.type);
+    console.log("----------");
 
     /* create an event info div */
     var eventInfo = document.createElement('div');
@@ -651,7 +654,7 @@ function insertMeeting(meeting)
 
     /* professor */
     var profSpan = document.createElement('span');
-    profSpan.innerHTML = meeting.professor;
+    profSpan.innerHTML = meeting.professorName;
 
     /* time range */
     var timeSpan = document.createElement('span');
@@ -659,7 +662,7 @@ function insertMeeting(meeting)
 
     /* section code */
     var sectSpan = document.createElement('span');
-    sectSpan.innerHTML = meeting.code;
+    sectSpan.innerHTML = meeting.sectionCode;
 
     /* add spans to event info div */
     eventInfo.append(classSpan);
@@ -669,7 +672,7 @@ function insertMeeting(meeting)
     eventHeader.append(eventInfo);
 
     /* add event to day of meeting */
-    var dayElem = document.getElementById(meeting.day);
+    var dayElem = document.getElementById(meeting.day.toLowerCase());
     dayElem.append(event);
 }
 
@@ -683,27 +686,29 @@ function insertMeeting(meeting)
 function updateMeetings(meetings)
 {
     /* iterate through all the meetings in the JSON */
-    for(meeting in meetings) {
+    for(meetingId in meetings) {
+
+        var meeting = meetings[meetingId];
 
         /* extract selected base and section - the events to display on calendar */
-        var selectedBase = courses[meeting].selectedBase;
-        var selectedSection = courses[meeting].selectedSection;
+        var selectedBase = meeting.selectedBase;
+        var selectedSection = meeting.selectedSection;
 
         /* get list of selected base (i.e. lectures) and section elements (i.e. discussions) */
-        var baseElements = courses[meeting].bases[selectedBase].baseElements;
-        var sectionElements = courses[meeting].bases[selectedBase].sectionElements[selectedSection];
+        var baseEvents = meeting.bases[selectedBase].baseEvents;
+        var sectionEvents = meeting.bases[selectedBase].sectionEvents[selectedSection];
 
         /* insert all base elements */
-        for(var i = 0; i < baseElements.length; i++) {
-            insertMeeting(baseElements[i]);
+        for (var i = 0; i < baseEvents.length; i++) {
+            insertMeeting(baseEvents[i]);
         }
 
         /* check if there are any sections */
-        if(sectionElements != null) {
+        if (sectionEvents != null) {
 
             /* insert all section elements */
-            for(var i = 0; i < sectionElements.length; i++) {
-                insertMeeting(sectionElements[i]);
+            for (var i = 0; i < sectionEvents.length; i++) {
+                insertMeeting(sectionEvents[i]);
             }
         }
     }
@@ -762,13 +767,15 @@ function insertOneTimeEvents(oneTimeEventData)
 function updateOneTimeEvents(courses)
 {
     /* iterate through all the meetings in the JSON */
-    for (course in courses) {
+    for (courseId in courses) {
+
+        console.log("UOTE course: " + JSON.stringify(courses[courseId]));
 
         /* extract selected base - the events to display on calendar */
-        var selectedBase = courses[course].selectedBase;
+        var selectedBase = courses[courseId].selectedBase;
 
         /* get list of one time events (i.e. finals) */
-        var oneTimeEvents = courses[course].bases[selectedBase].oneTimeEvents;
+        var oneTimeEvents = courses[courseId].bases[selectedBase].oneTimeEvents;
 
         /* insert all one time events */
         for (var i = 0; i < oneTimeEvents.length; i++)
@@ -783,6 +790,9 @@ function updateSchedule(courses) {
     console.log(JSON.stringify(courses));
     console.log("------------------------------------------")
     myApp.courses = courses;
+    clearOneTimeEvents();
+    updateOneTimeEvents(courses);
+    clearMeetings();
     updateMeetings(courses);
 }
 
@@ -819,8 +829,8 @@ function generateSchedule() {
     // When the text is edited, it clears the search and populates it
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            var courses = JSON.parse(xhr.responseText);
-            updateSchedule(courses);
+            var response = JSON.parse(xhr.responseText);
+            updateSchedule(response.courses);
         }
     }
 }
