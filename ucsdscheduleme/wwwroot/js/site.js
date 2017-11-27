@@ -443,7 +443,6 @@ function typeAhead(e) {
     typeAheadCallout(input);
 }
 
-
 /**
  * Clears the courses from the drop down.
  */
@@ -453,7 +452,6 @@ function clearSearch() {
         courses[0].remove();
     }
 }
-
 
 /**
  * Populates the search drop down with the auto-complete results.
@@ -474,7 +472,6 @@ function populateSearch(data) {
     // Add it to the drop down
     courses.append(course);
 }
-
 
 /**
  * Adds the course selected to the class list below the search bar.
