@@ -5,6 +5,7 @@ $primary-color: #203E5F;
 $secondary-color: #FFCC03;
 $off-white: #EDEDED;
 $off-black: #151515;
+$off-red: #F22613;
 $white-bg: #EFEFEF;
 $text-white: #FEFEFE;
 $gray: #E9E9E9;
@@ -70,6 +71,12 @@ ul {
 }
 
 #logo {
+    text-align: center;
+    color: $secondary-color;
+    background-color: $primary-color;
+    padding: 10px;
+    font-size: 1.5em;
+    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -129,7 +136,10 @@ ul {
 
         &:first-of-type {
             margin-left: 4em;
-            border: none;
+        }
+        /* fix the Friday border due to overflow scroll */
+        &:last-of-type {
+            margin-right: 10px;
         }
     }
 
@@ -171,6 +181,7 @@ ul {
     top: 50px;
     height: 100px;
     z-index: 1;
+    cursor: pointer;
     @include boxshadow();
 
     .event-header {
@@ -216,35 +227,62 @@ ul {
     }
 }
 
-.bottom {
-    @include boxshadow();
-    border-top: 4px solid $secondary-color;
-    border-collapse: collapse;
-    height: 20%;
-    width: 100%;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    background-color: white;
-    font-size: 12px;
-    margin-bottom: 15px;
-
-    tr {
-        th {
-            background-color: $primary-color;
-            color: $text-white;
-            font-size: 14px;
-            border: 1px solid black;
-        }
-
-        td {
-            border: 1px solid black;
-            text-align: center;
-            color: black;
-        }
-    }
+.event-activated {
+    box-shadow: 0px 0px 10px rgba(0,0,0, 1);
+    background-color: #C5EFF7;
+    z-index: 2;
 }
 
-.final-row {
+.event-deactivated {
+    opacity: 0.75;
+    background-color: rgba(255,0,0,0.2);
+}
+
+.bottom {
+    @include boxshadow();
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    background-color: white;
+    border-top: 4px solid $secondary-color;
+    border-collapse: collapse;
+    width: 100%;
+    display: block;
+
+    thead {
+        tr {
+            background-color: $primary-color;
+
+            th {
+                width: 200px;
+                padding-right: 20px;
+                color: $text-white;
+                font-size: 14px;
+                height: 2em;
+            }
+        }
+    }
+
+    tbody {
+        display: block;
+        overflow-y: scroll;
+        width: 100%;
+        height: 100px;
+
+        tr {
+            td {
+                width: 200px;
+                border: 1px solid black;
+                padding: 10px;
+                text-align: center;
+                color: black;
+
+                &:last-of-type {
+                    border-right: none;
+                }
+            }
+        }
+    }
 }
 
 .searchbar-container {
@@ -294,6 +332,7 @@ ul {
             position: absolute;
             background: $text-white;
             width: 100%;
+            z-index: 2;
 
             .courseItem {
                 display: block;
@@ -354,7 +393,56 @@ ul {
     }
 
     span {
+        margin-right: 10px;
+    }
+}
+
+.unlock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #666;
+
+    &:hover {
+        cursor: pointer;
+        color: $off-black;
+    }
+
+    span {
         margin-right: 5px;
+    }
+}
+
+.lock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: $off-red;
+
+    &:hover {
+        cursor: pointer;
+        color: red;
+    }
+
+    span {
+        margin-right: 5px;
+    }
+}
+
+.generate-schedule-container {
+    position: relative;
+
+    select {
+        width: 100%;
+        height: 50px;
+        margin-top: 15px;
+        text-align: center;
     }
 }
 
@@ -383,6 +471,35 @@ ul {
 
     &:after {
         content: "Generate Schedule";
+        color: $off-black;
+    }
+}
+
+.logout-button {
+    cursor: pointer;
+    @include boxshadow();
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: $secondary-color;
+    color: $off-black;
+    font-family: $font;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+
+    &:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255,255,255, 0.2);
+    }
+
+    &:after {
+        content: "Logout";
         color: $off-black;
     }
 }
@@ -467,7 +584,8 @@ ul {
 
 .course-stat-container {
     overflow-y: scroll;
-    height: 57%;
+    margin-top: 15px;
+    height: 435px;
 }
 
 .course-stat {
@@ -475,6 +593,10 @@ ul {
     border-top: 4px solid $secondary-color;
     @include boxshadow();
     margin-bottom: 15px;
+
+    &:last-of-type {
+        margin: 0;
+    }
 }
 
 .course-name {
@@ -490,7 +612,6 @@ ul {
     font-size: 12px;
     padding: 5px;
     margin-bottom: 5px;
-    background-color: #EAEAEA;
     color: $off-black;
 }
 

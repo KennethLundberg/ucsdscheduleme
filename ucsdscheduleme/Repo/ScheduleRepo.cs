@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ucsdscheduleme.Models;
+using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 
 namespace ucsdscheduleme.Repo
 {
@@ -527,7 +528,42 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return mostGapsSchedule;
-        } 
+        }
+
+        public List<Section> Optimize(Optimization optimization, PossibleSchedules schedules)
+        {
+            List<Section> schedule;
+            switch (optimization)
+            {
+                case Optimization.HighestGPA:
+                    schedule = HighestGPA(schedules);
+                    break;
+                case Optimization.HighestRMP:
+                    schedule = RMPRating(schedules);
+                    break;
+                case Optimization.EarlyEnd:
+                    schedule = EarliestEnd(schedules);
+                    break;
+                case Optimization.LateStart:
+                    schedule = LatestStart(schedules);
+                    break;
+                case Optimization.MostDays:
+                    schedule = MostDays(schedules);
+                    break;
+                case Optimization.LeastDays:
+                    schedule = LeastDays(schedules);
+                    break;
+                case Optimization.MostGaps:
+                    schedule = MostGaps(schedules);
+                    break;
+                case Optimization.LeastGaps:
+                    schedule = LeastGaps(schedules);
+                    break;
+                default:
+                    throw new FormatException();
+            }
+            return schedule;
+        }
 
         /// <summary>
         /// Calculates the average gap size between sections

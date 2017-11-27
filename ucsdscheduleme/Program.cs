@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using ucsdscheduleme.Data;
+using System.Net;
 
 namespace ucsdscheduleme
 {
@@ -24,7 +25,7 @@ namespace ucsdscheduleme
                     try
                     {
                         var context = services.GetRequiredService<ScheduleContext>();
-                        DbInitializer.Initialize(context);
+                        //DbInitializer.Initialize(context);
                     }
                     catch (Exception ex)
                     {
@@ -38,6 +39,10 @@ namespace ucsdscheduleme
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(options => {
+                    options.Listen(IPAddress.Any, 58798, listenOptions => listenOptions.UseHttps("localhost.pfx", "enter"));
+                })
+                .UseUrls("https://*:58798")  
                 .UseStartup<Startup>()
                 .Build();
     }

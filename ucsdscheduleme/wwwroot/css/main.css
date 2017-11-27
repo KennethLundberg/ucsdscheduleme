@@ -35,6 +35,12 @@ ul {
 }
 
 #logo {
+    text-align: center;
+    color: #FFCC03;
+    background-color: #203E5F;
+    padding: 10px;
+    font-size: 1.5em;
+    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -100,11 +106,15 @@ ul {
         border: 1px dashed #E0E0E0;
         border-right: none;
         border-top: none;
+        /* fix the Friday border due to overflow scroll */
     }
 
         .schedule .schedule-group:first-of-type {
             margin-left: 4em;
-            border: none;
+        }
+
+        .schedule .schedule-group:last-of-type {
+            margin-right: 10px;
         }
 
     .schedule .schedule-header {
@@ -144,6 +154,7 @@ ul {
     top: 50px;
     height: 100px;
     z-index: 1;
+    cursor: pointer;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -189,31 +200,59 @@ ul {
                 font-size: 10px;
             }
 
-.bottom {
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    border-top: 4px solid #FFCC03;
-    border-collapse: collapse;
-    height: 20%;
-    width: 100%;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    background-color: white;
-    font-size: 12px;
-    margin-bottom: 15px;
+.event-activated {
+    box-shadow: 0px 0px 10px black;
+    background-color: #C5EFF7;
+    z-index: 2;
 }
 
-    .bottom tr th {
+.event-deactivated {
+    opacity: 0.75;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.bottom {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    background-color: white;
+    border-top: 4px solid #FFCC03;
+    border-collapse: collapse;
+    width: 100%;
+    display: block;
+}
+
+    .bottom thead tr {
         background-color: #203E5F;
-        color: #FEFEFE;
-        font-size: 14px;
-        border: 1px solid black;
     }
 
-    .bottom tr td {
-        border: 1px solid black;
-        text-align: center;
-        color: black;
+        .bottom thead tr th {
+            width: 200px;
+            padding-right: 20px;
+            color: #FEFEFE;
+            font-size: 14px;
+            height: 2em;
+        }
+
+    .bottom tbody {
+        display: block;
+        overflow-y: scroll;
+        width: 100%;
+        height: 100px;
     }
+
+        .bottom tbody tr td {
+            width: 200px;
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            color: black;
+        }
+
+            .bottom tbody tr td:last-of-type {
+                border-right: none;
+            }
 
 .searchbar-container {
     position: relative;
@@ -264,6 +303,7 @@ ul {
             position: absolute;
             background: #FEFEFE;
             width: 100%;
+            z-index: 2;
         }
 
             .searchbar-container .searchbar .search-result .courseItem {
@@ -323,7 +363,56 @@ ul {
     }
 
     .edit-button span {
+        margin-right: 10px;
+    }
+
+.unlock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #666;
+}
+
+    .unlock-button:hover {
+        cursor: pointer;
+        color: #151515;
+    }
+
+    .unlock-button span {
         margin-right: 5px;
+    }
+
+.lock-button {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px;
+    vertical-align: text-bottom;
+    color: #F22613;
+}
+
+    .lock-button:hover {
+        cursor: pointer;
+        color: red;
+    }
+
+    .lock-button span {
+        margin-right: 5px;
+    }
+
+.generate-schedule-container {
+    position: relative;
+}
+
+    .generate-schedule-container select {
+        width: 100%;
+        height: 50px;
+        margin-top: 15px;
+        text-align: center;
     }
 
 .generate-schedule-button {
@@ -352,6 +441,35 @@ ul {
 
     .generate-schedule-button:after {
         content: "Generate Schedule";
+        color: #151515;
+    }
+
+.logout-button {
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #FFCC03;
+    color: #151515;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+    .logout-button:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .logout-button:after {
+        content: "Logout";
         color: #151515;
     }
 
@@ -452,7 +570,8 @@ ul {
 
 .course-stat-container {
     overflow-y: scroll;
-    height: 57%;
+    margin-top: 15px;
+    height: 435px;
 }
 
 .course-stat {
@@ -461,6 +580,10 @@ ul {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     margin-bottom: 15px;
 }
+
+    .course-stat:last-of-type {
+        margin: 0;
+    }
 
 .course-name {
     font-size: 14px;
@@ -475,7 +598,6 @@ ul {
     font-size: 12px;
     padding: 5px;
     margin-bottom: 5px;
-    background-color: #EAEAEA;
     color: #151515;
 }
 

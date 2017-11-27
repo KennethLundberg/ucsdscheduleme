@@ -5,7 +5,7 @@ namespace ucsdscheduleme.Models
     public class Location
     {
         public int Id { get; set; }
-        [StringLength(10)]
+        [StringLength(50)]
         public string Building { get; set; }
         [StringLength(10)]
         public string RoomNumber { get; set; }
