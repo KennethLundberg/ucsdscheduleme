@@ -6,7 +6,6 @@ var courses = {
         "selectedSection": "10201",
         "bases": {
             "A": {
-                //Array of base object calenar events here (like lectures)
                 "baseElements": [
                     {
                         type: "lecture",
@@ -40,7 +39,6 @@ var courses = {
                     }
                 ],
                 "sectionElements": {
-                    //Array of this section specific courses here
                     "90210": [
                         {
                             type: "discussion",
@@ -112,7 +110,6 @@ var courses = {
                     }
                 ],
                 "sectionElements": {
-                    //Array of this section specific courses here
                     "10201": [
                         {
                             type: "discussion",
@@ -145,34 +142,42 @@ var courses = {
         }
     },
     "cse110": {
-        "selectedBase": "A",
-        "selectedSection": "1",
+        "selectedBase": "C",
+        "selectedSection": "C0",
         "bases": {
-            "A": {
+            "C": {
                 "baseElements": [
-                    {
-                        type: "lecture",
-                        courseAbbreviation: "CSE 110",
-                        professor: "Gillespie, Gary",
-                        code: "C00",
-                        startTimeInMinutesAfterFirstHour: 5*60,
-                        durationInMinutes: 110,
-                        timespan: "12:30pm - 1:50pm",
-                        day: "tuesday"
-                    }
+
                 ],
                 "sectionElements": {
-                    //Array of this section specific courses here
-                    "90210": [
+                    "C0": [
                         {
-                            type: "discussion",
-                            courseAbbreviation: "CSE 101",
-                            professor: "Miles, Jones",
-                            code: "A01-1",
-                            startTimeInMinutesAfterFirstHour: 30,
-                            durationInMinutes: 50,
-                            timespan: "8:00am - 8:50am",
+                            type: "lecture",
+                            courseAbbreviation: "CSE 110",
+                            professor: "Gillespie, Gary",
+                            code: "C00",
+                            startTimeInMinutesAfterFirstHour: 5*60,
+                            durationInMinutes: 110,
+                            timespan: "12:30pm - 1:50pm",
                             day: "tuesday"
+                        }
+                    ],
+                }
+            },
+            "D": {
+                "baseElements": [
+                ],
+                "sectionElements": {
+                    "D00": [
+                        {
+                            type: "lecture",
+                            courseAbbreviation: "CSE 110",
+                            professor: "Gillespie, Gary",
+                            code: "D00",
+                            startTimeInMinutesAfterFirstHour: 3*60,
+                            durationInMinutes: 110,
+                            timespan: "10:30am - 11:50am",
+                            day: "thursday"
                         }
                     ]
                 }
@@ -376,12 +381,12 @@ function updateMeetings(meetings)
     /* iterate through all the meetings in the JSON */
     for(meeting in meetings) {
         /* extract selected base and section - the events to display on calendar */
-        var selectedBase = courses[meeting].selectedBase;
-        var selectedSection = courses[meeting].selectedSection;
+        var selectedBase = meetings[meeting].selectedBase;
+        var selectedSection = meetings[meeting].selectedSection;
 
         /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
-        var baseElements = courses[meeting].bases[selectedBase].baseElements;
-        var sectionElements = courses[meeting].bases[selectedBase].sectionElements[selectedSection];
+        var baseElements = meetings[meeting].bases[selectedBase].baseElements;
+        var sectionElements = meeting[meeting].bases[selectedBase].sectionElements[selectedSection];
 
         /* insert all base elements */
         for(var i = 0; i < baseElements.length; i++) {
@@ -400,7 +405,8 @@ function updateMeetings(meetings)
 }
 
 function showAllBasesAndAllSections(ids) {
-    var course = courses[ids.courseId];
+
+    var course = myApp.courses[ids.courseId];
     var bases = course.bases;
 
     var baseKeys = Object.keys(bases);
@@ -433,10 +439,12 @@ function showAllBasesAndAllSections(ids) {
 }
 
 function showBaseAndAllSections(ids) {
-    var course = courses[ids.courseId];
+    var course = myApp.courses[ids.courseId];
     var baseElements = course.bases[ids.baseId].baseElements;
     var sectionElements = course.bases[ids.baseId].sectionElements;
+    
     clearMeetings(ids.courseId);
+
     for(var i = 0; i < baseElements.length; i++) {
         var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
         event.className += " event-activated";
@@ -470,13 +478,15 @@ function changeSchedule(event) {
  */
 function updateSelectedSection(event) {
     var ids = extractIds(event);
-    courses[ids.courseId].selectedSection = ids.sectionId;
-    courses[ids.courseId].selectedBase = ids.baseId;
+
+    // update the base and section IDs in the global object
+    myApp.courses[ids.courseId].selectedSection = ids.sectionId;
+    myApp.courses[ids.courseId].selectedBase = ids.baseId;
 
     clearAllMeetings();
-    updateMeetings(courses);
-    isEditing = false;
+    updateMeetings(myApp.courses);
 
+    isEditing = false;
     showEditButtons();
 }
 
@@ -486,20 +496,29 @@ function updateSelectedSection(event) {
 function updateSelectedBase(event) {
     var ids = extractIds(event);
 
-    courses[ids.courseId].selectedBase = ids.baseId;
+    // update the base ID in the global object
+    myApp.courses[ids.courseId].selectedBase = ids.baseId;
 
     clearAllMeetings();
-    updateMeetings(courses)
+    updateMeetings(myApp.courses)
     
     hideEditButtons();
 
-    showBaseAndAllSections(ids);    
+    // showBaseAndAllSections(ids);
+    var baseElements = myApp.courses[ids.courseId].bases[ids.baseId].baseElements;
+    var sectionElements = myApp.courses[ids.courseId].bases[ids.baseId].sectionElements;
+
+    showBaseAndAllSections(ids);
 }
 
+// clicked on section or base, know because bases have "_undefined" as sectionId
 function updateEvent(event) {
+
     if(!event.classList.contains("_undefined")) {
+        // selected a section
         updateSelectedSection(event);
     } else {
+        // selected a base
         updateSelectedBase(event)
     }
 }
@@ -507,8 +526,6 @@ function updateEvent(event) {
 
 function activateSelectedBasesAndSections(event) {
     var ids = extractIds(event, false);
-    // console.log("activateAllBasesAndAllSections")
-    // console.log(ids)
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
 
@@ -566,6 +583,7 @@ function extractIds(event, noUnderscore = true) {
     if(event.classList.length <= 0) {
         return null;
     }
+    var classListLength = event.classList.length;
 
     var courseId = event.classList[1];
     var baseId = event.classList[2];
@@ -588,7 +606,7 @@ function extractIds(event, noUnderscore = true) {
  * @param: element: DOM element of which you want to find the event div for 
  */
 function findOuterDiv(element, className) {
-    // console.log(element.classList.length);
+
     if(typeof element == undefined) {
         return null;
     }
