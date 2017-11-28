@@ -175,7 +175,7 @@ namespace ucsdscheduleme.Repo
             {
                 AverageGpaExpected = capeForSection.AverageGradeExpected,
                 AverageGpaReceived = capeForSection.AverageGradeReceived,
-                AverageTotalWorkload = capeForSection.StudyHoursPerWeek,
+                AverageWorkload = capeForSection.StudyHoursPerWeek,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
                 ProfessorName = section.Professor.Name
             };

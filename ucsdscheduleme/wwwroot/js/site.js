@@ -12,7 +12,7 @@ var sectionsB = ["10201", "11023"];
 var randomSelection = (randomBaseIndex == 0) ? sectionsA[randomSelectionIndex] : sectionsB[randomSelectionIndex];
 var randomSelectionForOneBase = sectionsA[randomBaseIndex];
 
-var courses = {
+var testCourses = {
     "cse101": {
         "selectedBase": randomBase,
         "selectedSection": randomSelection,
@@ -91,9 +91,9 @@ var courses = {
                     {
                         courseAbbreviation: "CSE 110",
                         professorName: "Gary Gillespie",
-                        averageWorkload: "Avg. Workload: 69 Hrs/Wk ",
-                        averageGpaExpected: "Avg. Grade Expected: F- (0.00)",
-                        averageGpaReceived: "Avg. Grade Received: F- (0.00)",
+                        averageWorkload: "10.0",
+                        averageGpaExpected: "3.0",
+                        averageGpaReceived: "2.0",
                     }
                 ]
             },
@@ -390,8 +390,9 @@ function setup() {
     clearOneTimeEvents();
     clearMetadata();
     console.log("setup()");
-    updateMeetings(courses);
-    updateOneTimeEvents(courses);
+    updateMeetings(testCourses);
+    updateOneTimeEvents(testCourses);
+    updateOverallMetadata(testCourses);
 }
  
 /* called when DOM is ready */
@@ -957,9 +958,6 @@ function showEditButtons() {
         buttons[i].style.visibility = 'visible';
     }
 }
-/**
- * @description Clears the current table of one time events
- */
 
 //clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
 function clearMetadata() {
@@ -969,6 +967,16 @@ function clearMetadata() {
         courses.removeChild(courses.firstChild);
     }
     clearOverallMetadata();
+}
+
+function clearOverallMetadata() {
+    var workload = document.getElementById("overall-workload");
+    var expected = document.getElementById("gpa-expected");
+    var received = document.getElementById("gpa-received");
+
+    workload.innerHTML = "0";
+    expected.innerHTML = "0";
+    received.innerHTML = "0";
 }
 
 //a function that takes in a metadata object for an individual course and adds it to the view.
@@ -1030,7 +1038,7 @@ function updateMetadata(metadataList) {
 
 // a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
 function updateOverallMetadata(courses) {
-
+    var numCourses = 0;
     var overallWorkload = 0;
     var overallExpectedGpa = 0;
     var overallRecievedGpa = 0;
@@ -1044,60 +1052,115 @@ function updateOverallMetadata(courses) {
         /* get list of one time events (i.e. finals) */
         var metadata = courses[course].bases[selectedBase].metadata;
 
+        console.log(metadata.averageWorkload);
+
         //var metadata = extractMetadata(course);
         overallWorkload = overallWorkload + metadata.averageWorkload;
         overallExpectedGpa = overallExpectedGpa + metadata.averageGpaExpected;
         overallRecievedGpa = overallRecievedGpa + metadata.averageGpaRecieved;
+
+        numCourses++;
     }
 
     //calculating averages
-    overallWorkload /= courses.length;
-    overallExpectedGpa /= courses.length;
-    overallRecievedGpa /= courses.length;
+    overallWorkload /= numCourses;
+    overallExpectedGpa /= numCourses;
+    overallRecievedGpa /= numCourses;
 
-    document.getElementById("overall-workload").innerHTML = format
+    //console.log(numCourses);
+    console.log(overallWorkload);
+    console.log(overallExpectedGpa);
+    console.log(overallRecievedGpa);
+
+    document.getElementById("overall-workload").innerHTML = convertGPAToStringFormat(overallWorkload);
+    document.getElementById("gpa-expected").innerHTML = convertGPAToStringFormat(overallExpectedGpa);
+    document.getElementById("gpa-received").innerHTML = convertGPAToStringFormat(overallRecievedGpa);
 }
 
-function clearOverallMetadata() 
+        //helper function that takes GPA decimal and returns equivalent
+        // letter grade in proper format.
+function convertGPAToStringFormat(grade)
 {
-    var workload = document.getElementById("overall-workload");
-    var expected = document.getElementById("gpa-expected");
-    var received = document.getElementById("gpa-received");
+    var prefix = "";
 
-    workload.innerHTML = "0";
-    expected.innerHTML = "0";
-    received.innerHTML = "0";
+    if (grade >= 4.0)
+    {
+        prefix = "A";
+    }
+    else if (grade >= 3.7)
+    {
+        prefix = "A-";
+    }
+    else if (grade >= 3.3)
+    {
+        prefix = "B+";
+    }
+    else if (grade >= 3.0)
+    {
+        prefix = "B";
+    }
+    else if (grade >= 2.7)
+    {
+        prefix = "B-";
+    }
+    else if (grade >= 2.3)
+    {
+        prefix = "C+";
+    }
+    else if (grade >= 2.0)
+    {
+        prefix = "C";
+    }
+    else if (grade >= 1.7)
+    {
+        prefix = "C-";
+    }
+    else if (grade >= 1.0)
+    {
+        prefix = "D";
+    }
+    else
+    {
+        prefix = "F";
+    }
+    //format that looks like "B+ (3.82)"
+    //var gradeString = 
+    console.log(parseInt(grade));
+    return prefix + " (" + grade + ")";
 }
 
-////metadata extraction helper function
-//function extractMetadata(course) {
+//metadata extraction helper function
+function extractMetadata(course) {
 
-//    // extract selected base - classes to update
-//    var selectedBase = course.selectedBase;
+    // extract selected base - classes to update
+    var selectedBase = course.selectedBase;
 
-//    // the specific class you're interested in
-//    var base = course.bases[selectedBase];
+    // the specific class you're interested in
+    var base = course.bases[selectedBase];
 
-//    // the metadata for that class
-//    var metadata = base.metadata;
+    // the metadata for that class
+    var metadata = base.metadata;
 
-//    // the individual elements of the metadata
-//    var className = metadata.courseAbbreviation;
-//    var profName = metadata.professorName;
-//    var avgTotalWorkload = metadata.averageTotalWorkload;
-//    var avgGpaExpected = metadata.averageGpaExpected;
-//    var avgGpaRecieved = metadata.averageGpaRecieved;
+    // the individual elements of the metadata
+    var className = metadata.courseAbbreviation;
+    var profName = metadata.professorName;
+    var avgTotalWorkload = metadata.averageTotalWorkload;
+    var avgGpaExpected = metadata.averageGpaExpected;
+    var avgGpaRecieved = metadata.averageGpaRecieved;
 
-//    // return object with metadata for class
-//    return {
-//        className: className,
-//        professorName: profName,
-//        averageTotalWorkload: avgTotalWorkload,
-//        averageGpaExpected: avgGpaExpected,
-//        averageGpaRecieved: avgGpaRecieved
-//    };
-//}
+    // return object with metadata for class
+    return {
+        className: className,
+        professorName: profName,
+        averageTotalWorkload: avgTotalWorkload,
+        averageGpaExpected: avgGpaExpected,
+        averageGpaRecieved: avgGpaRecieved
+    };
+}
 
+/**
+ * @description Clears the current table of one time events
+ */
 function clearOneTimeEvents()
 {
     var oneTimeEvents = document.getElementById('onetime');
