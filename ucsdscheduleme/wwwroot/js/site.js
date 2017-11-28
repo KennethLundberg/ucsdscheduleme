@@ -449,7 +449,6 @@ function typeAhead(e) {
     typeAheadCallout(input);
 }
 
-
 /**
  * Clears the courses from the drop down.
  */
@@ -461,7 +460,6 @@ function clearSearch()
         courses[0].remove();
     }
 }
-
 
 /**
  * Populates the search drop down with the auto-complete results.
@@ -483,7 +481,6 @@ function populateSearch(data)
     // Add it to the drop down
     courses.append(course);
 }
-
 
 /**
  * Adds the course selected to the class list below the search bar.
@@ -849,7 +846,6 @@ function updateEvent(event) {
     }
 }
 
-
 function activateSelectedBasesAndSections(event) {
     var ids = extractIds(event, false);
 
@@ -948,13 +944,13 @@ function findOuterDiv(element, className) {
     return null;
 }
 
-
 function hideEditButtons() {
     var buttons = document.getElementsByClassName('edit-button');
     for(var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'hidden';
     }
 }
+
 function showEditButtons() {
     var buttons = document.getElementsByClassName('edit-button');
     for(var i = 0; i < buttons.length; i++) {
@@ -962,7 +958,9 @@ function showEditButtons() {
     }
 }
 
-//clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
+/**
+ * @description clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
+ */
 function clearMetadata() {
     //clear metadata of course-stat-container
     var courses = document.getElementById("course-stat-container");
@@ -972,6 +970,9 @@ function clearMetadata() {
     clearOverallMetadata();
 }
 
+/**
+ * @description clears the overall metadata table seting the values to 0.
+ */
 function clearOverallMetadata() {
     var workload = document.getElementById("overall-workload");
     var expected = document.getElementById("gpa-expected");
@@ -982,7 +983,10 @@ function clearOverallMetadata() {
     received.innerHTML = "0";
 }
 
-//a function that takes in a metadata object for an individual course and adds it to the view.
+/**
+ * @description a function that takes in a metadata object for an individual course and adds it to the view.
+ * @param {any} metadata
+ */
 function insertMetadata(metadata) {
     //outer course stat div
     var courseMetadata = document.createElement('div');
@@ -1027,8 +1031,10 @@ function insertMetadata(metadata) {
     courseGoesHere.append(courseMetadata);
 }
 
-
-//a function that updates the metadata by calling the InsertMetadata function for each course metadata
+/**
+ * @description a function that updates the metadata by calling the InsertMetadata function for each course metadata
+ * @param {any} courses
+ */
 function updateMetadata(courses) {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
@@ -1043,7 +1049,10 @@ function updateMetadata(courses) {
     }
 }
 
-// a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
+/**
+ * @description a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
+ * @param {any} courses
+ */
 function updateOverallMetadata(courses) {
     var numCourses = 0;
     var overallWorkload = 0;
@@ -1077,8 +1086,10 @@ function updateOverallMetadata(courses) {
     document.getElementById("gpa-received").innerHTML = convertGPAToStringFormat(overallReceivedGpa.toFixed(2));
 }
 
-//helper function that takes GPA decimal and returns equivalent
-// letter grade in proper format.
+/**
+ * @description helper function that takes GPA decimal and returns equivalent letter grade in proper format.
+ * @param {any} grade
+ */
 function convertGPAToStringFormat(grade)
 {
     var prefix = "";
