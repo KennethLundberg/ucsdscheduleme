@@ -44,13 +44,6 @@ namespace ucsdscheduleme.Models
         public decimal AverageWorkload { get; set; }
         public string CourseAbbreviation { get; set; }
         public string ProfessorName { get; set; }
-        //public string FormattedGpaExpected { get { return ConvertGPAToStringFormat(AverageGpaExpected); } }
-        //public string FormattedGpaRecieved { get { return ConvertGPAToStringFormat(AverageGpaReceived); } }
-        //public int CourseId { get; set; }
-
-
-
-
     }
 
     public class CalendarEvent

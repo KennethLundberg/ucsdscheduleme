@@ -390,9 +390,9 @@ function setup() {
     clearOneTimeEvents();
     clearMetadata();
     console.log("setup()");
-    updateMeetings(testCourses);
-    updateOneTimeEvents(testCourses);
-    updateOverallMetadata(testCourses);
+    //updateMeetings(testCourses);
+    //updateOneTimeEvents(testCourses);
+    //updateOverallMetadata(testCourses);
 }
  
 /* called when DOM is ready */
@@ -983,19 +983,15 @@ function clearOverallMetadata() {
 }
 
 //a function that takes in a metadata object for an individual course and adds it to the view.
-function insertMetadata(course) {
-
-    // TO DO: check that metadata is properly being brought into these divs
+function insertMetadata(metadata) {
     //outer course stat div
-    var metadata = extractMetadata(course);
-
     var courseMetadata = document.createElement('div');
     courseMetadata.className = "course-stat";
 
     //class name
     var courseName = document.createElement('div');
-    courseName.className = "course-stat";
-    courseName.innerHTML = metadata.className;
+    courseName.className = "course-name";
+    courseName.innerHTML = metadata.courseAbbreviation;
 
     //professor name
     var professorName = document.createElement('div');
@@ -1004,18 +1000,18 @@ function insertMetadata(course) {
 
     //average work load
     var avgWorkload = document.createElement('div');
-    avgWorkload.className = "class-info";
-    avgWorkload.innerHTML = metadata.averageTotalWorkload;
+    avgWorkload.className = "course-info";
+    avgWorkload.innerHTML = "Avg.Workload: " + metadata.averageWorkload + " Hrs/Wk ";
 
     //average expected
     var avgExpected = document.createElement('div');
-    avgExpected.className = "class-info";
-    avgExpected.innerHTML = metadata.averageGpaExpected;
+    avgExpected.className = "course-info";
+    avgExpected.innerHTML = "Avg. Grade Expected: " + metadata.averageGpaExpected;
 
     //average recieved
     var avgRecieved = document.createElement('div');
-    avgRecieved.className = "class-info";
-    avgRecieved.innerHTML = metadata.averageGpaRecieved;
+    avgRecieved.className = "course-info";
+    avgRecieved.innerHTML = "Avg. Grade Received: " + metadata.averageGpaReceived;
 
     //attaching all class information to course div
     courseMetadata.append(courseName);
@@ -1033,9 +1029,17 @@ function insertMetadata(course) {
 
 
 //a function that updates the metadata by calling the InsertMetadata function for each course metadata
-function updateMetadata(metadataList) {
-    for (var i = 0; i < metadataList.length; i++) {
-        insertMetadata(metadataList[i]);
+function updateMetadata(courses) {
+    /* iterate through all the meetings in the JSON */
+    for (courseId in courses) {
+        /* extract selected base - the events to display on calendar */
+        var selectedBase = courses[courseId].selectedBase;
+
+        /* get list of one time events (i.e. finals) */
+        var metadata = courses[courseId].bases[selectedBase].metadata;
+
+        /* insert metadata */
+        insertMetadata(metadata);
     }
 }
 
@@ -1044,7 +1048,7 @@ function updateOverallMetadata(courses) {
     var numCourses = 0;
     var overallWorkload = 0;
     var overallExpectedGpa = 0;
-    var overallRecievedGpa = 0;
+    var overallReceivedGpa= 0;
 
     //iterate through all the metadata in the JSON
     for (course in courses)
@@ -1055,12 +1059,10 @@ function updateOverallMetadata(courses) {
         /* get list of one time events (i.e. finals) */
         var metadata = courses[course].bases[selectedBase].metadata;
 
-        console.log(metadata.averageWorkload);
-
         //var metadata = extractMetadata(course);
         overallWorkload = overallWorkload + metadata.averageWorkload;
         overallExpectedGpa = overallExpectedGpa + metadata.averageGpaExpected;
-        overallRecievedGpa = overallRecievedGpa + metadata.averageGpaRecieved;
+        overallReceivedGpa = overallReceivedGpa + metadata.averageGpaReceived;
 
         numCourses++;
     }
@@ -1068,20 +1070,15 @@ function updateOverallMetadata(courses) {
     //calculating averages
     overallWorkload /= numCourses;
     overallExpectedGpa /= numCourses;
-    overallRecievedGpa /= numCourses;
+    overallReceivedGpa /= numCourses;
 
-    //console.log(numCourses);
-    console.log(overallWorkload);
-    console.log(overallExpectedGpa);
-    console.log(overallRecievedGpa);
-
-    document.getElementById("overall-workload").innerHTML = convertGPAToStringFormat(overallWorkload);
-    document.getElementById("gpa-expected").innerHTML = convertGPAToStringFormat(overallExpectedGpa);
-    document.getElementById("gpa-received").innerHTML = convertGPAToStringFormat(overallRecievedGpa);
+    document.getElementById("overall-workload").innerHTML = convertGPAToStringFormat(overallWorkload.toFixed(2));
+    document.getElementById("gpa-expected").innerHTML = convertGPAToStringFormat(overallExpectedGpa.toFixed(2));
+    document.getElementById("gpa-received").innerHTML = convertGPAToStringFormat(overallReceivedGpa.toFixed(2));
 }
 
-        //helper function that takes GPA decimal and returns equivalent
-        // letter grade in proper format.
+//helper function that takes GPA decimal and returns equivalent
+// letter grade in proper format.
 function convertGPAToStringFormat(grade)
 {
     var prefix = "";
@@ -1127,38 +1124,7 @@ function convertGPAToStringFormat(grade)
         prefix = "F";
     }
     //format that looks like "B+ (3.82)"
-    //var gradeString = 
-    console.log(parseInt(grade));
     return prefix + " (" + grade + ")";
-}
-
-//metadata extraction helper function
-function extractMetadata(course) {
-
-    // extract selected base - classes to update
-    var selectedBase = course.selectedBase;
-
-    // the specific class you're interested in
-    var base = course.bases[selectedBase];
-
-    // the metadata for that class
-    var metadata = base.metadata;
-
-    // the individual elements of the metadata
-    var className = metadata.courseAbbreviation;
-    var profName = metadata.professorName;
-    var avgTotalWorkload = metadata.averageTotalWorkload;
-    var avgGpaExpected = metadata.averageGpaExpected;
-    var avgGpaRecieved = metadata.averageGpaRecieved;
-
-    // return object with metadata for class
-    return {
-        className: className,
-        professorName: profName,
-        averageTotalWorkload: avgTotalWorkload,
-        averageGpaExpected: avgGpaExpected,
-        averageGpaRecieved: avgGpaRecieved
-    };
 }
 
 /**
@@ -1215,9 +1181,6 @@ function updateOneTimeEvents(courses)
 {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
-
-        console.log("UOTE course: " + JSON.stringify(courses[courseId]));
-
         /* extract selected base - the events to display on calendar */
         var selectedBase = courses[courseId].selectedBase;
 
@@ -1241,6 +1204,9 @@ function updateSchedule(courses) {
     updateOneTimeEvents(courses);
     clearMeetings();
     updateMeetings(courses);
+    clearMetadata();
+    updateOverallMetadata(courses);
+    updateMetadata(courses);
 }
 
 function generateSchedule() {
