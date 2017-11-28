@@ -83,6 +83,7 @@ namespace ucsdscheduleme.Controllers
                         .ThenInclude(m => m.Location)
                 .Include(c => c.Cape)
                     .ThenInclude(ca => ca.Professor)
+                        .ThenInclude(p => p.RateMyProfessor)
                 .Where(c => courseInfo.CourseIds.Contains(c.Id)).ToArray();
             Optimization optimization = courseInfo.Optimization;
 

@@ -44,6 +44,8 @@ namespace ucsdscheduleme.Models
         public decimal AverageWorkload { get; set; }
         public string CourseAbbreviation { get; set; }
         public string ProfessorName { get; set; }
+        public decimal Quality { get; set; }
+        public decimal Difficulty { get; set; }
     }
 
     public class CalendarEvent

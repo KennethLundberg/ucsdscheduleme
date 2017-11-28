@@ -1002,6 +1002,10 @@ function insertMetadata(metadata) {
     professorName.className = "professor-name";
     professorName.innerHTML = metadata.professorName;
 
+    var rateMyProfessor = document.createElement('div');
+    rateMyProfessor.className = "course-info";
+    rateMyProfessor.innerHTML = "Quality: " + metadata.quality + " Difficulty: " + metadata.difficulty;
+
     //average work load
     var avgWorkload = document.createElement('div');
     avgWorkload.className = "course-info";
@@ -1020,6 +1024,7 @@ function insertMetadata(metadata) {
     //attaching all class information to course div
     courseMetadata.append(courseName);
     courseMetadata.append(professorName);
+    courseMetadata.append(rateMyProfessor);
     courseMetadata.append(avgWorkload);
     courseMetadata.append(avgExpected);
     courseMetadata.append(avgRecieved);

@@ -170,6 +170,8 @@ namespace ucsdscheduleme.Repo
         {
             var capeForSection = section.Course.Cape.FirstOrDefault(ca => ca.Professor == section.Professor);
 
+            var rateMyProfessor = section.Professor.RateMyProfessor;
+
             string professorString = (capeForSection == null) ? $"{section.Professor.Name} (Capes Unknown)" 
                                                               : section.Professor.Name;
             return new Metadata
@@ -178,7 +180,9 @@ namespace ucsdscheduleme.Repo
                 AverageGpaReceived = capeForSection?.AverageGradeReceived ?? 0M,
                 AverageWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
-                ProfessorName = professorString
+                ProfessorName = professorString,
+                Quality = rateMyProfessor.OverallQuality,
+                Difficulty = rateMyProfessor.LevelOfDifficulty
             };
         }
 
