@@ -7,13 +7,13 @@ namespace ucsdscheduleme.Models
 {
     public enum Optimization
     {
-        HighestGPA,
-        HighestRMP,
-        EarlyEnd,
-        LateStart,
         MostGaps,
         LeastGaps,
         MostDays,
-        LeastDays
+        LeastDays,
+        HighestGPA,
+        HighestRMP,
+        EarlyEnd,
+        LateStart
     }
 }

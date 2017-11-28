@@ -28,7 +28,7 @@ var testCourses = {
                         "type": "FI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
@@ -60,7 +60,7 @@ var testCourses = {
                         day: "friday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -107,7 +107,7 @@ var testCourses = {
                         "type": "FI"
                     },
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 101",
@@ -139,7 +139,7 @@ var testCourses = {
                         day: "friday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "10201": [
                         {
@@ -194,7 +194,7 @@ var testCourses = {
                         "type": "MI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -216,7 +216,7 @@ var testCourses = {
                         day: "thursday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -264,7 +264,7 @@ var testCourses = {
                         "type": "MI"
                     }
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -286,7 +286,7 @@ var testCourses = {
                         day: "thursday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "10201": [
                         {
@@ -334,7 +334,7 @@ var testCourses = {
                         "type": "FI"
                     },
                 ],
-                "baseElements": [
+                "baseEvents": [
                     {
                         type: "lecture",
                         courseAbbreviation: "CSE 100",
@@ -346,7 +346,7 @@ var testCourses = {
                         day: "tuesday"
                     }
                 ],
-                "sectionElements": {
+                "sectionEvents": {
                     //Array of this section specific courses here
                     "90210": [
                         {
@@ -621,7 +621,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     /* create an icon and add to event header div */
     var icon = document.createElement('div');
     icon.className = "class-icon";
-    icon.id = meeting.type;
+    icon.id = meeting.type.toLowerCase();
     eventHeader.append(icon);
 
     /* create the Change and edit-button icon and add to event div */
@@ -648,7 +648,10 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     icon.append(iconLabel);
 
     // Use first two letters as text
-    iconLabel.innerText = meeting.type.toUpperCase().substr(0,2);
+    iconLabel.innerText = meeting.type.toUpperCase().substr(0, 2);
+    console.log("----------");
+    console.log("Meeting type: " + meeting.type);
+    console.log("----------");
 
     /* create an event info div */
     var eventInfo = document.createElement('div');
@@ -661,7 +664,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 
     /* professor */
     var profSpan = document.createElement('span');
-    profSpan.innerHTML = meeting.professor;
+    profSpan.innerHTML = meeting.professorName;
 
     /* time range */
     var timeSpan = document.createElement('span');
@@ -669,7 +672,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 
     /* section code */
     var sectSpan = document.createElement('span');
-    sectSpan.innerHTML = meeting.code;
+    sectSpan.innerHTML = meeting.sectionCode;
 
     /* add spans to event info div */
     eventInfo.append(classSpan);
@@ -686,7 +689,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     event.className += sectionId;
 
     /* add event to day of meeting */
-    var dayElem = document.getElementById(meeting.day);
+    var dayElem = document.getElementById(meeting.day.toLowerCase());
     dayElem.append(event);
 
     return event;
@@ -708,20 +711,20 @@ function updateMeetings(meetings)
         var selectedSection = meetings[meeting].selectedSection;
 
         /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
-        var baseElements = meetings[meeting].bases[selectedBase].baseElements;
-        var sectionElements = meetings[meeting].bases[selectedBase].sectionElements[selectedSection];
+        var baseEvents = meetings[meeting].bases[selectedBase].baseEvents;
+        var sectionEvents = meetings[meeting].bases[selectedBase].sectionEvents[selectedSection];
 
         /* insert all base elements */
-        for(var i = 0; i < baseElements.length; i++) {
-            insertMeeting(baseElements[i], meeting, selectedBase);
+        for(var i = 0; i < baseEvents.length; i++) {
+            insertMeeting(baseEvents[i], meeting, selectedBase);
         }
 
         /* check if there are any sections */
-        if(sectionElements != null) {
+        if (sectionEvents != null) {
 
             /* insert all section elements */
-            for(var i = 0; i < sectionElements.length; i++) {
-                insertMeeting(sectionElements[i], meeting, selectedBase, selectedSection);
+            for(var i = 0; i < sectionEvents.length; i++) {
+                insertMeeting(sectionEvents[i], meeting, selectedBase, selectedSection);
             }
         }
     }
@@ -738,8 +741,8 @@ function showAllBasesAndAllSections(ids) {
 
     for(var i = 0; i < baseKeys.length; i++) {
         // insert all bases aka lectures
-        for(var j = 0; j < bases[baseKeys[i]].baseElements.length; j++) {
-            var meeting = bases[baseKeys[i]].baseElements[j];
+        for(var j = 0; j < bases[baseKeys[i]].baseEvents.length; j++) {
+            var meeting = bases[baseKeys[i]].baseEvents[j];
 
             // insert base and set activated class
             var event = insertMeeting(meeting, ids.courseId, baseKeys[i], "undefined");
@@ -747,10 +750,10 @@ function showAllBasesAndAllSections(ids) {
         }
 
         // insert each section
-        var sectionElements = bases[baseKeys[i]].sectionElements;
-        var sectionsKeys = Object.keys(sectionElements);
+        var sectionEvents = bases[baseKeys[i]].sectionEvents;
+        var sectionsKeys = Object.keys(sectionEvents);
         sectionsKeys.forEach(function(key) {
-            var section = sectionElements[key];
+            var section = sectionEvents[key];
 
             // insert section and set activated class
             for(var k = 0; k < section.length; k++) {
@@ -763,19 +766,19 @@ function showAllBasesAndAllSections(ids) {
 
 function showBaseAndAllSections(ids) {
     var course = myApp.courses[ids.courseId];
-    var baseElements = course.bases[ids.baseId].baseElements;
-    var sectionElements = course.bases[ids.baseId].sectionElements;
+    var baseEvents = course.bases[ids.baseId].baseEvents;
+    var sectionEvents = course.bases[ids.baseId].sectionEvents;
     
     clearMeetings(ids.courseId);
 
-    for(var i = 0; i < baseElements.length; i++) {
-        var event = insertMeeting(baseElements[i], ids.courseId, ids.baseId, "undefined");
+    for(var i = 0; i < baseEvents.length; i++) {
+        var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, "undefined");
         event.className += " event-activated";
     }
 
-    var sectionsKeys = Object.keys(sectionElements);
+    var sectionsKeys = Object.keys(sectionEvents);
     sectionsKeys.forEach(function(key) {
-        var section = sectionElements[key];
+        var section = sectionEvents[key];
         var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
         event.className += " event-activated";
     });
@@ -828,8 +831,8 @@ function updateSelectedBase(event) {
     hideEditButtons();
 
     // showBaseAndAllSections(ids);
-    var baseElements = myApp.courses[ids.courseId].bases[ids.baseId].baseElements;
-    var sectionElements = myApp.courses[ids.courseId].bases[ids.baseId].sectionElements;
+    var baseEvents = myApp.courses[ids.courseId].bases[ids.baseId].baseEvents;
+    var sectionEvents = myApp.courses[ids.courseId].bases[ids.baseId].sectionEvents;
 
     showBaseAndAllSections(ids);
 }
@@ -1211,18 +1214,70 @@ function insertOneTimeEvents(oneTimeEventData)
 function updateOneTimeEvents(courses)
 {
     /* iterate through all the meetings in the JSON */
-    for (course in courses) {
+    for (courseId in courses) {
+
+        console.log("UOTE course: " + JSON.stringify(courses[courseId]));
 
         /* extract selected base - the events to display on calendar */
-        var selectedBase = courses[course].selectedBase;
+        var selectedBase = courses[courseId].selectedBase;
 
         /* get list of one time events (i.e. finals) */
-        var oneTimeEvents = courses[course].bases[selectedBase].oneTimeEvents;
+        var oneTimeEvents = courses[courseId].bases[selectedBase].oneTimeEvents;
 
         /* insert all one time events */
         for (var i = 0; i < oneTimeEvents.length; i++)
         {
             insertOneTimeEvents(oneTimeEvents[i]);
+        }
+    }
+}
+
+function updateSchedule(courses) {
+    console.log("------------------------------------------")
+    console.log(JSON.stringify(courses));
+    console.log("------------------------------------------")
+    myApp.courses = courses;
+    clearOneTimeEvents();
+    updateOneTimeEvents(courses);
+    clearMeetings();
+    updateMeetings(courses);
+}
+
+function generateSchedule() {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.generateSchedule;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // TODO check if optimization isn't -1 and also that there is at least one course.
+
+    // Grab optimization from select list.
+    var optimizationSelect = document.getElementById("optimization");
+    var selectedValue = optimizationSelect.options[optimizationSelect.selectedIndex].value;
+
+    if (selectedValue == -1) {
+        return;
+        // TODO Error Message
+    }
+
+    // Grab courses to schedule
+    var courseIds = myApp.coursesToSchedule;
+    if (courseIds.length < 1) {
+        return;
+        // TODO error message
+    }
+
+    var request = { "optimization": selectedValue, "courseIds": courseIds };
+
+    console.log("Payload: " + JSON.stringify(request));
+
+    xhr.send(JSON.stringify(request));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            updateSchedule(response.courses);
         }
     }
 }
