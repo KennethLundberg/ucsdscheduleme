@@ -139,16 +139,44 @@ namespace ucsdscheduleme.Repo
                 {
                     if ((meeting1.Days & meeting2.Days) != 0)
                     {
-                        if ((meeting1.StartTime <= meeting2.EndTime) && (meeting1.EndTime >= meeting2.StartTime))
+                        // Want to compare recurring events like lecture, discussion, labs
+                        if (!IsOneTimeEvent(meeting1.MeetingType)
+                            && (!IsOneTimeEvent(meeting2.MeetingType)))
+                        //        if ((meeting1.StartTime <= meeting2.EndTime) && (meeting1.EndTime >= meeting2.StartTime))
                         {
-                            return true;
+                            if (Conflict(meeting1, meeting2))
+                            {
+                                return true;
+                            }
+                        }
+                        else if (IsOneTimeEvent(meeting1.MeetingType) && IsOneTimeEvent(meeting2.MeetingType))
+                        {
+                            if (meeting1.StartDate == meeting2.StartDate)
+                            {
+                                if (Conflict(meeting1, meeting2))
+                                {
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
             }
+
             return false;
         }
 
+        private bool Conflict(Meeting meeting1, Meeting meeting2)
+        {
+            if ((TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == 0)
+            && (TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == -1)
+            && (TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 0)
+            && (TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 1))
+            {
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Checks for time conflicts between a node and the existing schedule.
         /// </summary>
@@ -164,6 +192,16 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Tests whether or not a meeting is a one time event or not.
+        /// </summary>
+        /// <param name="type">The meeting type of the meeting to check.</param>
+        /// <returns>True if meeting is a one time event, false otherwise.</returns>
+        private static bool IsOneTimeEvent(MeetingType type)
+        {
+            return type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm;
         }
 
         /// <summary>
