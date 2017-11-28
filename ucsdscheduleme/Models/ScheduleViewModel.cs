@@ -7,6 +7,9 @@ namespace ucsdscheduleme.Models
 {
     public class ScheduleViewModel
     {
+        public Metadata OverallMetadata { get; set; } = new Metadata();
+        public List<Metadata> ClassMetadata { get; set; } = new List<Metadata>();
+        public List<Section> SectionList { get; set; } = new List<Section>();
         public Dictionary<CourseId, CourseViewModel> Courses { get; set; }
     }
 
@@ -34,13 +37,15 @@ namespace ucsdscheduleme.Models
         public string Type { get; set; }
     }
 
-    public struct Metadata
+    public class Metadata
     {
         public decimal AverageGpaExpected { get; set; }
         public decimal AverageGpaReceived { get; set; }
-        public decimal AverageTotalWorkload { get; set; }
+        public decimal AverageWorkload { get; set; }
         public string CourseAbbreviation { get; set; }
         public string ProfessorName { get; set; }
+        public decimal Quality { get; set; }
+        public decimal Difficulty { get; set; }
     }
 
     public class CalendarEvent
