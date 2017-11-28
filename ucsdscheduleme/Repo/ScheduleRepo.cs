@@ -168,10 +168,10 @@ namespace ucsdscheduleme.Repo
 
         private bool Conflict(Meeting meeting1, Meeting meeting2)
         {
-            if ((TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == 0)
-            && (TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == -1)
-            && (TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 0)
-            && (TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 1))
+            if (((TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == 0)
+                 || (TimeSpan.Compare(meeting1.StartTime.TimeOfDay, meeting2.EndTime.TimeOfDay) == -1))
+            && ((TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 0)
+                || (TimeSpan.Compare(meeting1.EndTime.TimeOfDay, meeting2.StartTime.TimeOfDay) == 1)))
             {
                 return true;
             }
