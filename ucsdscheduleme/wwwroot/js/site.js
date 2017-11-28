@@ -1014,12 +1014,12 @@ function insertMetadata(metadata) {
     //average expected
     var avgExpected = document.createElement('div');
     avgExpected.className = "course-info";
-    avgExpected.innerHTML = "Avg. Grade Expected: " + metadata.averageGpaExpected;
+    avgExpected.innerHTML = "Avg. Grade Expected: " + convertGPAToStringFormat(metadata.averageGpaExpected);
 
     //average recieved
     var avgRecieved = document.createElement('div');
     avgRecieved.className = "course-info";
-    avgRecieved.innerHTML = "Avg. Grade Received: " + metadata.averageGpaReceived;
+    avgRecieved.innerHTML = "Avg. Grade Received: " + convertGPAToStringFormat(metadata.averageGpaReceived);
 
     //attaching all class information to course div
     courseMetadata.append(courseName);
