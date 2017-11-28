@@ -90,10 +90,10 @@ var courses = {
                 "metadata": [
                     {
                         courseAbbreviation: "CSE 110",
-                        professor: "Gary Gillespie",
-                        avgWorkload: "Avg. Workload: 69 Hrs/Wk ",
-                        avgGradeExpected: "Avg. Grade Expected: F- (0.00)",
-                        avgGradeReceived: "Avg. Grade Received: F- (0.00)",
+                        professorName: "Gary Gillespie",
+                        averageWorkload: "Avg. Workload: 69 Hrs/Wk ",
+                        averageGpaExpected: "Avg. Grade Expected: F- (0.00)",
+                        averageGpaReceived: "Avg. Grade Received: F- (0.00)",
                     }
                 ]
             },
@@ -381,12 +381,14 @@ var courses = {
     }
     
 }
+
 /**
  * test adding calendar events, will delete later
  **/
 function setup() {
     clearAllMeetings();   
     clearOneTimeEvents();
+    clearMetadata();
     console.log("setup()");
     updateMeetings(courses);
     updateOneTimeEvents(courses);
@@ -931,11 +933,11 @@ function findOuterDiv(element, className) {
         return null;
     }
 
-    while(!element.classList.contains(className)) {
+    while (element && element.classList && !element.classList.contains(className)) {
         element = element.parentNode;
     }
 
-    if(element.classList.contains(className)) { 
+    if(element && element.classList && element.classList.contains(className)) { 
         return element;
     }
 
@@ -958,6 +960,144 @@ function showEditButtons() {
 /**
  * @description Clears the current table of one time events
  */
+
+//clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
+function clearMetadata() {
+    //clear metadata of course-stat-container
+    var courses = document.getElementById("course-stat-container");
+    while (courses.firstChild) {
+        courses.removeChild(courses.firstChild);
+    }
+    clearOverallMetadata();
+}
+
+//a function that takes in a metadata object for an individual course and adds it to the view.
+function insertMetadata(course) {
+
+    // TO DO: check that metadata is properly being brought into these divs
+    //outer course stat div
+    var metadata = extractMetadata(course);
+
+    var courseMetadata = document.createElement('div');
+    courseMetadata.className = "course-stat";
+
+    //class name
+    var courseName = document.createElement('div');
+    courseName.className = "course-stat";
+    courseName.innerHTML = metadata.className;
+
+    //professor name
+    var professorName = document.createElement('div');
+    professorName.className = "professor-name";
+    professorName.innerHTML = metadata.professorName;
+
+    //average work load
+    var avgWorkload = document.createElement('div');
+    avgWorkload.className = "class-info";
+    avgWorkload.innerHTML = metadata.averageTotalWorkload;
+
+    //average expected
+    var avgExpected = document.createElement('div');
+    avgExpected.className = "class-info";
+    avgExpected.innerHTML = metadata.averageGpaExpected;
+
+    //average recieved
+    var avgRecieved = document.createElement('div');
+    avgRecieved.className = "class-info";
+    avgRecieved.innerHTML = metadata.averageGpaRecieved;
+
+    //attaching all class information to course div
+    courseMetadata.append(courseName);
+    courseMetadata.append(professorName);
+    courseMetadata.append(avgWorkload);
+    courseMetadata.append(avgExpected);
+    courseMetadata.append(avgRecieved);
+
+    //retrieving course-stat-container
+    var courseGoesHere = document.getElementById("course-stat-container");
+
+    //insert course container to right side bar
+    courseGoesHere.append(courseMetadata);
+}
+
+
+//a function that updates the metadata by calling the InsertMetadata function for each course metadata
+function updateMetadata(metadataList) {
+    for (var i = 0; i < metadataList.length; i++) {
+        insertMetadata(metadataList[i]);
+    }
+}
+
+// a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
+function updateOverallMetadata(courses) {
+
+    var overallWorkload = 0;
+    var overallExpectedGpa = 0;
+    var overallRecievedGpa = 0;
+
+    //iterate through all the metadata in the JSON
+    for (course in courses)
+    {
+        /* extract selected base - the events to display on calendar */
+        var selectedBase = courses[course].selectedBase;
+
+        /* get list of one time events (i.e. finals) */
+        var metadata = courses[course].bases[selectedBase].metadata;
+
+        //var metadata = extractMetadata(course);
+        overallWorkload = overallWorkload + metadata.averageWorkload;
+        overallExpectedGpa = overallExpectedGpa + metadata.averageGpaExpected;
+        overallRecievedGpa = overallRecievedGpa + metadata.averageGpaRecieved;
+    }
+
+    //calculating averages
+    overallWorkload /= courses.length;
+    overallExpectedGpa /= courses.length;
+    overallRecievedGpa /= courses.length;
+
+    document.getElementById("overall-workload").innerHTML = format
+}
+
+function clearOverallMetadata() 
+{
+    var workload = document.getElementById("overall-workload");
+    var expected = document.getElementById("gpa-expected");
+    var received = document.getElementById("gpa-received");
+
+    workload.innerHTML = "0";
+    expected.innerHTML = "0";
+    received.innerHTML = "0";
+}
+
+////metadata extraction helper function
+//function extractMetadata(course) {
+
+//    // extract selected base - classes to update
+//    var selectedBase = course.selectedBase;
+
+//    // the specific class you're interested in
+//    var base = course.bases[selectedBase];
+
+//    // the metadata for that class
+//    var metadata = base.metadata;
+
+//    // the individual elements of the metadata
+//    var className = metadata.courseAbbreviation;
+//    var profName = metadata.professorName;
+//    var avgTotalWorkload = metadata.averageTotalWorkload;
+//    var avgGpaExpected = metadata.averageGpaExpected;
+//    var avgGpaRecieved = metadata.averageGpaRecieved;
+
+//    // return object with metadata for class
+//    return {
+//        className: className,
+//        professorName: profName,
+//        averageTotalWorkload: avgTotalWorkload,
+//        averageGpaExpected: avgGpaExpected,
+//        averageGpaRecieved: avgGpaRecieved
+//    };
+//}
+
 function clearOneTimeEvents()
 {
     var oneTimeEvents = document.getElementById('onetime');
