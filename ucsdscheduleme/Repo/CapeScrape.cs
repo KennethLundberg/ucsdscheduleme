@@ -10,6 +10,10 @@ namespace ucsdscheduleme.Repo
 {
     public class CapeScrape
     {
+
+        // The current class we're scraping
+        private static string CourseName;
+
         private readonly ScheduleContext _context;
         // Sending in context to files in /repo.
         public CapeScrape(ScheduleContext context)
@@ -22,6 +26,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         struct CapeXPaths
         {
+            public static readonly string CourseNamePath = "//*[@id='ctl00_ContentPlaceHolder1_lblCourseDescription']";
             public static readonly string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
             public static readonly string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
             public static readonly string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
@@ -153,6 +158,8 @@ namespace ucsdscheduleme.Repo
             string searchResultsUrl = @"http://cape.ucsd.edu/responses/Results.aspx?Name=" + professorName
                         + "&CourseNumber=" + courseName;
 
+            CapeScrape.CourseName = courseName;
+
             // Load the search result page
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(searchResultsUrl);
@@ -186,6 +193,17 @@ namespace ucsdscheduleme.Repo
             // HTML read from url and assign into var htmlDoc
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(Url);
+
+            // Get the course name 
+            HtmlNode crseNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.CourseNamePath);
+            string fullScrapedCourse = (crseNameNode != null) ? crseNameNode.InnerText : "N/A";
+            string[] splitCourse = fullScrapedCourse.Split(" ");
+
+            string courseName = splitCourse[0] + " " + splitCourse[1];
+
+            // Check if we're looking at the right course scrape
+            if (CourseName != courseName)
+                return null;
 
             // Gather professor and check for null return
             HtmlNode instrNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.InstrNamePath);
