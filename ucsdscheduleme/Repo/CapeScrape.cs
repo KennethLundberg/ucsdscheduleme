@@ -79,31 +79,52 @@ namespace ucsdscheduleme.Repo
                         if (capePageURL.Length != 0)
                         {
                             ScrapeResult scrapedCapePage = InsertDataFromHtmlPage(capePageURL);
+                            Cape newCapeReview = null;
+                            // Boolean to keep track if we need to add the cape review to the DB or
+                            // just update
+                            bool addToDb = true;
+
+                            // Check if we already have the cape for specific professor and course
+                            foreach (Cape tempCape in course.Cape)
+                            {
+                                if(tempCape.Professor == currProfessor)
+                                {
+                                    newCapeReview = tempCape;
+                                    addToDb = false;
+                                }
+                            }
+
+                            // If no cape found then make a new one
+                            if(newCapeReview == null)
+                            {
+                                newCapeReview = new Cape();
+                            }
 
                             if (scrapedCapePage != null)
                             {
                                 // Updating the cape review result for professor object
-                                Cape newCapeReview = new Cape()
-                                {
-                                    Term = scrapedCapePage.Term,
-                                    StudentsEnrolled = scrapedCapePage.StudentsEnrolled,
-                                    NumberOfEvaluation = scrapedCapePage.NumberOfEvaluation,
-                                    RecommendedClass = scrapedCapePage.RecommendedClass,
-                                    RecommendedProfessor = scrapedCapePage.RecommendedProfessor,
-                                    StudyHoursPerWeek = scrapedCapePage.StudyHoursPerWeek,
-                                    AverageGradeExpected = scrapedCapePage.AverageGradeExpected,
-                                    AverageGradeReceived = scrapedCapePage.AverageGradeReceived,
-                                    URL = capePageURL
-                                };
+                                newCapeReview.Term = scrapedCapePage.Term;
+                                newCapeReview.StudentsEnrolled = scrapedCapePage.StudentsEnrolled;
+                                newCapeReview.NumberOfEvaluation = scrapedCapePage.NumberOfEvaluation;
+                                newCapeReview.RecommendedClass = scrapedCapePage.RecommendedClass;
+                                newCapeReview.RecommendedProfessor = scrapedCapePage.RecommendedProfessor;
+                                newCapeReview.StudyHoursPerWeek = scrapedCapePage.StudyHoursPerWeek;
+                                newCapeReview.AverageGradeExpected = scrapedCapePage.AverageGradeExpected;
+                                newCapeReview.AverageGradeReceived = scrapedCapePage.AverageGradeReceived;
+                                newCapeReview.URL = capePageURL;
 
                                 // Adding cape review to professor and cource object
-                                currProfessor.Cape.Add(newCapeReview);
-                                course.Cape.Add(newCapeReview);
+                                if (addToDb)
+                                {
+                                    currProfessor.Cape.Add(newCapeReview);
+                                    course.Cape.Add(newCapeReview);
+                                }
                             }
 
                         }
                         else
                         {
+                            // Used to check when and for which tuples did we not find cape reviews.
                             profcourseNotFound.Add(Tuple.Create(currProfessor.Name, course.CourseAbbreviation));
                         }
 
