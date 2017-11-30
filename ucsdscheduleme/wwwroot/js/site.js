@@ -794,13 +794,13 @@ function customEventCallout(n, m, tu, w, th, f, st, et) {
     // When the text is edited, it clears the search and populates it
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            var text = JSON.parse(xhr.responseText);
+            //var text = JSON.parse(xhr.responseText);
             //clearSearch();
 
-            for (i = 0; i < text.length; i++) {
+            //for (i = 0; i < text.length; i++) {
                 //populateSearch(text[i]);
-                console.log(text[i]);
-            }
+                //console.log(text[i]);
+            //}
         }
     }
 }
@@ -816,7 +816,7 @@ function saveCustomEvent() {
     var endTime = document.getElementById('custom-event-endtime').value;
 
     /*callout function*/
-    //customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
+    customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
     cancelCustomEvent();
 }

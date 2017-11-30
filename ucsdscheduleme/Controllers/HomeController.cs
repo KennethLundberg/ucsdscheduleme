@@ -138,7 +138,7 @@ namespace ucsdscheduleme.Controllers
                 days = days & Days.Friday;
             }
 
-            string[] startTokens = data.startTime.Split(':');
+            string[] startTokens = data.startTime.Split(':');///////////////////
             string[] endTokens = data.endTime.Split(':');
 
             var startHr = Int32.Parse(startTokens[0]);
@@ -149,18 +149,34 @@ namespace ucsdscheduleme.Controllers
             var course = new Course() {
                 CourseAbbreviation = data.name,
                 UserId = user.Id,
-                User = user
+                User = user///////////////////////////
             };
 
-            var section = new Section();
+            var section = new Section() {
+                Course = course
+            };
 
             var meeting = new Meeting() {
                 Days = days,
                 StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
-                EndTime = new DateTime(1, 1, 1, endHr, endMin, 0)
+                EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
+                Section = section,
+                SectionId = section.Id
             };
 
             //add to db
+            section.Meetings.Add(meeting);
+            course.Sections.Add(section);
+
+            var userSection = new UserSection() {
+                Section = section,
+                SectionId = 
+                section.Id,
+                User = user,
+                UserId = user.Id
+            };
+
+            user.UserSections.Add(userSection);
 
             return View();
         }
