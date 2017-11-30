@@ -169,8 +169,6 @@ namespace ucsdscheduleme.Controllers
                 Days = days,
                 StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
                 EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
-                Section = section,
-                SectionId = section.Id
             };
 
             //add to db
