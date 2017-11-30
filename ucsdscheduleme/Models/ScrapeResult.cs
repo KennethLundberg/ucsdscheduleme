@@ -15,10 +15,10 @@ namespace ucsdscheduleme.Models
         public decimal RecommendedClass { get; set; }
         public decimal RecommendedProfessor { get; set; }
         public decimal StudyHoursPerWeek { get; set; }
-        public string AverageGradeExpected { get; set; }
-        public string AverageGradeReceived { get; set; }
-        public string OverallQuality { get; set; }
-        public string WouldTakeAgain { get; set; } // Percentage
-        public string LevelOfDifficulty { get; set; }
+        public decimal AverageGradeExpected { get; set; }
+        public decimal AverageGradeReceived { get; set; }
+        public decimal OverallQuality { get; set; }
+        public decimal WouldTakeAgain { get; set; } // Percentage
+        public decimal LevelOfDifficulty { get; set; }
     }
 }

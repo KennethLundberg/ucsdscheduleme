@@ -28,9 +28,7 @@ namespace ucsdscheduleme.Controllers
 
         public IActionResult Index()
         {
-
             ScheduleViewModel model;
-            return View(new ScheduleViewModel());
 
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
@@ -39,8 +37,8 @@ namespace ucsdscheduleme.Controllers
             if (user == null)
                 return View();
 #endif
-                // Grab schedule from db.
-                List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
+            // Grab schedule from db.
+            List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
 
             // Populate model with schedule info.
             if (schedule != null)
@@ -74,10 +72,21 @@ namespace ucsdscheduleme.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult GenerateSchedule(Course[] courses, Optimization optimization)
+        [HttpPost]
+        public IActionResult GenerateSchedule([FromBody] CourseInfoToSchedule courseInfo)
         {
-            // Used to return a list courses. 
-       
+            Course[] courses = _context.Courses
+                .Include(c => c.Sections)
+                    .ThenInclude(s => s.Professor)
+                .Include(c => c.Sections)
+                    .ThenInclude(s => s.Meetings)
+                        .ThenInclude(m => m.Location)
+                .Include(c => c.Cape)
+                    .ThenInclude(ca => ca.Professor)
+                        .ThenInclude(p => p.RateMyProfessor)
+                .Where(c => courseInfo.CourseIds.Contains(c.Id)).ToArray();
+            Optimization optimization = courseInfo.Optimization;
+
             var scheduleRepo = new ScheduleRepo();
 
             // Call the schedule finding algorithm.
@@ -98,9 +107,9 @@ namespace ucsdscheduleme.Controllers
             var suggestedCourses = _context.Courses.AsNoTracking()
                                       .Where(c => c.CourseAbbreviation.ToUpper().Contains(search.Input.ToUpper()));
 
-            if(search.AlreadyAddedCourses != null)
+            if (search.AlreadyAddedCourses != null)
             {
-                suggestedCourses = suggestedCourses.Where(s => !search.AlreadyAddedCourses.Contains(s.Id) );
+                suggestedCourses = suggestedCourses.Where(s => !search.AlreadyAddedCourses.Contains(s.Id));
             }
 
             var suggestions = suggestedCourses.Take(3)

@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using ucsdscheduleme.Models;
 using ucsdscheduleme.Repo;
+using ucsdscheduleme.Data;
 
 namespace ucsdscheduleme.Controllers
 {
     public class ScrapeController : Controller
     {
+        private readonly ScheduleContext _context;
+        // Sending in context to files in /repo.
+        public ScrapeController(ScheduleContext context)
+        {
+            _context = context;
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -23,14 +31,14 @@ namespace ucsdscheduleme.Controllers
         {
 
             // Scrape a single cape at specified URL by calling code in repo folder
-            ScrapeRepo scrapeRepo = new ScrapeRepo();
+            //CapeScrape scrapeRepo = new CapeScrape();
             switch (scrape.ScrapeSite)
             {
                 case ScrapeSite.Cape:
-                    scrape.ScrapeResults = scrapeRepo.ScrapeCape(scrape.Url);
+                    //scrape.ScrapeResults = scrapeRepo.InsertDataFromHtmlPage(scrape.Url);
                     break;
                 case ScrapeSite.RateMyProfessor:
-                    scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
+                    //scrape.ScrapeResults = scrapeRepo.ScrapeRateMyProf(scrape.Url);
                     break;
             }
 

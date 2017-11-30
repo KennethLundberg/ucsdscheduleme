@@ -41,7 +41,7 @@ namespace ucsdscheduleme.Repo
 
                 model.Courses.Add(course.Id,thisCourse);
 
-                var baseSectionGroups = course.Sections.GroupBy(s => s.Meetings.First().Code[0]);
+                var baseSectionGroups = course.Sections.GroupBy(s => s.Meetings.First(m => !IsOneTimeEvent(m.MeetingType)).Code[0]);
                 foreach (var baseSectionGroup in baseSectionGroups)
                 {
                     var baseForCourse = PopulateBaseForCourse(baseSectionGroup.ToList());
@@ -69,7 +69,6 @@ namespace ucsdscheduleme.Repo
             List<OneTimeEvent> oneTimeEvents = PopulateOneTimeEvents(sectionsForBase, course);
             thisBase.OneTimeEvents = oneTimeEvents;
 
-
             Section firstSection = sectionsForBase[0];
             List<CalendarEvent> baseEvents = PopulateBaseEvents(firstSection, course);
             thisBase.BaseEvents = baseEvents;
@@ -92,7 +91,7 @@ namespace ucsdscheduleme.Repo
             foreach (var section in sectionsForBase)
             {
                 List<CalendarEvent> thisSectionsEvents = new List<CalendarEvent>();
-                var sectionSpecificMeetings = section.Meetings.Where(m => m.SectionId != null);
+                var sectionSpecificMeetings = section.Meetings.Where(m => m.IsUnique && !IsOneTimeEvent(m.MeetingType));
                 foreach (var meeting in sectionSpecificMeetings)
                 {
                     AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, section.Professor.Name, meeting);
@@ -115,7 +114,7 @@ namespace ucsdscheduleme.Repo
             // by all classes in this base.
             var baseMeetings = firstSection
                                     .Meetings
-                                    .Where(m => m.SectionId == null);
+                                    .Where(m => !m.IsUnique && !IsOneTimeEvent(m.MeetingType));
 
             List<CalendarEvent> baseEvents = new List<CalendarEvent>();
             foreach (var baseMeeting in baseMeetings)
@@ -169,15 +168,21 @@ namespace ucsdscheduleme.Repo
         /// <returns>Populated metadata containing information for the base of the section.</returns>
         private static Metadata AddMetadata(Section section)
         {
-            var capeForSection = section.Course.Cape.First(ca => ca.Professor == section.Professor);
+            var capeForSection = section.Course.Cape.FirstOrDefault(ca => ca.Professor == section.Professor);
 
+            var rateMyProfessor = section.Professor.RateMyProfessor;
+
+            string professorString = (capeForSection == null) ? $"{section.Professor.Name} (Capes Unknown)" 
+                                                              : section.Professor.Name;
             return new Metadata
             {
-                AverageGpaExpected = capeForSection.AverageGradeExpected,
-                AverageGpaReceived = capeForSection.AverageGradeReceived,
-                AverageTotalWorkload = capeForSection.StudyHoursPerWeek,
+                AverageGpaExpected = capeForSection?.AverageGradeExpected ?? 0M,
+                AverageGpaReceived = capeForSection?.AverageGradeReceived ?? 0M,
+                AverageWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
-                ProfessorName = section.Professor.Name
+                ProfessorName = professorString,
+                Quality = rateMyProfessor.OverallQuality,
+                Difficulty = rateMyProfessor.LevelOfDifficulty
             };
         }
 

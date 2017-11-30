@@ -10,7 +10,7 @@
                 <div id="monday" class="schedule-group">
                     <div class="schedule-header"><span>Monday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lecture"><div class="class-icon-label">LE</div></div>
                             <div class="event-info">
@@ -25,7 +25,7 @@
                 <div id="tuesday" class="schedule-group">
                     <div class="schedule-header"><span>Tuesday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -40,7 +40,7 @@
                 <div id="wednesday" class="schedule-group">
                     <div class="schedule-header"><span>Wednesday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="discussion"><div class="class-icon-label">DI</div></div>
                             <div class="event-info">
@@ -55,7 +55,7 @@
                 <div id="thursday" class="schedule-group">
                     <div class="schedule-header"><span>Thursday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -70,7 +70,7 @@
                 <div id="friday" class="schedule-group">
                     <div class="schedule-header"><span>Friday</span></div>
                     <div class="event">
-                        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+                        <div class="edit-button"><span >Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
                         <div class="event-header">
                             <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
                             <div class="event-info">
@@ -229,18 +229,18 @@
         <div class="class-list" id="class-list">
         </div>
         <div class="generate-schedule-container">
-            <select style="width: 100%;">
-                <option selected="selected">Select Schedule Preference</option>
-                <option>Most Gaps</option>
-                <option>Fewest Gaps</option>
-                <option>Most Days</option>
-                <option>Fewest Days</option>
-                <option>Highest GPA</option>
-                <option>Highest Rate My Professor</option>
-                <option>Earliest Start</option>
-                <option>Latest Start</option>
+            <select id="optimization" style="width: 100%;">
+                <option value="-1" selected="selected">Select Schedule Preference</option>
+                <option value="0">Most Gaps</option>
+                <option value="1">Fewest Gaps</option>
+                <option value="2">Most Days</option>
+                <option value="3">Fewest Days</option>
+                <option value="4">Highest GPA</option>
+                <option value="5">Highest Rate My Professor</option>
+                <option value="6">Earliest End</option>
+                <option value="7">Latest Start</option>
             </select>
-            <div class="generate-schedule-button" onclick="setup()"></div>
+            <div class="generate-schedule-button" onclick="generateSchedule()"></div>
         </div>
     </div>
 
@@ -249,19 +249,19 @@
             <table id="tabledata">
                 <tr>
                     <td>Overall Avg. Workload</td>
-                    <td>29.9 Hr/wk</td>
+                    <td id="overall-workload">29.9 Hr/wk</td>
                 </tr>
-                <tr>
+                <tr> 
                     <td>Overall Avg. GPA Expected</td>
-                    <td>B+ (3.34)</td>
+                    <td id="gpa-expected">B+ (3.34)</td>
                 </tr>
                 <tr>
                     <td>Overall Avg. Received</td>
-                    <td>B- (2.99)</td>
+                    <td id="gpa-received">B- (2.99)</td>
                 </tr>
             </table>
         </div>
-        <div class="course-stat-container">
+        <div class="course-stat-container" id="course-stat-container">
             <div class="course-stat" id="course1">
                 <div class="course-name">CSE 110</div>
                 <div class="professor-name">Gary Gillespie</div>
@@ -353,13 +353,13 @@
             customEvent: "@Url.Action("CreateCustomEvent", "Home")"
         },
 	    coursesToSchedule: [],
-        courses: [],
-        metadata: []
+        courses: []
     };
 
+    var isEditing = false;
 
     (function () {
-        var search = document.getElementById("search");
+    	var search = document.getElementById("search");
         search.addEventListener("input", typeAhead);
 
 
@@ -393,7 +393,7 @@
 	        }
         }
 
-        document.addEventListener('click', function (e) {
+	    document.addEventListener('click',function(e) {
             if (e.target) {
                 if (e.target.classList.contains("courseItem")) {
                     //call addList
@@ -402,7 +402,52 @@
                     removeCourse(e);
                 }
             }
-        });
 
+	        // clicked on a calendar event
+	        var outerDiv = findOuterDiv(e.target, 'event'); 
+	        if(e.target && outerDiv) {
+	        	// currently editing AND event is activated
+	        	if(isEditing && outerDiv.classList.contains('event-activated')) {
+        			updateEvent(outerDiv);
+        		}
+	        }
+
+	        // clicked on change button
+	        if(e.target && (e.target.classList.contains('fa-cog') || e.target.classList.contains('edit-span'))) {
+	        	// only allow changes if currently not editing
+	        	if(!isEditing) {
+	        		changeSchedule(outerDiv);
+	        		isEditing = true;
+	        		hideEditButtons();
+	        	}
+	        }
+
+	        if(isEditing) {
+	        	var activatedEvents = document.getElementsByClassName('event-activated');
+	        	for(var i = 0; i < activatedEvents.length; i++) {
+	        		var activatedEvent = activatedEvents.item(i);
+		        	activatedEvent.addEventListener('mouseenter', function(e) {
+		        		var hoverEvent = findOuterDiv(e.target, 'event');
+				    	if(e.target && hoverEvent) {
+				        	// currently editing AND event is activated
+				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
+				        		activateSelectedBasesAndSections(hoverEvent);
+			        		}
+				        }
+				    });
+
+				    activatedEvent.addEventListener('mouseleave', function(e) {
+				    	if(e.target && findOuterDiv(e.target, 'event')) {
+				        	// currently editing AND event is activated
+				        	var hoverEvent = findOuterDiv(e.target, 'event');
+				        	if(isEditing && hoverEvent.classList.contains('event-activated')) {
+				        		reactivateAllBasesAndAllSections(hoverEvent);
+			        		}
+				    	}
+				    });
+		        }
+		    }
+	        
+        });
     })();
 </script>
