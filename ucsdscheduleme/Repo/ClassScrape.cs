@@ -409,7 +409,7 @@ namespace HtmlAgilitySandbox
 
                             // Check for edge case where professor field is empty, so we use the previous professor.
                             HtmlNode instrNode = daysNode.NextSibling.NextSibling?.SelectSingleNode(ActStrings.AnchorChildNode) ?? daysNode.NextSibling.NextSibling;
-                            currentProf = instrNode.InnerText;
+                            currentProf = instrNode.InnerText.Trim();
                         }
                         // Class is cancelled so continue to next node.
                         else if (daysNode.InnerText.Contains("Cancelled")) continue;
@@ -571,9 +571,19 @@ namespace HtmlAgilitySandbox
             // Add courses to db and save.
             foreach (Course course in courseList)
             {
-                _context.Courses.Add(course);
+                try
+                {
+                    _context.Courses.Add(course);
+                    _context.SaveChanges(); // TODO REMOVE LATER
+                }
+                catch (Exception ex)
+                {
+                    //var logger = services.GetRequiredService<ILogger<Program>>();
+                    //logger.LogError(ex, "An error occurred while seeding the database.");
+                    Console.WriteLine(ex);
+                }
             }
-            _context.SaveChanges();
+            //_context.SaveChanges();
         }
 
         /// <summary>
@@ -609,6 +619,8 @@ namespace HtmlAgilitySandbox
                     return MeetingType.Tutorial;
                 case "PB":
                     return MeetingType.ProblemSession;
+                case "FW":
+                    return MeetingType.Fieldwork;
                 default:
                     throw new FormatException(meetingType);
 

@@ -36,16 +36,16 @@ namespace ucsdscheduleme.Repo
                 classScraper.Update();
             }*/
 
-            ClassScrape classScraper = new ClassScrape(_context, "WI18", "cse 1-190");
+            ClassScrape classScraper = new ClassScrape(_context, "WI18", "COMM 1-190");
             classScraper.Update();
 
             // Scraping the rate my professor page for all professor in the db
-            RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(_context);
-            scrapeRMP.Update();
+            //RateMyProfessorScrape scrapeRMP = new RateMyProfessorScrape(_context);
+            //scrapeRMP.Update();
 
             // Scraping the cape website for each professor and course combo in db
-            CapeScrape scrapeCape = new CapeScrape(_context);
-            scrapeCape.Update();
+            //CapeScrape scrapeCape = new CapeScrape(_context);
+            //scrapeCape.Update();
         }
 
         /// <summary>

@@ -14,12 +14,11 @@ namespace ucsdscheduleme.Data
         public static void Initialize(ScheduleContext context)
         {
             // TODO put back before commiting
-            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            if(context.Courses.Any())
+            /*if(context.Courses.Any())
             {
                 return;
-            }
+            }*/
 
             // Calling the Scraping Controller
             ScrapeRepo scrapeAll = new ScrapeRepo(context);
