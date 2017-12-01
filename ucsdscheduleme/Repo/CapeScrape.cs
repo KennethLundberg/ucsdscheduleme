@@ -92,7 +92,7 @@ namespace ucsdscheduleme.Repo
                             // Check if we already have the cape for specific professor and course
                             foreach (Cape tempCape in course.Cape)
                             {
-                                if(tempCape.Professor == currProfessor)
+                                if (tempCape.Professor == currProfessor)
                                 {
                                     newCapeReview = tempCape;
                                     addToDb = false;
@@ -100,7 +100,7 @@ namespace ucsdscheduleme.Repo
                             }
 
                             // If no cape found then make a new one
-                            if(newCapeReview == null)
+                            if (newCapeReview == null)
                             {
                                 newCapeReview = new Cape();
                             }
@@ -199,8 +199,11 @@ namespace ucsdscheduleme.Repo
             string fullScrapedCourse = (crseNameNode != null) ? crseNameNode.InnerText : "N/A";
             string[] splitCourse = fullScrapedCourse.Split(" ");
 
-            string courseName = splitCourse[0] + " " + splitCourse[1];
+            // Cape is too old to scrape
+            if (splitCourse.Length < 2)
+                return null;
 
+            string courseName = splitCourse[0] + " " + splitCourse[1];
             // Check if we're looking at the right course scrape
             if (CourseName != courseName)
                 return null;
@@ -251,8 +254,8 @@ namespace ucsdscheduleme.Repo
             else
             {
                 avgGradeExpected = (avgGradeExpectedCheck.Substring(avgGradeExpectedCheck.IndexOf("(")));
-                avgGradeExpected = avgGradeExpected.Replace("(","");
-                avgGradeExpected = avgGradeExpected.Replace(")","");
+                avgGradeExpected = avgGradeExpected.Replace("(", "");
+                avgGradeExpected = avgGradeExpected.Replace(")", "");
             }
 
             // Gather average grade received, if valid only grabs letter grade portion of string
@@ -266,8 +269,8 @@ namespace ucsdscheduleme.Repo
             else
             {
                 avgGradeReceived = (avgGradeReceivedCheck.Substring(avgGradeReceivedCheck.IndexOf('(')));
-                avgGradeReceived = avgGradeReceived.Replace("(","");
-                avgGradeReceived = avgGradeReceived.Replace(")","");
+                avgGradeReceived = avgGradeReceived.Replace("(", "");
+                avgGradeReceived = avgGradeReceived.Replace(")", "");
             }
 
             // Make a scrapeResult object to store the result
