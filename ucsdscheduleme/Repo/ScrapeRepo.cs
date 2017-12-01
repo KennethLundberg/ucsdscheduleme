@@ -36,7 +36,7 @@ namespace ucsdscheduleme.Repo
                 classScraper.Update();
             }*/
 
-            ClassScrape classScraper = new ClassScrape(_context, "WI18", "COMM 1-190");
+            ClassScrape classScraper = new ClassScrape(_context, "WI18", "EAP 1-190");
             classScraper.Update();
 
             // Scraping the rate my professor page for all professor in the db

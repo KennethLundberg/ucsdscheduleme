@@ -621,6 +621,8 @@ namespace HtmlAgilitySandbox
                     return MeetingType.ProblemSession;
                 case "FW":
                     return MeetingType.Fieldwork;
+                case "SA":
+                    return MeetingType.StudyAbroad;
                 default:
                     throw new FormatException(meetingType);
 
