@@ -298,51 +298,48 @@
                 <div class="course-info">Avg. Grade Received: F- (0.00)</div>
             </div>
         </div>
-        <div class="logout-button" onclick="visibility_on('friend-form');">Add Friend</div>
+        <div class="button" onclick="visibility_on('friend-form');">Add Custom Event</div>
         <div class="logout-button"></div>
     </div>
 </div>
 
-<div style="display:none; position:absolute; left:20%; top:20%; width:60%; height:60%; min-height:10px; min-width:10px; z-index:9; background-color:pink;" id="friend-form">
-    <div>
-        <span>Event Name: </span>
-        <input type="text" maxlength="10" placeholder="i.e. Work" id="custom-event-name" />
+<div class="custom-event-modal" id="friend-form">
+    <div id="custom-event-wrapper">
+        <div id="custom-event-name-wrapper">
+            <input type="text" maxlength="10" placeholder="Event Name" id="custom-event-name" />
+        </div>
+        <div>
+            <div id="custom-event-time-wrapper">
+                <input type="time" id="custom-event-starttime" min="07:30" max="23:15"/>
+                <span> to </span>
+                <input type="time" id="custom-event-endtime" min="7:45" max="23:30" />
+            </div>
+        </div>
+        <div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-monday" />
+                <span>Mon</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-tuesday" />
+                <span>Tue</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-wednesday" />
+                <span>Wed</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-thursday" />
+                <span>Thu</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-friday" />
+                <span>Fri</span>
+            </div>
+        </div>
+        <div class="custom-event-button" onclick="saveCustomEvent();">Save</div>
+        <div class="custom-event-button" onclick="cancelCustomEvent();">Cancel</div>
     </div>
-    <div>
-        <div>Days: </div>
-        <div>
-            <input type="checkbox" id="custom-event-monday" />
-            <span>Monday</span>
-        </div>
-        <div>
-            <input type="checkbox" id="custom-event-tuesday" />
-            <span>Tueday</span>
-        </div>
-        <div>
-            <input type="checkbox" id="custom-event-wednesday" />
-            <span>Wednesday</span>
-        </div>
-        <div>
-            <input type="checkbox" id="custom-event-thursday" />
-            <span>Thursday</span>
-        </div>
-        <div>
-            <input type="checkbox" id="custom-event-friday" />
-            <span>Friday</span>
-        </div>
-    </div>
-    <div>
-        <div>
-            <span>Start Time: </span>
-            <input type="time" id="custom-event-starttime" min="07:30" />
-        </div>
-        <div>
-            <span>End Time: </span>
-            <input type="time" id="custom-event-endtime" max="23:00" />
-        </div>
-    </div>
-    <div class="logout-button" onclick="saveCustomEvent();">Save</div>
-    <div class="logout-button" onclick="cancelCustomEvent();">Cancel</div>
 </div>
 
 <script>
