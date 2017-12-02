@@ -149,6 +149,7 @@ namespace ucsdscheduleme.Repo
                 if ( delay % 100 == 0)
                 {
                     System.Threading.Thread.Sleep(10000);
+                    _context.SaveChanges();
                 }
             }
 

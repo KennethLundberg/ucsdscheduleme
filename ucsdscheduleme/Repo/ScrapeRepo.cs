@@ -44,8 +44,8 @@ namespace ucsdscheduleme.Repo
             //scrapeRMP.Update();
 
             // Scraping the cape website for each professor and course combo in db
-            //CapeScrape scrapeCape = new CapeScrape(_context);
-            //scrapeCape.Update();
+            CapeScrape scrapeCape = new CapeScrape(_context);
+            scrapeCape.Update();
         }
 
         /// <summary>

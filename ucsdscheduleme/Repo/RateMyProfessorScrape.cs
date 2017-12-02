@@ -61,6 +61,15 @@ namespace ucsdscheduleme.Repo
                     professor.RateMyProfessor = new RateMyProfessor();
                 }
 
+                // Quick fix for the only weird professor : William Arctander O'Brien
+                // character " ' " results in weird characters in the last name
+                if (professor.Name.Contains("O&#039;Brien"))
+                    continue;
+                ////////////////////////////////////////////////////////////////////
+
+
+
+
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
                 if (rateMyProfURL.Length != 0)
@@ -84,11 +93,12 @@ namespace ucsdscheduleme.Repo
                 if (delay % 100 == 0 )
                 {
                     System.Threading.Thread.Sleep(10000);
+                    //_context.SaveChanges();
                 }
             }
 
             // Save changes made in the database
-            _context.SaveChanges();
+           // _context.SaveChanges();
 
         }
 
@@ -102,15 +112,18 @@ namespace ucsdscheduleme.Repo
             // Split the name to get first and last name
             string[] names = ProfName.Split(",");
 
-            // If the professor's name is staff, then there is no RMP page!
-            if (names[0] == "Staff")
+            // If the professor's name is staff or empty, then there is no RMP page!
+            if (names[0] == "Staff" || names[0]=="")
             {
                 return ("");
             }
 
+            
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
+
+
 
             // Need to add edge cases; when there are muntiple first and last names in the act and RMP.
 
