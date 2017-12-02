@@ -123,7 +123,7 @@ namespace ucsdscheduleme.Controllers
         [HttpPost]
         public IActionResult CreateCustomEvent([FromBody] CustomEvent data)
         {
-            var user = _userManager.GetUserAsync(User).Result;
+            //var user = _userManager.GetUserAsync(User).Result;
 
             Days days = 0;
 
@@ -147,7 +147,7 @@ namespace ucsdscheduleme.Controllers
                 days = days & Days.Friday;
             }
 
-            string[] startTokens = data.startTime.Split(':');///////////////////
+            string[] startTokens = data.startTime.Split(':');
             string[] endTokens = data.endTime.Split(':');
 
             var startHr = Int32.Parse(startTokens[0]);
@@ -157,8 +157,8 @@ namespace ucsdscheduleme.Controllers
 
             var course = new Course() {
                 CourseAbbreviation = data.name,
-                UserId = user.Id,
-                User = user///////////////////////////
+                //UserId = user.Id,
+                //User = user///////////////////////////
             };
 
             var section = new Section() {
@@ -179,11 +179,11 @@ namespace ucsdscheduleme.Controllers
                 Section = section,
                 SectionId = 
                 section.Id,
-                User = user,
-                UserId = user.Id
+                //User = user,
+                //UserId = user.Id
             };
 
-            user.UserSections.Add(userSection);
+            //user.UserSections.Add(userSection);
 
             return View();
         }

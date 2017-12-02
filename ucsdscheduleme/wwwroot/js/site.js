@@ -1310,6 +1310,8 @@ function saveCustomEvent() {
     customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
     cancelCustomEvent();
+
+    //generate schedule
 }
 
 function cancelCustomEvent() {
