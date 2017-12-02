@@ -158,7 +158,7 @@ namespace ucsdscheduleme.Controllers
             var course = new Course() {
                 CourseAbbreviation = data.name,
                 //UserId = user.Id,
-                //User = user///////////////////////////
+                //User = user
             };
 
             var section = new Section() {
@@ -185,7 +185,9 @@ namespace ucsdscheduleme.Controllers
 
             //user.UserSections.Add(userSection);
 
-            return View();
+            //add to database
+
+            return Json(course);
         }
     }
 }

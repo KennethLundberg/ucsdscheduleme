@@ -790,6 +790,7 @@ function changeSchedule(event) {
         showBaseAndAllSections(ids);
     }
 }
+
 /**
  * updateSelectedSection
  * @param: sectionId: string
@@ -1279,19 +1280,21 @@ function customEventCallout(n, m, tu, w, th, f, st, et) {
         "startTime": st,
         "endTime": et
     };
+
+    //TODO check valid input
+
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
 
-    // When the text is edited, it clears the search and populates it
+    // generate schedule with new event
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            //var text = JSON.parse(xhr.responseText);
-            //clearSearch();
-
-            //for (i = 0; i < text.length; i++) {
-                //populateSearch(text[i]);
-                //console.log(text[i]);
-            //}
+            var text = JSON.parse(xhr.responseText);
+            //get course id to add to scheduleing
+            myApp.coursesToSchedule.push(text.id);
+            //generate schedule
+            generateSchedule();
+            console.log("ADDED CUSTOM EVENT");
         }
     }
 }
@@ -1307,14 +1310,14 @@ function saveCustomEvent() {
     var endTime = document.getElementById('custom-event-endtime').value;
 
     /*callout function*/
-    customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
+    //customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
-    cancelCustomEvent();
+    closeCustomEvent();
 
     //generate schedule
 }
 
-function cancelCustomEvent() {
+function closeCustomEvent() {
     visibility_off('friend-form');
 
     document.getElementById('custom-event-name').value = document.getElementById('custom-event-name').defaultValue;
