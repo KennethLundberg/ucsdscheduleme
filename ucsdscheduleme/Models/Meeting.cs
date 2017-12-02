@@ -20,7 +20,7 @@ namespace ucsdscheduleme.Models
     }
     public enum MeetingType
     {
-        Lecture, Discussion, Lab, Review, Final, Midterm, Seminar, Practicum, IndependentStudy, Studio, Tutorial, ProblemSession, Fieldwork
+        Lecture, Discussion, Lab, Review, Final, Midterm, Seminar, Practicum, IndependentStudy, Studio, Tutorial, ProblemSession, Fieldwork, StudyAbroad
     }
     public class Meeting
     {

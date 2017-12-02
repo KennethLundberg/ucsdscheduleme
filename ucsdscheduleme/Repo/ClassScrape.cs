@@ -487,6 +487,8 @@ namespace HtmlAgilitySandbox
 
                         // Set test day.
                         HtmlNode testDayNode = testDateNode.NextSibling.NextSibling;
+                        // Check if test is cancelled, else continue grabbing data.
+                        if (testDayNode.InnerText.Contains("Cancelled")) continue;
                         string days = testDayNode.InnerText.Trim();
                         currentMeeting.Days = GetDays(days);
 
