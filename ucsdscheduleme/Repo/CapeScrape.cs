@@ -10,6 +10,10 @@ namespace ucsdscheduleme.Repo
 {
     public class CapeScrape
     {
+
+        // The current class we're scraping
+        private static string CourseName;
+
         private readonly ScheduleContext _context;
         // Sending in context to files in /repo.
         public CapeScrape(ScheduleContext context)
@@ -22,6 +26,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         struct CapeXPaths
         {
+            public static readonly string CourseNamePath = "//*[@id='ctl00_ContentPlaceHolder1_lblCourseDescription']";
             public static readonly string InstrNamePath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblInstructorName')]";
             public static readonly string TermPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblTermCode')]";
             public static readonly string EnrollmentPath = "//span[contains(@id, 'ctl00_ContentPlaceHolder1_lblEnrollment')]";
@@ -79,31 +84,52 @@ namespace ucsdscheduleme.Repo
                         if (capePageURL.Length != 0)
                         {
                             ScrapeResult scrapedCapePage = InsertDataFromHtmlPage(capePageURL);
+                            Cape newCapeReview = null;
+                            // Boolean to keep track if we need to add the cape review to the DB or
+                            // just update
+                            bool addToDb = true;
+
+                            // Check if we already have the cape for specific professor and course
+                            foreach (Cape tempCape in course.Cape)
+                            {
+                                if (tempCape.Professor == currProfessor)
+                                {
+                                    newCapeReview = tempCape;
+                                    addToDb = false;
+                                }
+                            }
+
+                            // If no cape found then make a new one
+                            if (newCapeReview == null)
+                            {
+                                newCapeReview = new Cape();
+                            }
 
                             if (scrapedCapePage != null)
                             {
                                 // Updating the cape review result for professor object
-                                Cape newCapeReview = new Cape()
-                                {
-                                    Term = scrapedCapePage.Term,
-                                    StudentsEnrolled = scrapedCapePage.StudentsEnrolled,
-                                    NumberOfEvaluation = scrapedCapePage.NumberOfEvaluation,
-                                    RecommendedClass = scrapedCapePage.RecommendedClass,
-                                    RecommendedProfessor = scrapedCapePage.RecommendedProfessor,
-                                    StudyHoursPerWeek = scrapedCapePage.StudyHoursPerWeek,
-                                    AverageGradeExpected = scrapedCapePage.AverageGradeExpected,
-                                    AverageGradeReceived = scrapedCapePage.AverageGradeReceived,
-                                    URL = capePageURL
-                                };
+                                newCapeReview.Term = scrapedCapePage.Term;
+                                newCapeReview.StudentsEnrolled = scrapedCapePage.StudentsEnrolled;
+                                newCapeReview.NumberOfEvaluation = scrapedCapePage.NumberOfEvaluation;
+                                newCapeReview.RecommendedClass = scrapedCapePage.RecommendedClass;
+                                newCapeReview.RecommendedProfessor = scrapedCapePage.RecommendedProfessor;
+                                newCapeReview.StudyHoursPerWeek = scrapedCapePage.StudyHoursPerWeek;
+                                newCapeReview.AverageGradeExpected = scrapedCapePage.AverageGradeExpected;
+                                newCapeReview.AverageGradeReceived = scrapedCapePage.AverageGradeReceived;
+                                newCapeReview.URL = capePageURL;
 
                                 // Adding cape review to professor and cource object
-                                currProfessor.Cape.Add(newCapeReview);
-                                course.Cape.Add(newCapeReview);
+                                if (addToDb)
+                                {
+                                    currProfessor.Cape.Add(newCapeReview);
+                                    course.Cape.Add(newCapeReview);
+                                }
                             }
 
                         }
                         else
                         {
+                            // Used to check when and for which tuples did we not find cape reviews.
                             profcourseNotFound.Add(Tuple.Create(currProfessor.Name, course.CourseAbbreviation));
                         }
 
@@ -131,6 +157,8 @@ namespace ucsdscheduleme.Repo
             // Generate url to access search results 
             string searchResultsUrl = @"http://cape.ucsd.edu/responses/Results.aspx?Name=" + professorName
                         + "&CourseNumber=" + courseName;
+
+            CapeScrape.CourseName = courseName;
 
             // Load the search result page
             HtmlWeb web = new HtmlWeb();
@@ -165,6 +193,20 @@ namespace ucsdscheduleme.Repo
             // HTML read from url and assign into var htmlDoc
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(Url);
+
+            // Get the course name 
+            HtmlNode crseNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.CourseNamePath);
+            string fullScrapedCourse = (crseNameNode != null) ? crseNameNode.InnerText : "N/A";
+            string[] splitCourse = fullScrapedCourse.Split(" ");
+
+            // Cape is too old to scrape
+            if (splitCourse.Length < 2)
+                return null;
+
+            string courseName = splitCourse[0] + " " + splitCourse[1];
+            // Check if we're looking at the right course scrape
+            if (CourseName != courseName)
+                return null;
 
             // Gather professor and check for null return
             HtmlNode instrNameNode = htmlDoc.DocumentNode.SelectSingleNode(CapeXPaths.InstrNamePath);
@@ -212,8 +254,8 @@ namespace ucsdscheduleme.Repo
             else
             {
                 avgGradeExpected = (avgGradeExpectedCheck.Substring(avgGradeExpectedCheck.IndexOf("(")));
-                avgGradeExpected = avgGradeExpected.Replace("(","");
-                avgGradeExpected = avgGradeExpected.Replace(")","");
+                avgGradeExpected = avgGradeExpected.Replace("(", "");
+                avgGradeExpected = avgGradeExpected.Replace(")", "");
             }
 
             // Gather average grade received, if valid only grabs letter grade portion of string
@@ -227,8 +269,8 @@ namespace ucsdscheduleme.Repo
             else
             {
                 avgGradeReceived = (avgGradeReceivedCheck.Substring(avgGradeReceivedCheck.IndexOf('(')));
-                avgGradeReceived = avgGradeReceived.Replace("(","");
-                avgGradeReceived = avgGradeReceived.Replace(")","");
+                avgGradeReceived = avgGradeReceived.Replace("(", "");
+                avgGradeReceived = avgGradeReceived.Replace(")", "");
             }
 
             // Make a scrapeResult object to store the result
