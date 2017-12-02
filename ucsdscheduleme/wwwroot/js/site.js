@@ -538,6 +538,7 @@ function clearAllMeetings()
         elements[0].parentNode.removeChild(elements[0]);
     }
 }
+
 function clearMeetings(className)
 {
     /* retrieve elements with class 'event' */
@@ -795,6 +796,7 @@ function changeSchedule(event) {
         showBaseAndAllSections(ids);
     }
 }
+
 /**
  * updateSelectedSection
  * @param: sectionId: string
@@ -1003,7 +1005,7 @@ function insertMetadata(metadata) {
     professorName.innerHTML = metadata.professorName;
 
     var rateMyProfessor = document.createElement('div');
-    rateMyProfessor.className = "course-info";
+    rateMyProfessor.className = "professor-name";
     rateMyProfessor.innerHTML = "Quality: " + metadata.quality + " Difficulty: " + metadata.difficulty;
 
     //average work load
@@ -1082,11 +1084,10 @@ function updateOverallMetadata(courses) {
     }
 
     //calculating averages
-    overallWorkload /= numCourses;
     overallExpectedGpa /= numCourses;
     overallReceivedGpa /= numCourses;
 
-    document.getElementById("overall-workload").innerHTML = convertGPAToStringFormat(overallWorkload.toFixed(2));
+    document.getElementById("overall-workload").innerHTML = overallWorkload.toFixed(2) + " Hr/wk";
     document.getElementById("gpa-expected").innerHTML = convertGPAToStringFormat(overallExpectedGpa.toFixed(2));
     document.getElementById("gpa-received").innerHTML = convertGPAToStringFormat(overallReceivedGpa.toFixed(2));
 }
