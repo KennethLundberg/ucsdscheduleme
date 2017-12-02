@@ -181,8 +181,8 @@ namespace ucsdscheduleme.Repo
                 AverageWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
                 ProfessorName = professorString,
-                Quality = rateMyProfessor.OverallQuality,
-                Difficulty = rateMyProfessor.LevelOfDifficulty
+                Quality = rateMyProfessor?.OverallQuality ?? 0M,
+                Difficulty = rateMyProfessor?.LevelOfDifficulty ?? 0M
             };
         }
 
