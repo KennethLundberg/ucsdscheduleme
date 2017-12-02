@@ -1289,11 +1289,12 @@ function customEventCallout(n, m, tu, w, th, f, st, et) {
     // generate schedule with new event
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            var text = JSON.parse(xhr.responseText);
+            //var text = JSON.parse(xhr.responseText);
             //get course id to add to scheduleing
-            myApp.coursesToSchedule.push(text.id);
+            //myApp.coursesToSchedule.push(text.id);
+            //addList(text.id);
             //generate schedule
-            generateSchedule();
+            //generateSchedule();
             console.log("ADDED CUSTOM EVENT");
         }
     }
@@ -1313,8 +1314,6 @@ function saveCustomEvent() {
     //customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
     closeCustomEvent();
-
-    //generate schedule
 }
 
 function closeCustomEvent() {
