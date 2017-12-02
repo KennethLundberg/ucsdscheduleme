@@ -61,6 +61,9 @@ namespace ucsdscheduleme.Repo
             // List of professor and courses that do not have cape review
             List<Tuple<string, string>> profcourseNotFound = new List<Tuple<string, string>>();
 
+            // Keep track of number of course we scrape 
+            int delay = 0;
+
             // Iterate over all the courses we recieved from the database
             foreach (var course in courses)
             {
@@ -139,6 +142,13 @@ namespace ucsdscheduleme.Repo
                         }
 
                     }
+                }
+
+                // After every 100 courses scraped, wait for 10 seconds 
+                delay++;
+                if ( delay % 100 == 0)
+                {
+                    System.Threading.Thread.Sleep(10000);
                 }
             }
 
