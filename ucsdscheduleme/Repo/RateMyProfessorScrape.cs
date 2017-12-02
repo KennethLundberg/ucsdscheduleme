@@ -98,7 +98,7 @@ namespace ucsdscheduleme.Repo
             }
 
             // Save changes made in the database
-           // _context.SaveChanges();
+           _context.SaveChanges();
 
         }
 
