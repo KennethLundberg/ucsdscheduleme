@@ -119,5 +119,73 @@ namespace ucsdscheduleme.Controllers
 
             return Json(suggestions);
         }
+
+        [HttpPost]
+        public IActionResult CreateCustomEvent([FromBody] CustomEvent data)
+        {
+            //var user = _userManager.GetUserAsync(User).Result;
+
+            Days days = 0;
+
+            if(data.monday == true) {
+                days = days & Days.Monday;
+            }
+            if (data.tuesday == true)
+            {
+                days = days & Days.Tuesday;
+            }
+            if (data.wednesday == true)
+            {
+                days = days & Days.Wednesday;
+            }
+            if (data.thursday == true)
+            {
+                days = days & Days.Thursday;
+            }
+            if (data.friday == true)
+            {
+                days = days & Days.Friday;
+            }
+
+            string[] startTokens = data.startTime.Split(':');
+            string[] endTokens = data.endTime.Split(':');
+
+            var startHr = Int32.Parse(startTokens[0]);
+            var startMin = Int32.Parse(startTokens[1]);
+            var endHr = Int32.Parse(endTokens[0]);
+            var endMin = Int32.Parse(endTokens[1]);
+
+            var course = new Course() {
+                CourseAbbreviation = data.name,
+                //UserId = user.Id,
+                //User = user///////////////////////////
+            };
+
+            var section = new Section() {
+                Course = course
+            };
+
+            var meeting = new Meeting() {
+                Days = days,
+                StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
+                EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
+            };
+
+            //add to db
+            section.Meetings.Add(meeting);
+            course.Sections.Add(section);
+
+            var userSection = new UserSection() {
+                Section = section,
+                SectionId = 
+                section.Id,
+                //User = user,
+                //UserId = user.Id
+            };
+
+            //user.UserSections.Add(userSection);
+
+            return View();
+        }
     }
 }

@@ -68,7 +68,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            startTimeInMinutesAfterFirstHour: (10 * 60 + 30),
                             durationInMinutes: 110,
                             timespan: "6:00pm - 7:50pm",
                             day: "tuesday"
@@ -80,7 +80,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            startTimeInMinutesAfterFirstHour: (11 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "7:00pm - 8:50pm",
                             day: "tuesday"
@@ -147,7 +147,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            startTimeInMinutesAfterFirstHour: (10 * 60 + 30),
                             durationInMinutes: 110,
                             timespan: "6:00pm - 7:50pm",
                             day: "thursday"
@@ -159,14 +159,14 @@ var testCourses = {
                             courseAbbreviation: "CSE 101",
                             professor: "Miles, Jones",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            startTimeInMinutesAfterFirstHour: (11 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "7:00pm - 8:50pm",
                             day: "monday"
                         }
                     ]
                 },
-                "metadata" : {
+                "metadata": {
                     //the actual object here
                 }
             }
@@ -184,7 +184,7 @@ var testCourses = {
                         "date": "Thursday 12/6",
                         "time": "7:00PM-10:00PM",
                         "location": "WARREN LECTURE HALL 123",
-                        "type" : "FI"
+                        "type": "FI"
                     },
                     {
                         "courseAbbreviation": "CSE 100",
@@ -200,7 +200,7 @@ var testCourses = {
                         courseAbbreviation: "CSE 100",
                         professor: "Alvarado, Christine",
                         code: "A00",
-                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        startTimeInMinutesAfterFirstHour: (3 * 60 + 1 * 30),
                         durationInMinutes: 80,
                         timespan: "11:0am-12:20pm",
                         day: "tuesday"
@@ -210,7 +210,7 @@ var testCourses = {
                         courseAbbreviation: "CSE 100",
                         professor: "Alvarado, Christine",
                         code: "A00",
-                        startTimeInMinutesAfterFirstHour: (3*60+1*30),
+                        startTimeInMinutesAfterFirstHour: (3 * 60 + 1 * 30),
                         durationInMinutes: 80,
                         timespan: "11:0am-12:20pm",
                         day: "thursday"
@@ -224,7 +224,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Alvarado, Christine",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (10*60+30),
+                            startTimeInMinutesAfterFirstHour: (10 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "6:00pm - 6:50pm",
                             day: "friday"
@@ -236,7 +236,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Alvarado, Christine",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (11*60+30),
+                            startTimeInMinutesAfterFirstHour: (11 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "7:00pm - 8:50pm",
                             day: "monday"
@@ -244,7 +244,7 @@ var testCourses = {
                     ]
                 },
                 "metadata": [
-                
+
                 ]
             },
             "B": {
@@ -270,7 +270,7 @@ var testCourses = {
                         courseAbbreviation: "CSE 100",
                         professor: "Alvarado, Christine",
                         code: "A00",
-                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        startTimeInMinutesAfterFirstHour: (5 * 60 + 1 * 30),
                         durationInMinutes: 80,
                         timespan: "12:00pm-1:20pm",
                         day: "tuesday"
@@ -280,7 +280,7 @@ var testCourses = {
                         courseAbbreviation: "CSE 100",
                         professor: "Alvarado, Christine",
                         code: "A00",
-                        startTimeInMinutesAfterFirstHour: (5*60+1*30),
+                        startTimeInMinutesAfterFirstHour: (5 * 60 + 1 * 30),
                         durationInMinutes: 80,
                         timespan: "12:00pm-1:20pm",
                         day: "thursday"
@@ -294,7 +294,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Alvarado, Christine",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (9*60+30),
+                            startTimeInMinutesAfterFirstHour: (9 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "5:00pm - 5:50pm",
                             day: "thursday"
@@ -306,14 +306,14 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Alvarado, Christine",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (8*60+30),
+                            startTimeInMinutesAfterFirstHour: (8 * 60 + 30),
                             durationInMinutes: 50,
                             timespan: "4:00pm - 4:50pm",
                             day: "monday"
                         }
                     ]
                 },
-                "metadata" : {
+                "metadata": {
                     //the actual object here
                 }
             }
@@ -340,7 +340,7 @@ var testCourses = {
                         courseAbbreviation: "CSE 100",
                         professor: "Gillespie, Gary",
                         code: "A00",
-                        startTimeInMinutesAfterFirstHour: (9*60+1*30),
+                        startTimeInMinutesAfterFirstHour: (9 * 60 + 1 * 30),
                         durationInMinutes: 170,
                         timespan: "5:00pm-7:50pm",
                         day: "tuesday"
@@ -354,7 +354,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Gillespie, Gary",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (5*60+30),
+                            startTimeInMinutesAfterFirstHour: (5 * 60 + 30),
                             durationInMinutes: 170,
                             timespan: "5:00pm - 7:50pm",
                             day: "wednesday"
@@ -366,7 +366,7 @@ var testCourses = {
                             courseAbbreviation: "CSE 100",
                             professor: "Gillespie, Gary",
                             code: "A01",
-                            startTimeInMinutesAfterFirstHour: (1*60+30),
+                            startTimeInMinutesAfterFirstHour: (1 * 60 + 30),
                             durationInMinutes: 170,
                             timespan: "9:00am - 11:50am",
                             day: "monday"
@@ -374,12 +374,12 @@ var testCourses = {
                     ]
                 },
                 "metadata": [
-                
+
                 ]
             }
         }
     }
-    
+
 }
 
 /**
@@ -396,7 +396,7 @@ function setup() {
 }
  
 /* called when DOM is ready */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     setup();
 });
 
@@ -452,11 +452,9 @@ function typeAhead(e) {
 /**
  * Clears the courses from the drop down.
  */
-function clearSearch()
-{
+function clearSearch() {
     var courses = document.getElementsByClassName("courseItem");
-    while (courses[0])
-    {
+    while (courses[0]) {
         courses[0].remove();
     }
 }
@@ -465,8 +463,7 @@ function clearSearch()
  * Populates the search drop down with the auto-complete results.
  * @param {Number} data the data to populate the drop down with.
  */
-function populateSearch(data)
-{
+function populateSearch(data) {
     // Create the element to populate the search with
     var courses = document.getElementById("courseItems");
     var course = document.createElement('div');
@@ -485,8 +482,7 @@ function populateSearch(data)
 /**
  * Adds the course selected to the class list below the search bar.
  */
-function addList(data) 
-{
+function addList(data) {
     console.log("HELLO");
     console.log(data);
 
@@ -534,7 +530,7 @@ function clearAllMeetings()
     var elements = document.getElementsByClassName('event');
 
     /* remove first element in resulting list until all children are deleted*/
-    while(elements[0]) {
+    while (elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
 }
@@ -603,7 +599,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     var pos = calculateMeetingPosition(meeting);
     var top = pos.top;
     var height = pos.height;
-    
+
     /* create an event div */
     var event = document.createElement('div');
     event.style.top = top;
@@ -699,8 +695,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
  * Description: From the list of all bases and sections, get only the selected ones.
  *      Then add each event to the calendar by calling insertMeeting on each meeting
  */
-function updateMeetings(meetings)
-{
+function updateMeetings(meetings) {
     /* iterate through all the meetings in the JSON */
     for(meeting in meetings) {
         /* extract selected base and section - the events to display on calendar */
@@ -1146,22 +1141,19 @@ function convertGPAToStringFormat(grade)
 /**
  * @description Clears the current table of one time events
  */
-function clearOneTimeEvents()
-{
+function clearOneTimeEvents() {
     var oneTimeEvents = document.getElementById('onetime');
 
-    while (oneTimeEvents.firstChild)
-    {
+    while (oneTimeEvents.firstChild) {
         oneTimeEvents.removeChild(oneTimeEvents.firstChild);
-    } 
+    }
 }
 
 /**
  * @description Insersts the one time event data into the view
  * @param {OneTimeEvent} oneTimeEventData The current one time event object
  */
-function insertOneTimeEvents(oneTimeEventData)
-{
+function insertOneTimeEvents(oneTimeEventData) {
     var oneTimeEvent = document.createElement('tr');
 
     var courseAbbrev = document.createElement('td');
@@ -1193,8 +1185,7 @@ function insertOneTimeEvents(oneTimeEventData)
  * @description Updates the one time event table to hold have the current schedule
  * @param {ScheduleViewModel} courses Dictionary of CourseViewModels
  */
-function updateOneTimeEvents(courses)
-{
+function updateOneTimeEvents(courses) {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
         /* extract selected base - the events to display on calendar */
@@ -1204,8 +1195,7 @@ function updateOneTimeEvents(courses)
         var oneTimeEvents = courses[courseId].bases[selectedBase].oneTimeEvents;
 
         /* insert all one time events */
-        for (var i = 0; i < oneTimeEvents.length; i++)
-        {
+        for (var i = 0; i < oneTimeEvents.length; i++) {
             insertOneTimeEvents(oneTimeEvents[i]);
         }
     }
@@ -1262,4 +1252,77 @@ function generateSchedule() {
             updateSchedule(response.courses);
         }
     }
+}
+
+function visibility_on(id) {
+    var e = document.getElementById(id);
+    e.style.display = 'block';
+}
+
+function visibility_off(id) {
+    var e = document.getElementById(id);
+    e.style.display = 'none';
+}
+
+function customEventCallout(n, m, tu, w, th, f, st, et) {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.customEvent;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    var send = {
+        "name": n,
+        "monday": m,
+        "tuesday": tu,
+        "wednesday": w,
+        "thursday": th,
+        "friday": f,
+        "startTime": st,
+        "endTime": et
+    };
+    console.log("Payload: " + JSON.stringify(send));
+    xhr.send(JSON.stringify(send));
+
+    // When the text is edited, it clears the search and populates it
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            //var text = JSON.parse(xhr.responseText);
+            //clearSearch();
+
+            //for (i = 0; i < text.length; i++) {
+                //populateSearch(text[i]);
+                //console.log(text[i]);
+            //}
+        }
+    }
+}
+
+function saveCustomEvent() {
+    var name = document.getElementById('custom-event-name').value;
+    var monday = document.getElementById('custom-event-monday').checked;
+    var tuesday = document.getElementById('custom-event-tuesday').checked;
+    var wednesday = document.getElementById('custom-event-wednesday').checked;
+    var thursday = document.getElementById('custom-event-thursday').checked;
+    var friday = document.getElementById('custom-event-friday').checked;
+    var startTime = document.getElementById('custom-event-starttime').value;
+    var endTime = document.getElementById('custom-event-endtime').value;
+
+    /*callout function*/
+    customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
+
+    cancelCustomEvent();
+
+    //generate schedule
+}
+
+function cancelCustomEvent() {
+    visibility_off('friend-form');
+
+    document.getElementById('custom-event-name').value = document.getElementById('custom-event-name').defaultValue;
+    document.getElementById('custom-event-monday').checked = false;
+    document.getElementById('custom-event-tuesday').checked = false;
+    document.getElementById('custom-event-wednesday').checked = false;
+    document.getElementById('custom-event-thursday').checked = false;
+    document.getElementById('custom-event-friday').checked = false;
+    document.getElementById('custom-event-starttime').value = document.getElementById('custom-event-starttime').defaultValue;
+    document.getElementById('custom-event-endtime').value = document.getElementById('custom-event-endtime').defaultValue;
 }

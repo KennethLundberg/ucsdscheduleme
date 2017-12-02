@@ -347,6 +347,120 @@ ul {
             color: #FFCC03;
         }
 
+.custom-event-modal {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    display: none;
+    position: absolute;
+    left: 40%;
+    top: 25%;
+    width: 20%;
+    min-height: 10px;
+    min-width: 10px;
+    z-index: 9;
+    background-color: white;
+}
+
+#custom-event-wrapper {
+    text-align: center;
+    margin: 15px;
+}
+
+#custom-event-name-wrapper {
+    padding: 10px;
+    margin-top: 5px;
+}
+
+    #custom-event-name-wrapper input#custom-event-name {
+        font-family: "Open Sans", sans-serif;
+        color: #151515;
+    }
+
+#custom-event-name {
+    width: 90%;
+    padding: 10px;
+}
+
+#custom-event-time-wrapper {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+    #custom-event-time-wrapper input {
+        font-family: "Open Sans", sans-serif;
+        color: #151515;
+    }
+
+.custom-event-day-input {
+    display: inline-block;
+}
+
+.custom-event-button {
+    display: inline-block;
+    width: 100px;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    padding: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    color: #EDEDED;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    background-color: #26A65B;
+}
+
+    .custom-event-button:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .custom-event-button:after {
+        color: #151515;
+    }
+
+    .custom-event-button:first-of-type {
+        margin-right: 10px;
+    }
+
+    .custom-event-button:last-of-type {
+        background-color: #EC644B;
+    }
+
+.button {
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #FFCC03;
+    color: #151515;
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+}
+
+    .button:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .button:after {
+        color: #151515;
+    }
+
 .edit-button {
     position: absolute;
     bottom: 0;
@@ -612,4 +726,5 @@ ul {
     .course-info:last-of-type {
         padding-bottom: 10px;
     }
+
 /*# sourceMappingURL=main.css.map */

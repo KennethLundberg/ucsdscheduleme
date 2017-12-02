@@ -298,7 +298,47 @@
                 <div class="course-info">Avg. Grade Received: F- (0.00)</div>
             </div>
         </div>
+        <div class="button" onclick="visibility_on('friend-form');">Add Custom Event</div>
         <div class="logout-button"></div>
+    </div>
+</div>
+
+<div class="custom-event-modal" id="friend-form">
+    <div id="custom-event-wrapper">
+        <div id="custom-event-name-wrapper">
+            <input type="text" maxlength="10" placeholder="Event Name" id="custom-event-name" />
+        </div>
+        <div>
+            <div id="custom-event-time-wrapper">
+                <input type="time" id="custom-event-starttime" min="07:30" max="23:15"/>
+                <span> to </span>
+                <input type="time" id="custom-event-endtime" min="7:45" max="23:30" />
+            </div>
+        </div>
+        <div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-monday" />
+                <span>Mon</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-tuesday" />
+                <span>Tue</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-wednesday" />
+                <span>Wed</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-thursday" />
+                <span>Thu</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-friday" />
+                <span>Fri</span>
+            </div>
+        </div>
+        <div class="custom-event-button" onclick="saveCustomEvent();">Save</div>
+        <div class="custom-event-button" onclick="cancelCustomEvent();">Cancel</div>
     </div>
 </div>
 
@@ -306,7 +346,8 @@
     var myApp = {
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
-            typeAhead: "@Url.Action("TypeAhead", "Home")"
+            typeAhead: "@Url.Action("TypeAhead", "Home")",
+            customEvent: "@Url.Action("CreateCustomEvent", "Home")"
         },
 	    coursesToSchedule: [],
         courses: []
@@ -318,17 +359,17 @@
     	var search = document.getElementById("search");
         search.addEventListener("input", typeAhead);
 
-	
+
         var input = document.getElementById("search");
         var dropdown = document.getElementById("courseItems");
 
-	
+
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
 
         dropdown.addEventListener("focusin", fin);
 	    dropdown.addEventListener("focusout", fout);
-	
+
 	    var isHover;
         dropdown.onmouseover = function() {
             isHover = true;
@@ -343,10 +384,10 @@
         }
 
         function fout() {
-	        
+
 	        if(!isHover) {
 	        	dropdown.style.display = "none";
-	        }            	
+	        }
         }
 
 	    document.addEventListener('click',function(e) {
