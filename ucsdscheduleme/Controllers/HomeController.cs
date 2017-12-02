@@ -183,9 +183,13 @@ namespace ucsdscheduleme.Controllers
                 //UserId = user.Id
             };
 
+            //WILL THIS ADD IT TO DATABASE?
             //user.UserSections.Add(userSection);
 
             //add to database
+            //_context.Courses.Add(course);
+            //_context.Sections.Add(section);
+            //_context.Meetings.Add(meeting);
 
             return Json(course);
         }
