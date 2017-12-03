@@ -758,7 +758,8 @@ function updateOverallMetadata(courses) {
         var metadata = course.bases[selectedBase].metadata;
 
         // If there is no metadata for this course, skip it.
-        if (!metadata) {
+        if (!metadata || metadata.averageWorkload === 0 
+            || metadata.averageGpaExpected === 0 || metadata.averageGpaReceived === 0) {
             continue;
         }
 
