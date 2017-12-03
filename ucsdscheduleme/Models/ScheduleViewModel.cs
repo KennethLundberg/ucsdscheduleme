@@ -5,16 +5,27 @@ using SectionId = System.Int32;
 
 namespace ucsdscheduleme.Models
 {
+    public class UserScheduleViewModel
+    {
+        public ScheduleViewModel ScheduleViewModel { get; set; }
+        public List<CourseListItemViewModel> CourseListItems{ get; set; }
+    }
+
+    public class CourseListItemViewModel
+    {
+        public int CourseId { get; set; }
+        public string CourseAbbreviation { get; set; }
+        public bool IsCustomEvent { get; set; }
+    }
+
     public class ScheduleViewModel
     {
-        public Metadata OverallMetadata { get; set; } = new Metadata();
-        public List<Metadata> ClassMetadata { get; set; } = new List<Metadata>();
-        public List<Section> SectionList { get; set; } = new List<Section>();
         public Dictionary<CourseId, CourseViewModel> Courses { get; set; }
     }
 
     public class CourseViewModel
     {
+        public string CourseAbbreviation { get; set; }
         public char SelectedBase { get; set; }
         public int SelectedSection { get; set; }
         public Dictionary<BaseId, BaseViewModel> Bases { get; set; }

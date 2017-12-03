@@ -32,6 +32,7 @@ namespace ucsdscheduleme.Repo
                 var selectedSection = courseSection.Key;
                 CourseViewModel thisCourse = new CourseViewModel
                 {
+                    CourseAbbreviation = course.CourseAbbreviation,
                     Bases = new Dictionary<char, BaseViewModel>(),
                     SelectedSection = selectedSection.Id,
                     // If our sections have no meetings, we're in trouble. Time to abort.
@@ -85,16 +86,17 @@ namespace ucsdscheduleme.Repo
         /// <param name="sectionsForBase">All the sections contained in the current base.</param>
         /// <param name="course">The course these sections belong to.</param>
         /// <returns>A populated dictionary containing all calendar events for each section in the base.</returns>
-        private static Dictionary<int, List<CalendarEvent>> PopulateSectionEventsForBase(List<Section> sectionsForBase, Course course)
+        public static Dictionary<int, List<CalendarEvent>> PopulateSectionEventsForBase(List<Section> sectionsForBase, Course course)
         {
             Dictionary<int, List<CalendarEvent>> thisBasesSectionEvents = new Dictionary<int, List<CalendarEvent>>();
             foreach (var section in sectionsForBase)
             {
                 List<CalendarEvent> thisSectionsEvents = new List<CalendarEvent>();
                 var sectionSpecificMeetings = section.Meetings.Where(m => m.IsUnique && !IsOneTimeEvent(m.MeetingType));
+                string professorName = section.Professor?.Name ?? "Unknown";
                 foreach (var meeting in sectionSpecificMeetings)
                 {
-                    AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, section.Professor.Name, meeting);
+                    AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, professorName, meeting);
                 }
                 thisBasesSectionEvents.Add(section.Id, thisSectionsEvents);
             }
@@ -108,7 +110,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="firstSection">The first section to pull the list of meetings from.</param>
         /// <param name="course">The course that all these sections are a part of.</param>
         /// <returns>A populated list of all calendar events.</returns>
-        private static List<CalendarEvent> PopulateBaseEvents(Section firstSection, Course course)
+        public static List<CalendarEvent> PopulateBaseEvents(Section firstSection, Course course)
         {
             // If a meeting is not associated with a section, then we know that it is used
             // by all classes in this base.
@@ -121,9 +123,11 @@ namespace ucsdscheduleme.Repo
             {
                 var type = baseMeeting.MeetingType;
 
+                string professorName = firstSection.Professor?.Name ?? "Unknown";
+
                 if (!IsOneTimeEvent(type))
                 {
-                    AddCalendarEvent(ref baseEvents, course.CourseAbbreviation, firstSection.Professor.Name, baseMeeting);
+                    AddCalendarEvent(ref baseEvents, course.CourseAbbreviation, professorName, baseMeeting);
                 }
             }
 
@@ -170,10 +174,31 @@ namespace ucsdscheduleme.Repo
         {
             var capeForSection = section.Course.Cape.FirstOrDefault(ca => ca.Professor == section.Professor);
 
-            var rateMyProfessor = section.Professor.RateMyProfessor;
+            var professor = section.Professor;
+            var rateMyProfessor = professor?.RateMyProfessor;
+            string professorName;
 
-            string professorString = (capeForSection == null) ? $"{section.Professor.Name} (Capes Unknown)" 
-                                                              : section.Professor.Name;
+            if(professor == null)
+            {
+                // If this is a custom event.
+                if(section.Course.User != null)
+                {
+                    // We don't want this custom event to create a metadata object.
+                    return null;
+                }
+                // Otherwise we just don't know who the professor is
+                else
+                {
+                    professorName = "Unk Professor";
+                }
+            }
+            else
+            {
+                professorName = professor.Name;
+            }
+
+            string professorString = (capeForSection == null) ? $"{professorName} (Capes Unknown)" 
+                                                              : professorName;
             return new Metadata
             {
                 AverageGpaExpected = capeForSection?.AverageGradeExpected ?? 0M,
@@ -181,8 +206,8 @@ namespace ucsdscheduleme.Repo
                 AverageWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
                 ProfessorName = professorString,
-                Quality = rateMyProfessor.OverallQuality,
-                Difficulty = rateMyProfessor.LevelOfDifficulty
+                Quality = rateMyProfessor?.OverallQuality ?? 0M,
+                Difficulty = rateMyProfessor?.LevelOfDifficulty ?? 0M
             };
         }
 

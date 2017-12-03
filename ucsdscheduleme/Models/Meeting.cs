@@ -22,7 +22,7 @@ namespace ucsdscheduleme.Models
     {
         Lecture, Discussion, Lab, Review, Final, Midterm, Seminar, Practicum,
         IndependentStudy, Studio, Tutorial, ProblemSession, Fieldwork, StudyAbroad,
-        MakeUpSession
+        MakeUpSession, CustomEvent
     }
     public class Meeting
     {
