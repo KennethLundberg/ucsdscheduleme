@@ -575,19 +575,9 @@ namespace HtmlAgilitySandbox
             // Add courses to db and save.
             foreach (Course course in courseList)
             {
-                try
-                {
-                    _context.Courses.Add(course);
-                    _context.SaveChanges(); // TODO REMOVE LATER
-                }
-                catch (Exception ex)
-                {
-                    //var logger = services.GetRequiredService<ILogger<Program>>();
-                    //logger.LogError(ex, "An error occurred while seeding the database.");
-                    Console.WriteLine(ex);
-                }
+                _context.Courses.Add(course);
+                _context.SaveChanges();
             }
-            //_context.SaveChanges();
         }
 
         /// <summary>

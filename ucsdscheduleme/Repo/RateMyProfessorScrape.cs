@@ -63,12 +63,8 @@ namespace ucsdscheduleme.Repo
 
                 // Quick fix for the only weird professor : William Arctander O'Brien
                 // character " ' " results in weird characters in the last name
-                if (professor.Name.Contains("O&#039;Brien"))
+                if (professor.Name.Contains("O&#039;Brien")) // TODO: Change name to O'Brien
                     continue;
-                ////////////////////////////////////////////////////////////////////
-
-
-
 
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
@@ -117,7 +113,6 @@ namespace ucsdscheduleme.Repo
             {
                 return ("");
             }
-
             
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
