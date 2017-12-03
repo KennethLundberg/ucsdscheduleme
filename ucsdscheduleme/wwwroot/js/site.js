@@ -404,7 +404,10 @@ document.addEventListener('DOMContentLoaded', function () {
 /** END OF DELETE **/
 
 
-
+/**
+ * @description Gets autocomplete results to populate the search dropdown
+ * @param {String} input String typed by the user
+ */
 function typeAheadCallout(input) {
     var xhr = new XMLHttpRequest();
     var url = myApp.urls.typeAhead;
@@ -428,18 +431,8 @@ function typeAheadCallout(input) {
     }
 }
 
-function removeCourse(e) {
-    var course = e.target.parentNode.parentNode;
-    var id = course.id;
-    var index = myApp.coursesToSchedule.indexOf(id);
-    myApp.coursesToSchedule.splice(index, 1);
-    console.log("Courses: " + myApp.coursesToSchedule);
-    course.remove();
-    typeAheadCallout(document.getElementById("search").value);
-}
-
 /**
- * Clears the drop down and populates the drop down with the auto-complete results.
+ * @description Clears the drop down and populates the drop down with the auto-complete results.
  * @param {String} e The string to search for auto-complete results with.
  */
 function typeAhead(e) {
@@ -450,7 +443,7 @@ function typeAhead(e) {
 }
 
 /**
- * Clears the courses from the drop down.
+ * @description Clears the courses from the drop down.
  */
 function clearSearch() {
     var courses = document.getElementsByClassName("courseItem");
@@ -460,8 +453,8 @@ function clearSearch() {
 }
 
 /**
- * Populates the search drop down with the auto-complete results.
- * @param {Number} data the data to populate the drop down with.
+ * @description Populates the search drop down with the auto-complete results.
+ * @param {Number} data The data to populate the drop down with.
  */
 function populateSearch(data) {
     // Create the element to populate the search with
@@ -480,32 +473,21 @@ function populateSearch(data) {
 }
 
 /**
- * Adds the course selected to the class list below the search bar.
+ * @description Adds event to the course itinerary
+ * @param {course/event} event
  */
-function addList(data) {
-    console.log("HELLO");
-    console.log(data);
-
-    // Hide dropdown menu
-    var dropdown = document.getElementById("courseItems");
-    dropdown.style.display = "none";
-
+function addToScheduleList(event) {
     // Create the element the add to the course list
     var list = document.getElementById("class-list");
 
     var course = document.createElement('div');
     course.className = "class";
-    course.id = data.id;
+    course.id = event.id;
 
     var span = document.createElement('span');
-    span.innerText = data.innerText;
+    span.innerText = event.courseAbbreviation;
 
-    console.log("data.id: " + data.id);
-    myApp.coursesToSchedule.push(data.id);
-
-    // Now clear the dropdown and repopulate it
-    typeAheadCallout(document.getElementById("search").value);
-
+    // Create remove button
     var iconContainer = document.createElement('div');
     iconContainer.className = "class-icon";
     var icon = document.createElement('i');
@@ -517,12 +499,48 @@ function addList(data) {
     course.append(span);
     course.append(iconContainer);
     list.append(course);
+
+    // Add course to current schedule
+    console.log("data.id: " + event.id);
+    myApp.coursesToSchedule.push(event.id);
 }
 
 /**
- * Function: clearAllMeetings()
- * Param: none
- * Description: Clears the calendar of events by removing all elements with class 'event'
+ * @description Adds the course selected from the search dropdown to the class itinerary.
+ * @param {HTMLElement} data class div selected to add
+ */
+function addCourse(data) {
+    console.log("HELLO");
+    console.log("Data: " + JSON.stringify(data));
+
+    // Hide dropdown menu
+    var dropdown = document.getElementById("courseItems");
+    dropdown.style.display = "none";
+
+    // Create the element the add to the course list
+    var course = { "id": data.id, "courseAbbreviation": data.innerText };
+    addToScheduleList(course);
+
+    // Now clear the dropdown and repopulate it
+    typeAheadCallout(document.getElementById("search").value);
+}
+
+/**
+ * @description Removes a course from the schedule of classes
+ * @param {HTMLElement} e
+ */
+function removeCourse(e) {
+    var course = e.target.parentNode.parentNode;
+    var id = course.id;
+    var index = myApp.coursesToSchedule.indexOf(id);
+    myApp.coursesToSchedule.splice(index, 1);
+    console.log("Courses: " + myApp.coursesToSchedule);
+    course.remove();
+    typeAheadCallout(document.getElementById("search").value);
+}
+
+/**
+ * @description Clears the calendar of events by removing all elements with class 'event'
  */
 function clearAllMeetings()
 {
@@ -535,6 +553,10 @@ function clearAllMeetings()
     }
 }
 
+/**
+ * @description Clears the meetings of one class
+ * @param {String} className
+ */
 function clearMeetings(className)
 {
     /* retrieve elements with class 'event' */
@@ -547,13 +569,12 @@ function clearMeetings(className)
 }
 
 /**
- * Function: calculateMeetingPosition(meeting)
- * Param: meeting - the meeting to insert
- * Description: Based on the time and duration of the event, calculate the top and height of the event element.
+ * @description Based on the time and duration of the event, calculate the top and height of the event element.
  *      This can be done because the height of any 30 minute increment is fixed, so a calculation of the top is just
  *      (# half hour increments after 7:30 am) * (height of individual 30 min increment) in px.
  *      Then height is just (duration of event in minutes) * (height of 30 min section) / 30.
- * Return: returns the top and height values
+ * @param {Meeting} meeting The meeting to insert
+ * @returns The top and height values
  */
 function calculateMeetingPosition(meeting) {
 
@@ -572,27 +593,26 @@ function calculateMeetingPosition(meeting) {
 }
 
 /**
- * Function: insertMeeting(meeting)
- * Param: meeting - the meeting to insert
- * Description: Inserts a single meeting into the calendar.
+ * @description Inserts a single meeting into the calendar.
  *  A meeting has the following structure
-    <div class="event">
-        <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-        <div class="unlock-button"><i class="fa fa-unlock" aria-hidden="true"></i></div>
-        <div class="event-header">
-            <div class="icon" id="lecture">LE</div>
-            <div class="event-info">
-                <span>CSE 110</span>
-                <span>Gary Gillespie</span>
-                <span>8:00am - 9:20am</span>
-                <span>A00</span>
-            </div>
-        </div>
-    </div>
+ *  <div class="event">
+ *      <div class="edit-button"><span>Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
+ *      <div class="unlock-button"><i class="fa fa-unlock" aria-hidden="true"></i></div>
+ *      <div class="event-header">
+ *          <div class="icon" id="lecture">LE</div>
+ *          <div class="event-info">
+ *              <span>CSE 110</span>
+ *              <span>Gary Gillespie</span>
+ *              <span>8:00am - 9:20am</span>
+ *              <span>A00</span>
+ *          </div>
+ *      </div>
+ *  </div>
  * Creates each div and create the div hiearchy as shown above. Create and add the spans to the "event-info"
  * div. Populate divs and spans with data from the parameter. Use calculateMeetingPosition function to size
  * and place the event div.
- *  Each div is assigned the appropriate class and id.
+ * Each div is assigned the appropriate class and id.
+ * @param {Meeting} meeting The meeting to insert
  */
 function insertMeeting(meeting, courseId, baseId, sectionId)
 {
@@ -690,11 +710,10 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 }
 
 /**
- * Function: updateMeetings(meetings)
- * Param: meetings - the JSON object with a list of selected bases, selections
- *      See global variable TODO for the structure
- * Description: From the list of all bases and sections, get only the selected ones.
- *      Then add each event to the calendar by calling insertMeeting on each meeting
+ * @description From the list of all bases and sections, get only the selected ones.
+ * Then add each event to the calendar by calling insertMeeting on each meeting
+ * @param {Meeting} meetings - the JSON object with a list of selected bases, selections
+ * See global variable TODO for the structure
  */
 function updateMeetings(meetings) {
     /* iterate through all the meetings in the JSON */
@@ -956,7 +975,7 @@ function showEditButtons() {
 }
 
 /**
- * @description clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
+ * @description Clear method that removes all divs for individual classes and its children.Also clearing the table of overall metadata.
  */
 function clearMetadata() {
     //clear metadata of course-stat-container
@@ -968,7 +987,7 @@ function clearMetadata() {
 }
 
 /**
- * @description clears the overall metadata table seting the values to 0.
+ * @description Clears the overall metadata table seting the values to 0.
  */
 function clearOverallMetadata() {
     var workload = document.getElementById("overall-workload");
@@ -981,8 +1000,8 @@ function clearOverallMetadata() {
 }
 
 /**
- * @description a function that takes in a metadata object for an individual course and adds it to the view.
- * @param {any} metadata
+ * @description A function that takes in a metadata object for an individual course and adds it to the view.
+ * @param {Metadata} metadata Metadata object to insert
  */
 function insertMetadata(metadata) {
     //outer course stat div
@@ -1034,8 +1053,8 @@ function insertMetadata(metadata) {
 }
 
 /**
- * @description a function that updates the metadata by calling the InsertMetadata function for each course metadata
- * @param {any} courses
+ * @description A function that updates the metadata by calling the InsertMetadata function for each course metadata
+ * @param {ScheduleViewModel} courses Courses to display metadata
  */
 function updateMetadata(courses) {
     /* iterate through all the meetings in the JSON */
@@ -1052,8 +1071,8 @@ function updateMetadata(courses) {
 }
 
 /**
- * @description a function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
- * @param {any} courses
+ * @description A function that updates the overall metadata table in the view by iterating through the list of metadata and calculating the new overall data
+ * @param {ScheduleViewModel} courses Courses to display metadata
  */
 function updateOverallMetadata(courses) {
     var numCourses = 0;
@@ -1088,8 +1107,8 @@ function updateOverallMetadata(courses) {
 }
 
 /**
- * @description helper function that takes GPA decimal and returns equivalent letter grade in proper format.
- * @param {any} grade
+ * @description Helper function that takes GPA decimal and returns equivalent letter grade in proper format.
+ * @param {Number} grade Gpa grade
  */
 function convertGPAToStringFormat(grade)
 {
@@ -1285,15 +1304,16 @@ function customEventCallout(n, m, tu, w, th, f, st, et) {
 
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
-
+    console.log("test");
     // generate schedule with new event
     xhr.onreadystatechange = function () {
+        console.log("test2");
         if (xhr.readyState == 4 && xhr.status == 200) {
-            //var text = JSON.parse(xhr.responseText);
+            console.log("Custom Event: " + JSON.stringify(xhr.responseText));
+            var text = JSON.parse(xhr.responseText);
             //get course id to add to scheduleing
-            //myApp.coursesToSchedule.push(text.id);
-            //addList(text.id);
-            //generate schedule
+            var course = { "id": text.id, "courseAbbreviation": text.courseAbbrev };
+            addToScheduleList(course);
             //generateSchedule();
             console.log("ADDED CUSTOM EVENT");
         }
@@ -1311,7 +1331,7 @@ function saveCustomEvent() {
     var endTime = document.getElementById('custom-event-endtime').value;
 
     /*callout function*/
-    //customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
+    customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
 
     closeCustomEvent();
 }

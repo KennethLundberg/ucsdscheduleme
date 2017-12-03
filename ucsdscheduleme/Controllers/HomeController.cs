@@ -125,6 +125,12 @@ namespace ucsdscheduleme.Controllers
         {
             //var user = _userManager.GetUserAsync(User).Result;
 
+            //testing
+            //_context.Courses.RemoveRange(_context.Courses.Where(c => c.Id.Contains("1002")));
+            //_context.SaveChanges();
+
+            Console.WriteLine("Custom Event Controller " + data.ToString());
+
             Days days = 0;
 
             if(data.monday == true) {
@@ -171,27 +177,29 @@ namespace ucsdscheduleme.Controllers
                 EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
             };
 
-            //add to db
+            //Add back connections
             section.Meetings.Add(meeting);
             course.Sections.Add(section);
 
-            var userSection = new UserSection() {
-                Section = section,
-                SectionId = 
-                section.Id,
-                //User = user,
-                //UserId = user.Id
-            };
+            //var userSection = new UserSection() {
+            //    Section = section,
+            //    SectionId = 
+            //    section.Id,
+            //    User = user,
+            //    UserId = user.Id
+            //};
 
             //WILL THIS ADD IT TO DATABASE?
             //user.UserSections.Add(userSection);
 
             //add to database
-            //_context.Courses.Add(course);
-            //_context.Sections.Add(section);
-            //_context.Meetings.Add(meeting);
+            _context.Courses.Add(course);
+            _context.Sections.Add(section);
+            _context.Meetings.Add(meeting);
+            _context.SaveChanges();
 
             return Json(course);
+            //return View();
         }
     }
 }
