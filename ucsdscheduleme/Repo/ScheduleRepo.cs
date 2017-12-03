@@ -248,6 +248,7 @@ namespace ucsdscheduleme.Repo
             return result;
         }
 
+
         /// <summary>
         /// Returns the schedule with the highest overall quality from RateMyProfessor.
         /// </summary>
@@ -316,8 +317,8 @@ namespace ucsdscheduleme.Repo
                 {
                     lastestScheduleTime = lastestClassTime;
                 }
-                
-                //Compare
+
+                // Compare
                 if (earliestEnd > lastestScheduleTime)
                 {
                     earliestEnd = lastestScheduleTime;
@@ -365,7 +366,7 @@ namespace ucsdscheduleme.Repo
                 {
                     earliestScheduleTime = earliestClassTime;
                 }
-                
+
                 // Compare
                 if (latestStart > earliestScheduleTime)
                 {
@@ -383,6 +384,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             int leastDay = 5;
             List<Section> leastDaySchedule = possibleSchedules[0];
 
@@ -409,6 +414,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> MostDays(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             int mostDay = 0;
             List<Section> mostDaySchedule = possibleSchedules[0];
 
@@ -432,7 +441,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="schedule">A schedule of classes</param>
         /// <returns> the number of days in the schedule</returns>
-        private int NumDays(List<Section> schedule)
+        public int NumDays(List<Section> schedule)
         {
             int numDays = 0;
             int[] currDays = { 0, 0, 0, 0, 0 };
@@ -487,6 +496,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastGaps(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null) 
+            {
+                return null;
+            }
             List<Section> leastGapsSchedule = possibleSchedules[0];
             TimeSpan leastGap = new TimeSpan(99,59,59);
 
@@ -512,6 +525,10 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> MostGaps(List<List<Section>> possibleSchedules)
         {
+            if (possibleSchedules == null)
+            {
+                return null;
+            }
             List<Section> mostGapsSchedule = possibleSchedules[0];
             TimeSpan mostGap = new TimeSpan(0,0,0);
 

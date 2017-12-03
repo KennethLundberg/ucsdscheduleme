@@ -14,4 +14,8 @@
     <ProjectReference Include="..\ucsdscheduleme\ucsdscheduleme.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
