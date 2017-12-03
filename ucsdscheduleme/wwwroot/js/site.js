@@ -476,12 +476,12 @@ function populateSearch(data) {
  * @description Adds event to the course itinerary
  * @param {course/event} event
  */
-function addToScheduleList(event) {
+function addToScheduleList(event, isCustom = false) {
     // Create the element the add to the course list
     var list = document.getElementById("class-list");
 
     var course = document.createElement('div');
-    course.className = "class";
+    course.className = (isCustom) ? "custom class" : "class";
     course.id = event.id;
 
     var span = document.createElement('span');
@@ -525,6 +525,15 @@ function addCourse(data) {
     typeAheadCallout(document.getElementById("search").value);
 }
 
+function removeCustomEventCallout(courseId) {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.removeCustomEvent + "?courseId=" + courseId;
+    xhr.open("DELETE", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    console.log("Payload: " + JSON.stringify(courseId));
+    xhr.send();
+}
+
 /**
  * @description Removes a course from the schedule of classes
  * @param {HTMLElement} e
@@ -535,6 +544,13 @@ function removeCourse(e) {
     var index = myApp.coursesToSchedule.indexOf(id);
     myApp.coursesToSchedule.splice(index, 1);
     console.log("Courses: " + myApp.coursesToSchedule);
+
+    if (course.classList.contains("custom")) {
+        removeCustomEventCallout(id);
+        delete myApp.courses[id];
+        updateSchedule(myApp.courses);
+    }
+
     course.remove();
     typeAheadCallout(document.getElementById("search").value);
 }
@@ -616,7 +632,7 @@ function calculateMeetingPosition(meeting) {
  */
 function insertMeeting(meeting, courseId, baseId, sectionId)
 {
-    var isCustomEvent = meeting.type != "CustomEvent";
+    var isCustomEvent = meeting.type == "CustomEvent";
 
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
@@ -1257,7 +1273,7 @@ function updateSchedule(courses) {
     myApp.courses = courses;
     clearOneTimeEvents();
     updateOneTimeEvents(courses);
-    clearMeetings();
+    clearAllMeetings();
     updateMeetings(courses);
     clearMetadata();
     updateOverallMetadata(courses);
@@ -1338,7 +1354,7 @@ function customEventCallout(name, days, startTime, endTime) {
 
             //get course id to add to scheduleing
             var course = { "id": text.courseId, "courseAbbreviation": text.courseAbbreviation };
-            addToScheduleList(course);
+            addToScheduleList(course, true);
 
             var scheduleCourse = {
                 "selectedBase": "A",

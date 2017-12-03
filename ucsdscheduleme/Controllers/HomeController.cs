@@ -163,6 +163,7 @@ namespace ucsdscheduleme.Controllers
             _context.Courses.Add(course);
             _context.Sections.Add(section);
             _context.Meetings.Add(meeting);
+            _context.UserSections.Add(userSection);
             _context.SaveChanges();
 
             // Return response object
@@ -178,6 +179,25 @@ namespace ucsdscheduleme.Controllers
             };
 
             return Json(response);
+        }
+
+        [HttpDelete]
+        public void RemoveCustomEvent( int courseId )
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+
+            Course course = _context.Courses
+                                    .Include(c => c.Sections)
+                                        .ThenInclude(s => s.Meetings)
+                                    .FirstOrDefault(c => c.User == user && c.Id == courseId);
+            Section section = course.Sections.First();
+            UserSection userSection = _context.UserSections.First(us => us.User == user && us.Section == section);
+
+            _context.Meetings.RemoveRange(section.Meetings);
+            _context.Sections.Remove(section);
+            _context.UserSections.Remove(userSection);
+            _context.Courses.Remove(course);
+            _context.SaveChanges();
         }
     }
 }

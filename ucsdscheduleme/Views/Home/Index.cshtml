@@ -347,7 +347,8 @@
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
             typeAhead: "@Url.Action("TypeAhead", "Home")",
-            customEvent: "@Url.Action("CreateCustomEvent", "Home")"
+            customEvent: "@Url.Action("CreateCustomEvent", "Home")",
+            removeCustomEvent: "@Url.Action("RemoveCustomEvent", "Home")"
         },
 	    coursesToSchedule: [],
         courses: []
@@ -401,7 +402,7 @@
             }
 
 	        // clicked on a calendar event
-	        var outerDiv = findOuterDiv(e.target, 'event'); 
+	        var outerDiv = findOuterDiv(e.target, 'event');
 	        if(e.target && outerDiv) {
 	        	// currently editing AND event is activated
 	        	if(isEditing && outerDiv.classList.contains('event-activated')) {
@@ -444,7 +445,7 @@
 				    });
 		        }
 		    }
-	        
+
         });
     })();
 </script>
