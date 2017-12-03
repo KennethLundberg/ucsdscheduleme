@@ -20,36 +20,36 @@ $row-height: 50px;
 }
 
 body {
-	font-family: $font;
-  background-color: $primary-color;
+    font-family: $font;
+    background-color: $primary-color;
 }
 
 .container {
-  box-shadow: 0 0 4px rgba(0,0,0, 0.8);
-	position: fixed;
-  width: 25%;
- 	height: 50%;
- 	top: 50%;
-  left: 50%;
- 	transform: translate(-50%, -50%);
-  border-radius: 5px;
-  background-color: $off-white;
-	text-align: center;
+    box-shadow: 0 0 4px rgba(0,0,0, 0.8);
+    position: fixed;
+    width: 25%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    background-color: $off-white;
+    text-align: center;
 }
 
 #logo {
-  width: 75%;
-  height: 75%;
+    width: 75%;
+    height: 75%;
 }
 
 #title {
-	background-color: $secondary-color;
-	font-size: 1.75em;
+    background-color: $secondary-color;
+    font-size: 1.75em;
 }
 
 #tagline {
-  	position: absolute;	
-	font-size: 16px;
+    position: absolute;
+    font-size: 16px;
 }
 
 .button {
@@ -60,6 +60,7 @@ body {
     background-color: $secondary-color;
     color: $off-black;
     font-family: $font;
+    border: none;
     text-align: center;
     vertical-align: middle;
     position: relative;
