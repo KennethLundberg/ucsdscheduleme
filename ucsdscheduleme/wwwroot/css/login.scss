@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans');
+
+$font: 'Open Sans', sans-serif;
+$primary-color: #203E5F;
+$secondary-color: #FFCC03;
+$off-white: #EDEDED;
+$off-black: #151515;
+$white-bg: #EFEFEF;
+$text-white: #FEFEFE;
+$gray: #E9E9E9;
+$border-color: #E0E0E0;
+$lecture-color: #FF9703;
+$discussion-color: #188CF0;
+$lab-color: #CC0000;
+$columns-number: 5;
+$row-height: 50px;
+
+@mixin boxshadow() {
+    box-shadow: 0 0 4px rgba(0,0,0, 0.25);
+}
+
+body {
+	font-family: $font;
+  background-color: $primary-color;
+}
+
+.container {
+  box-shadow: 0 0 4px rgba(0,0,0, 0.8);
+	position: fixed;
+  width: 25%;
+ 	height: 50%;
+ 	top: 50%;
+  left: 50%;
+ 	transform: translate(-50%, -50%);
+  border-radius: 5px;
+  background-color: $off-white;
+	text-align: center;
+}
+
+#logo {
+  width: 75%;
+  height: 75%;
+}
+
+#title {
+	background-color: $secondary-color;
+	font-size: 1.75em;
+}
+
+#tagline {
+  	position: absolute;	
+	font-size: 16px;
+}
+
+.button {
+    cursor: pointer;
+    @include boxshadow();
+    padding: 15px;
+    margin: 0 auto;
+    background-color: $secondary-color;
+    color: $off-black;
+    font-family: $font;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    width: 200px;
+
+    &:hover:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255,255,255, 0.2);
+    }
+
+    &:after {
+        content: "Sign in with Google";
+        color: $off-black;
+    }
+}
