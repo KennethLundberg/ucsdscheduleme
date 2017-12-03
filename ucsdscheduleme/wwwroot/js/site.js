@@ -254,8 +254,8 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
 
     /* create an icon and add to event header div */
     var icon = document.createElement('div');
-    icon.className = "class-icon";
-    icon.id = meeting.type.toLowerCase();
+    icon.className = "class-icon ";
+    icon.className += meeting.type.toLowerCase();
     eventHeader.append(icon);
 
     /* create the Change and edit-button icon and add to event div */
@@ -312,7 +312,9 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
     eventInfo.append(classSpan);
     eventInfo.append(profSpan);
     eventInfo.append(timeSpan);
-    eventInfo.append(sectSpan);
+    if (!isCustomEvent) {
+        eventInfo.append(sectSpan);
+    }
     eventHeader.append(eventInfo);
 
     courseId = ' _c' + courseId;
@@ -942,12 +944,12 @@ function generateSchedule() {
     }
 }
 
-function visibility_on(id) {
+function visibilityOn(id) {
     var e = document.getElementById(id);
     e.style.display = 'block';
 }
 
-function visibility_off(id) {
+function visibilityOff(id) {
     var e = document.getElementById(id);
     e.style.display = 'none';
 }
@@ -1019,7 +1021,7 @@ function saveCustomEvent() {
 }
 
 function closeCustomEvent() {
-    visibility_off('friend-form');
+    visibilityOff('custom-event-form');
 
     document.getElementById('custom-event-name').value = document.getElementById('custom-event-name').defaultValue;
     document.getElementById('custom-event-monday').checked = false;
