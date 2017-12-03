@@ -1,13 +1,15 @@
-﻿function setup() {
-    updateSchedule(myApp.courses);
-    console.log("setup()");
-}
-
-/* called when DOM is ready */
+﻿// called when DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
     setup();
 });
 
+/**
+ * @description Calls all the functions necessary on page load
+ */
+function setup() {
+    updateSchedule(myApp.courses);
+    console.log("setup()");
+}
 
 /**
  * @description Gets autocomplete results to populate the search dropdown
@@ -18,8 +20,10 @@ function typeAheadCallout(input) {
     var url = myApp.urls.typeAhead;
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    
     var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
     console.log("Payload: " + JSON.stringify(send));
+    
     xhr.send(JSON.stringify(send));
 
     // When the text is edited, it clears the search and populates it
@@ -130,6 +134,9 @@ function addCourse(data) {
     typeAheadCallout(document.getElementById("search").value);
 }
 
+/**
+ * @description Removes the custom event from the list and from the global store
+ */
 function removeCustomEventCallout(courseId) {
     var xhr = new XMLHttpRequest();
     var url = myApp.urls.removeCustomEvent + "?courseId=" + courseId;
@@ -197,7 +204,7 @@ function clearMeetings(className) {
  */
 function calculateMeetingPosition(meeting) {
 
-    /* calculate top and height based on number of half hour increments after 7:30am and duration */
+    // calculate top and height based on number of half hour increments after 7:30am and duration
     var numHalfHourInc = (meeting.startTimeInMinutesAfterFirstHour) / 30;
     var height30MinInc = document.querySelector(".time").childNodes[1].offsetHeight;
     var timeOffSet = 50;
