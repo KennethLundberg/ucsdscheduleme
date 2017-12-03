@@ -170,15 +170,19 @@ namespace ucsdscheduleme.Repo
         {
             var capeForSection = section.Course.Cape.FirstOrDefault(ca => ca.Professor == section.Professor);
 
+            var rateMyProfessor = section.Professor.RateMyProfessor;
+
             string professorString = (capeForSection == null) ? $"{section.Professor.Name} (Capes Unknown)" 
                                                               : section.Professor.Name;
             return new Metadata
             {
                 AverageGpaExpected = capeForSection?.AverageGradeExpected ?? 0M,
                 AverageGpaReceived = capeForSection?.AverageGradeReceived ?? 0M,
-                AverageTotalWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
+                AverageWorkload = capeForSection?.StudyHoursPerWeek ?? 0M,
                 CourseAbbreviation = section.Course.CourseAbbreviation,
-                ProfessorName = professorString
+                ProfessorName = professorString,
+                Quality = rateMyProfessor?.OverallQuality ?? 0M,
+                Difficulty = rateMyProfessor?.LevelOfDifficulty ?? 0M
             };
         }
 

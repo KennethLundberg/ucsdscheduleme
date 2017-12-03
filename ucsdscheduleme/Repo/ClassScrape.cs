@@ -168,10 +168,15 @@ namespace HtmlAgilitySandbox
             }
 
             // Hash maps for each object needed in database
-            // For course we're explicitly telling to grab the sections and meeting
+            // For course we're explicitly telling to grab the meeting of all sections, ratemyprofessor of all professor
+            // and cape of all course
             Dictionary<string, Course> courseDictionary = _context?.Courses
                                                                    .Include(c => c.Sections)
                                                                         .ThenInclude(s => s.Meetings)
+                                                                   .Include(c => c.Cape)
+                                                                   .Include(c => c.Sections)
+                                                                        .ThenInclude(s => s.Professor)
+                                                                        .ThenInclude(p => p.RateMyProfessor)
                                                                    .ToDictionary(c => c.CourseAbbreviation);
             Dictionary<string, Section> sectionDictionary = _context?.Sections.ToDictionary(s => s.Ticket.ToString());
             Dictionary<string, Location> locationDictionary = _context?.Locations.ToDictionary(l => l.Building + l.RoomNumber);
@@ -238,7 +243,7 @@ namespace HtmlAgilitySandbox
                                     StartDate = meeting.StartDate,
                                     MeetingType = meeting.MeetingType,
                                     Location = meeting.Location,
-                                    IsUnique = true
+                                    IsUnique = false
                                 };
                                 section.Meetings.Add(staticMeeting);
                             }
@@ -289,9 +294,17 @@ namespace HtmlAgilitySandbox
                             }
                             else
                             {
-                                // Delete all the meetings of the course which was found from the database 
-                                // and later we'll repopulate it.
+                                // Delete all the meetings, rmp, and cape of the course which was found from the 
+                                // database and later we'll repopulate it.
                                 var meetingsToDelete = currentCourse.Sections.SelectMany(s => s.Meetings);
+                                var rmpsToDelete = currentCourse.Sections.Select(s => s.Professor.RateMyProfessor);
+                                var capesToDelete = currentCourse.Cape;
+                                foreach (RateMyProfessor rmpToDelete in rmpsToDelete)
+                                {
+                                    if (rmpToDelete != null)
+                                        _context.RateMyProfessor.Remove(rmpToDelete);
+                                }                                
+                                _context.Cape.RemoveRange(capesToDelete);
                                 _context.Meetings.RemoveRange(meetingsToDelete);
                                 _context.SaveChanges();
                             }
@@ -319,9 +332,9 @@ namespace HtmlAgilitySandbox
                         string meetingType = meetingTypeTDNode.InnerText;
                         currentMeeting.MeetingType = GetMeetingType(meetingType);
 
-                        // Set it to false as default, if the meeting is unique, like final and lecture,
+                        // Set it to true as default, if the meeting is unique, like final and lecture,
                         // we're changing it later.
-                        currentMeeting.IsUnique = false;
+                        currentMeeting.IsUnique = true;
 
                         // Set code.
                         HtmlNode codeNode = meetingTypeTDNode.NextSibling.NextSibling;
@@ -519,7 +532,7 @@ namespace HtmlAgilitySandbox
                                 StartDate = currentMeeting.StartDate,
                                 MeetingType = currentMeeting.MeetingType,
                                 Location = currentMeeting.Location,
-                                IsUnique = true
+                                IsUnique = false
                             };
                             section.Meetings.Add(finalMeeting);
                         }
@@ -543,7 +556,7 @@ namespace HtmlAgilitySandbox
                         StartDate = meeting.StartDate,
                         MeetingType = meeting.MeetingType,
                         Location = meeting.Location,
-                        IsUnique = true
+                        IsUnique = false
                     };
                     section.Meetings.Add(staticMeeting);
                 }
