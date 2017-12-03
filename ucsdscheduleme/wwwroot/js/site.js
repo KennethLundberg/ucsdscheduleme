@@ -703,11 +703,15 @@ function insertMetadata(metadata) {
     courseMetadata.append(courseName);
     courseMetadata.append(professorName);
 
-    // If there is no data, do not append
-    if (metadata.quality != 0 && metadata .difficulty != 0 
-        && metadata.averageWorkload != 0 && metadata.averageGpaExpected != 0
-        && metadata.averageGpaReceived != 0) {
+    // If there is no rateMyProfessor, do not append
+    if (metadata.quality != 0 || metadata.difficulty != 0) 
+    {
         courseMetadata.append(rateMyProfessor);
+    }
+
+    // IF there is no CAPE, do not append
+    if ( metadata.averageWorkload != 0 || metadata.averageGpaExpected != 0
+        || metadata.averageGpaReceived != 0) {
         courseMetadata.append(avgWorkload);
         courseMetadata.append(avgExpected);
         courseMetadata.append(avgRecieved);
