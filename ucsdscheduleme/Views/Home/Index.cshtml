@@ -183,6 +183,12 @@
     var coursesFromModel = @Html.Raw(Json.Serialize(@Model.ScheduleViewModel.Courses));
     var courseListFromModel = @Html.Raw(Json.Serialize(@Model.CourseListItems.Select(cl => cl.CourseId)));
     var myApp = {
+        constants: {
+            coursePrefix: "_c",
+            basePrefix: "_b",
+            sectionPrefix: "_s",
+            baseEventClass: "undefined"
+        },
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
             typeAhead: "@Url.Action("TypeAhead", "Home")",

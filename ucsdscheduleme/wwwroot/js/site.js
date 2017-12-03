@@ -2,7 +2,7 @@
     updateSchedule(myApp.courses);
     console.log("setup()");
 }
- 
+
 /* called when DOM is ready */
 document.addEventListener('DOMContentLoaded', function () {
     setup();
@@ -163,8 +163,7 @@ function removeCourse(e) {
 /**
  * @description Clears the calendar of events by removing all elements with class 'event'
  */
-function clearAllMeetings()
-{
+function clearAllMeetings() {
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName('event');
 
@@ -178,13 +177,12 @@ function clearAllMeetings()
  * @description Clears the meetings of one class
  * @param {String} className
  */
-function clearMeetings(className)
-{
+function clearMeetings(className) {
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName(className);
 
     /* remove first element in resulting list until all children are deleted*/
-    while(elements[0]) {
+    while (elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
 }
@@ -235,8 +233,7 @@ function calculateMeetingPosition(meeting) {
  * Each div is assigned the appropriate class and id.
  * @param {Meeting} meeting The meeting to insert
  */
-function insertMeeting(meeting, courseId, baseId, sectionId)
-{
+function insertMeeting(meeting, courseId, baseId, sectionId) {
     var isCustomEvent = meeting.type == "CustomEvent";
 
     /* Calculate the meeting position using helper function */
@@ -272,7 +269,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 
     var editIcon = document.createElement('i');
     editIcon.className = "fa fa-cog";
-    editIcon.setAttribute("aria-hidden", true); 
+    editIcon.setAttribute("aria-hidden", true);
     editButton.append(editIcon);
 
     if (!isCustomEvent) {
@@ -318,9 +315,9 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     eventInfo.append(sectSpan);
     eventHeader.append(eventInfo);
 
-    courseId = ' _' + courseId;
-    baseId = ' _' + baseId;
-    sectionId = ' _' + sectionId;
+    courseId = ' _c' + courseId;
+    baseId = ' _b' + baseId;
+    sectionId = ' _s' + sectionId;
     event.className += courseId;
     event.className += baseId;
     event.className += sectionId;
@@ -342,7 +339,7 @@ function updateMeetings(courses) {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
         var course = courses[courseId];
-        
+
         /* extract selected base and section - the events to display on calendar */
         var selectedBase = course.selectedBase;
         var selectedSection = course.selectedSection;
@@ -351,7 +348,7 @@ function updateMeetings(courses) {
 
         // Get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
         var baseEvents = base.baseEvents;
-        
+
         // If there is no base events for this course, move on.
         if (baseEvents) {
             // Insert all base elements.
@@ -376,6 +373,8 @@ function updateMeetings(courses) {
 
 function showAllBasesAndAllSections(ids) {
 
+    var baseEventClass = myApp.constants.baseEventClass;
+
     var course = myApp.courses[ids.courseId];
     var bases = course.bases;
 
@@ -383,24 +382,24 @@ function showAllBasesAndAllSections(ids) {
 
     clearMeetings(ids.courseId);
 
-    for(var i = 0; i < baseKeys.length; i++) {
+    for (var i = 0; i < baseKeys.length; i++) {
         // insert all bases aka lectures
-        for(var j = 0; j < bases[baseKeys[i]].baseEvents.length; j++) {
+        for (var j = 0; j < bases[baseKeys[i]].baseEvents.length; j++) {
             var meeting = bases[baseKeys[i]].baseEvents[j];
 
             // insert base and set activated class
-            var event = insertMeeting(meeting, ids.courseId, baseKeys[i], "undefined");
+            var event = insertMeeting(meeting, ids.courseId, baseKeys[i], baseEventClass);
             event.className += " event-activated";
         }
 
         // insert each section
         var sectionEvents = bases[baseKeys[i]].sectionEvents;
         var sectionsKeys = Object.keys(sectionEvents);
-        sectionsKeys.forEach(function(key) {
+        sectionsKeys.forEach(function (key) {
             var section = sectionEvents[key];
 
             // insert section and set activated class
-            for(var k = 0; k < section.length; k++) {
+            for (var k = 0; k < section.length; k++) {
                 var event = insertMeeting(section[k], ids.courseId, baseKeys[i], key);
                 event.className += " event-activated";
             }
@@ -409,19 +408,20 @@ function showAllBasesAndAllSections(ids) {
 }
 
 function showBaseAndAllSections(ids) {
+    var baseEventClass = myApp.constants.baseEventClass;
     var course = myApp.courses[ids.courseId];
     var baseEvents = course.bases[ids.baseId].baseEvents;
     var sectionEvents = course.bases[ids.baseId].sectionEvents;
-    
+
     clearMeetings(ids.courseId);
 
-    for(var i = 0; i < baseEvents.length; i++) {
-        var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, "undefined");
+    for (var i = 0; i < baseEvents.length; i++) {
+        var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, baseEventClass);
         event.className += " event-activated";
     }
 
     var sectionsKeys = Object.keys(sectionEvents);
-    sectionsKeys.forEach(function(key) {
+    sectionsKeys.forEach(function (key) {
         var section = sectionEvents[key];
         var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
         event.className += " event-activated";
@@ -431,15 +431,15 @@ function showBaseAndAllSections(ids) {
 }
 
 function changeSchedule(event) {
-   var ids = extractIds(event);
+    var info = extractEventInfo(event);
 
     // base selected
-    if(ids.sectionId === "undefined") {
-        showAllBasesAndAllSections(ids);
-    } 
+    if (info.isBaseEvent) {
+        showAllBasesAndAllSections(info);
+    }
     // section selected
     else {
-        showBaseAndAllSections(ids);
+        showBaseAndAllSections(info);
     }
 }
 
@@ -449,7 +449,7 @@ function changeScheduleSectionCallout(oldSectionId, newSectionId) {
     var url = myApp.urls.changeScheduleSection;
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    var request = { "sectionIdToRemove": oldSectionId, "sectionIdToAdd": newSectionId}; 
+    var request = { "sectionIdToRemove": oldSectionId, "sectionIdToAdd": newSectionId };
     xhr.send(JSON.stringify(request));
 }
 
@@ -458,7 +458,7 @@ function changeScheduleSectionCallout(oldSectionId, newSectionId) {
  * @param: sectionId: string
  */
 function updateSelectedSection(event) {
-    var ids = extractIds(event);
+    var ids = extractEventInfo(event);
 
     var course = myApp.courses[ids.courseId];
     var currentBase = course.selectedBase;
@@ -481,14 +481,14 @@ function updateSelectedSection(event) {
  * @param: baseId: string, sectionId: string
  */
 function updateSelectedBase(event) {
-    var ids = extractIds(event);
+    var ids = extractEventInfo(event);
 
     // update the base ID in the global object
     myApp.courses[ids.courseId].selectedBase = ids.baseId;
 
     clearAllMeetings();
     updateMeetings(myApp.courses)
-    
+
     hideEditButtons();
 
     // showBaseAndAllSections(ids);
@@ -498,10 +498,10 @@ function updateSelectedBase(event) {
     showBaseAndAllSections(ids);
 }
 
-// clicked on section or base, know because bases have "_undefined" as sectionId
+// clicked on section or base, as defined by extractEventInfo
 function updateEvent(event) {
-
-    if(!event.classList.contains("_undefined")) {
+    var info = extractEventInfo(event);
+    if (!info.isBaseEvent) {
         // selected a section
         updateSelectedSection(event);
     } else {
@@ -511,17 +511,18 @@ function updateEvent(event) {
 }
 
 function activateSelectedBasesAndSections(event) {
-    var ids = extractIds(event, false);
+    var infoForSelected = extractEventInfo(event, false);
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
 
-    if(ids.sectionId !== "_undefined") {
+    if (!infoForSelected.isBaseEvent) {
         var toDeactivate = [];
-        for(var j = 0; j < allActivatedEvents.length; j++) {
+        for (var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
+            var infoForCurrent = extractEventInfo(allActivatedEvents[j], false);
 
-            if(classList.contains(ids.courseId) && classList.contains(ids.baseId)) {
-                if(classList.contains(ids.sectionId) || classList.contains("_undefined")) {
+            if (classList.contains(infoForSelected.courseId) && classList.contains(infoForSelected.baseId)) {
+                if (classList.contains(infoForSelected.sectionId) || infoForCurrent.isBaseEvent) {
                 } else {
                     toDeactivate.push(allActivatedEvents[j]);
                 }
@@ -530,7 +531,7 @@ function activateSelectedBasesAndSections(event) {
             }
         }
 
-        for(var k = 0; k < toDeactivate.length; k++) {
+        for (var k = 0; k < toDeactivate.length; k++) {
             toDeactivate[k].classList.add('event-deactivated');
             toDeactivate[k].classList.remove('event-activated');
         }
@@ -538,15 +539,15 @@ function activateSelectedBasesAndSections(event) {
     } else {
         var toDeactivate = [];
 
-        for(var j = 0; j < allActivatedEvents.length; j++) {
+        for (var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
 
-            if(!classList.contains(ids.courseId) || !classList.contains(ids.baseId)) {
-                toDeactivate.push(allActivatedEvents[j]);   
+            if (!classList.contains(infoForSelected.courseId) || !classList.contains(infoForSelected.baseId)) {
+                toDeactivate.push(allActivatedEvents[j]);
             }
         }
 
-        for(var k = 0; k < toDeactivate.length; k++) {
+        for (var k = 0; k < toDeactivate.length; k++) {
             toDeactivate[k].classList.add('event-deactivated');
             toDeactivate[k].classList.remove('event-activated');
         }
@@ -554,9 +555,9 @@ function activateSelectedBasesAndSections(event) {
 }
 
 function reactivateAllBasesAndAllSections(event) {
-    var ids = extractIds(event, false);
+    var ids = extractEventInfo(event, false);
     var allActivatedEvents = document.getElementsByClassName('event-deactivated');
-    while(allActivatedEvents.length > 0) {
+    while (allActivatedEvents.length > 0) {
         allActivatedEvents[0].className += ' event-activated';
         allActivatedEvents[0].classList.remove('event-deactivated');
     }
@@ -564,28 +565,41 @@ function reactivateAllBasesAndAllSections(event) {
 
 // TODO: Replace comments
 // default: returns no underscores
-function extractIds(event, noUnderscore = true) {
+function extractEventInfo(event, noUnderscore = true) {
 
-    if(event.classList.length <= 0) {
+    if (!event || !event.classList || event.classList.length <= 0) {
         return null;
     }
     var classListLength = event.classList.length;
 
-    var courseId = event.classList[1];
-    var baseId = event.classList[2];
-    var sectionId = event.classList[3];
+    var prefixLength = 2;
 
-    if(noUnderscore) {
-        courseId = event.classList[1].substr(1);
-        baseId = event.classList[2].substr(1);
-        sectionId = event.classList[3].substr(1);
+    var constants = myApp.constants;
+
+    var courseId = findClassWithPrefix(event, constants.coursePrefix, prefixLength);
+    var baseId = findClassWithPrefix(event, constants.basePrefix, prefixLength);
+    var sectionId = findClassWithPrefix(event, constants.sectionPrefix, prefixLength);
+
+    var isBaseEvent = sectionId === constants.sectionPrefix + constants.baseEventClass;
+
+    if (noUnderscore) {
+        courseId = courseId.substr(prefixLength);
+        baseId = baseId.substr(prefixLength);
+        sectionId = sectionId.substr(prefixLength);
     }
 
     return {
         courseId: courseId,
         baseId: baseId,
-        sectionId: sectionId
-    }
+        sectionId: sectionId,
+        isBaseEvent: isBaseEvent
+    };
+}
+
+function findClassWithPrefix(element, prefix, prefixLength) {
+    var classes = element.classList;
+    var classWithPrefix = Array.from(classes).find(cl => cl.substr(0, prefixLength) == prefix);
+    return classWithPrefix;
 }
 
 /**
@@ -593,7 +607,7 @@ function extractIds(event, noUnderscore = true) {
  */
 function findOuterDiv(element, className) {
 
-    if(typeof element == undefined) {
+    if (typeof element == undefined) {
         return null;
     }
 
@@ -601,7 +615,7 @@ function findOuterDiv(element, className) {
         element = element.parentNode;
     }
 
-    if(element && element.classList && element.classList.contains(className)) { 
+    if (element && element.classList && element.classList.contains(className)) {
         return element;
     }
 
@@ -610,14 +624,14 @@ function findOuterDiv(element, className) {
 
 function hideEditButtons() {
     var buttons = document.getElementsByClassName('edit-button');
-    for(var i = 0; i < buttons.length; i++) {
+    for (var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'hidden';
     }
 }
 
 function showEditButtons() {
     var buttons = document.getElementsByClassName('edit-button');
-    for(var i = 0; i < buttons.length; i++) {
+    for (var i = 0; i < buttons.length; i++) {
         buttons[i].style.visibility = 'visible';
     }
 }
@@ -732,11 +746,10 @@ function updateOverallMetadata(courses) {
     var numCourses = 0;
     var overallWorkload = 0;
     var overallExpectedGpa = 0;
-    var overallReceivedGpa= 0;
+    var overallReceivedGpa = 0;
 
     //iterate through all the metadata in the JSON
-    for (courseId in courses)
-    {
+    for (courseId in courses) {
         var course = courses[courseId];
         /* extract selected base - the events to display on calendar */
         var selectedBase = course.selectedBase;
@@ -769,48 +782,37 @@ function updateOverallMetadata(courses) {
  * @description Helper function that takes GPA decimal and returns equivalent letter grade in proper format.
  * @param {Number} grade Gpa grade
  */
-function convertGPAToStringFormat(grade)
-{
+function convertGPAToStringFormat(grade) {
     var prefix = "";
 
-    if (grade >= 4.0)
-    {
+    if (grade >= 4.0) {
         prefix = "A";
     }
-    else if (grade >= 3.7)
-    {
+    else if (grade >= 3.7) {
         prefix = "A-";
     }
-    else if (grade >= 3.3)
-    {
+    else if (grade >= 3.3) {
         prefix = "B+";
     }
-    else if (grade >= 3.0)
-    {
+    else if (grade >= 3.0) {
         prefix = "B";
     }
-    else if (grade >= 2.7)
-    {
+    else if (grade >= 2.7) {
         prefix = "B-";
     }
-    else if (grade >= 2.3)
-    {
+    else if (grade >= 2.3) {
         prefix = "C+";
     }
-    else if (grade >= 2.0)
-    {
+    else if (grade >= 2.0) {
         prefix = "C";
     }
-    else if (grade >= 1.7)
-    {
+    else if (grade >= 1.7) {
         prefix = "C-";
     }
-    else if (grade >= 1.0)
-    {
+    else if (grade >= 1.0) {
         prefix = "D";
     }
-    else
-    {
+    else {
         prefix = "F";
     }
     //format that looks like "B+ (3.82)"
