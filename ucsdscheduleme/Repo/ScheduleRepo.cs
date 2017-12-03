@@ -142,7 +142,6 @@ namespace ucsdscheduleme.Repo
                         // Want to compare recurring events like lecture, discussion, labs
                         if (!IsOneTimeEvent(meeting1.MeetingType)
                             && (!IsOneTimeEvent(meeting2.MeetingType)))
-                        //        if ((meeting1.StartTime <= meeting2.EndTime) && (meeting1.EndTime >= meeting2.StartTime))
                         {
                             if (Conflict(meeting1, meeting2))
                             {
@@ -329,13 +328,13 @@ namespace ucsdscheduleme.Repo
             // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                DateTime? lastestScheduleTime = new DateTime(0,0,0,0,0,0);
-                DateTime? lastestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
+                DateTime? lastestScheduleTime = new DateTime(1, 1, 1, 0, 0, 0);
+                DateTime? lastestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
 
                 // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    lastestClassTime = new DateTime(0, 0, 0, 0, 0, 0, 0);
+                    lastestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
@@ -373,18 +372,18 @@ namespace ucsdscheduleme.Repo
         public List<Section> LatestStart(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            DateTime? latestStart = new DateTime(0, 0, 0, 0, 0, 0);
+            DateTime? latestStart = new DateTime(1, 1, 1, 0, 0, 0);
 
             // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                DateTime? earliestScheduleTime = new DateTime(0, 0, 0, 0, 0, 0);
-                DateTime? earliestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
+                DateTime? earliestScheduleTime = new DateTime(1, 1, 1, 0, 0, 0);
+                DateTime? earliestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
 
                 // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    earliestClassTime = new DateTime(0, 0, 0, 0, 0, 0);
+                    earliestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
