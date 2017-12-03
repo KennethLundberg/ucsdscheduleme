@@ -208,7 +208,8 @@ namespace ucsdscheduleme.Controllers
 
             // Return response object
 
-            var calendarEvents = FormatRepo.PopulateBaseEvents(section, course);
+            var calendarEvents = FormatRepo.PopulateSectionEventsForBase(new List<Section> { section }, course)
+                                           .Select(d => d.Value).First();
 
             var response = new CustomEventResponse
             {

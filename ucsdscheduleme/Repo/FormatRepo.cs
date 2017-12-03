@@ -86,7 +86,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="sectionsForBase">All the sections contained in the current base.</param>
         /// <param name="course">The course these sections belong to.</param>
         /// <returns>A populated dictionary containing all calendar events for each section in the base.</returns>
-        private static Dictionary<int, List<CalendarEvent>> PopulateSectionEventsForBase(List<Section> sectionsForBase, Course course)
+        public static Dictionary<int, List<CalendarEvent>> PopulateSectionEventsForBase(List<Section> sectionsForBase, Course course)
         {
             Dictionary<int, List<CalendarEvent>> thisBasesSectionEvents = new Dictionary<int, List<CalendarEvent>>();
             foreach (var section in sectionsForBase)
