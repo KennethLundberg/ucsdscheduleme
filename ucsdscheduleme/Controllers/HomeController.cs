@@ -27,48 +27,73 @@ namespace ucsdscheduleme.Controllers
 
         public IActionResult Index()
         {
-            ScheduleViewModel model;
+            UserScheduleViewModel model = new UserScheduleViewModel();
 
             // Find our user with the auth token.
             var user = _userManager.GetUserAsync(User).Result;
 
-#if DEBUG
-            if (user == null)
-                return View();
-#endif
             // Grab schedule from db.
-            List<Section> schedule = user.UserSections?.Select(us => us.Section).ToList();
+            var sectionIds = _context.UserSections
+                                    .Where(us => us.User == user)
+                                    .Select(us => us.SectionId);
+
+            var schedule = _context.Sections
+                                   .Include(s => s.Course)
+                                        .ThenInclude(c => c.User)
+                                   .Include(s => s.Course)
+                                        .ThenInclude(c => c.Sections)
+                                            .Include(s => s.Professor)
+                                   .Include(s => s.Course)
+                                        .ThenInclude(c => c.Sections)
+                                            .ThenInclude(s => s.Meetings)
+                                                .ThenInclude(m => m.Location)
+                                   .Include(s => s.Course)
+                                        .ThenInclude(c => c.Cape)
+                                            .ThenInclude(ca => ca.Professor)
+                                                .ThenInclude(p => p.RateMyProfessor)
+                                   
+                                   .Where(s => sectionIds.Contains(s.Id))
+                                   .ToList();
 
             // Populate model with schedule info.
             if (schedule != null)
             {
-                model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+                model.ScheduleViewModel = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+                model.CourseListItems = schedule.Select(s => new CourseListItemViewModel
+                    {
+                        CourseId = s.Course.Id,
+                        CourseAbbreviation = s.Course.CourseAbbreviation,
+                        IsCustomEvent = s.Course.User != null
+                    }).ToList();
             }
             else
             {
-                model = new ScheduleViewModel();
+                model.ScheduleViewModel = new ScheduleViewModel();
             }
 
             return View(model);
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public void ChangeScheduleSection([FromBody] ChangeSectionViewModel sections)
+        {
+            var user = _userManager.GetUserAsync(User).Result;
+
+            var sectionToRemove = _context.UserSections.FirstOrDefault(us => us.User == user && us.SectionId == sections.SectionIdToRemove);
+            if(sectionToRemove != null)
+            {
+                _context.Remove(sectionToRemove);
+            }
+            if(_context.Sections.Any(s => s.Id == sections.SectionIdToAdd))
+            {
+                _context.UserSections.Add(new UserSection { SectionId = sections.SectionIdToAdd, User = user });
+            }
+            _context.SaveChanges();
         }
 
         [HttpPost]
@@ -92,6 +117,18 @@ namespace ucsdscheduleme.Controllers
             PossibleSchedules schedules = scheduleRepo.FindScheduleForClasses(courses);
 
             List<Section> schedule = scheduleRepo.Optimize(optimization, schedules);
+
+            // Get the current user.
+            var user = _userManager.GetUserAsync(User).Result;
+            // Get the schedule sections for this user.
+            var sectionsToRemove = _context.UserSections.Where(us => us.User == user);
+            // Create user sections to add.
+            var sectionsToAdd = schedule.Select(s => new UserSection { Section = s, User = user });
+            // Remove old sections.
+            _context.RemoveRange(sectionsToRemove);
+            // Add new ones.
+            _context.AddRange(sectionsToAdd);
+            _context.SaveChanges();
 
             ScheduleViewModel model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
 
@@ -144,7 +181,9 @@ namespace ucsdscheduleme.Controllers
             };
 
             var meeting = new Meeting() {
+                IsUnique = true,
                 MeetingType = MeetingType.CustomEvent,
+                Code = "A00",
                 Days = data.Days,
                 StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
                 EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),

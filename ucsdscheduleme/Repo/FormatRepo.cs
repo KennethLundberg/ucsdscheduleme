@@ -32,6 +32,7 @@ namespace ucsdscheduleme.Repo
                 var selectedSection = courseSection.Key;
                 CourseViewModel thisCourse = new CourseViewModel
                 {
+                    CourseAbbreviation = course.CourseAbbreviation,
                     Bases = new Dictionary<char, BaseViewModel>(),
                     SelectedSection = selectedSection.Id,
                     // If our sections have no meetings, we're in trouble. Time to abort.
@@ -92,9 +93,10 @@ namespace ucsdscheduleme.Repo
             {
                 List<CalendarEvent> thisSectionsEvents = new List<CalendarEvent>();
                 var sectionSpecificMeetings = section.Meetings.Where(m => m.IsUnique && !IsOneTimeEvent(m.MeetingType));
+                string professorName = section.Professor?.Name ?? "Unknown";
                 foreach (var meeting in sectionSpecificMeetings)
                 {
-                    AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, section.Professor.Name, meeting);
+                    AddCalendarEvent(ref thisSectionsEvents, course.CourseAbbreviation, professorName, meeting);
                 }
                 thisBasesSectionEvents.Add(section.Id, thisSectionsEvents);
             }
@@ -172,10 +174,31 @@ namespace ucsdscheduleme.Repo
         {
             var capeForSection = section.Course.Cape.FirstOrDefault(ca => ca.Professor == section.Professor);
 
-            var rateMyProfessor = section.Professor.RateMyProfessor;
+            var professor = section.Professor;
+            var rateMyProfessor = professor?.RateMyProfessor;
+            string professorName;
 
-            string professorString = (capeForSection == null) ? $"{section.Professor.Name} (Capes Unknown)" 
-                                                              : section.Professor.Name;
+            if(professor == null)
+            {
+                // If this is a custom event.
+                if(section.Course.User != null)
+                {
+                    // We don't want this custom event to create a metadata object.
+                    return null;
+                }
+                // Otherwise we just don't know who the professor is
+                else
+                {
+                    professorName = "Unk Professor";
+                }
+            }
+            else
+            {
+                professorName = professor.Name;
+            }
+
+            string professorString = (capeForSection == null) ? $"{professorName} (Capes Unknown)" 
+                                                              : professorName;
             return new Metadata
             {
                 AverageGpaExpected = capeForSection?.AverageGradeExpected ?? 0M,
