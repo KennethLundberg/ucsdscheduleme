@@ -1304,16 +1304,16 @@ function customEventCallout(n, m, tu, w, th, f, st, et) {
 
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
-    console.log("test");
+    //console.log("test");
     // generate schedule with new event
     xhr.onreadystatechange = function () {
-        console.log("test2");
+        //console.log("test2");
         if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log("Custom Event: " + JSON.stringify(xhr.responseText));
-            var text = JSON.parse(xhr.responseText);
-            //get course id to add to scheduleing
-            var course = { "id": text.id, "courseAbbreviation": text.courseAbbrev };
-            addToScheduleList(course);
+            //console.log("Custom Event: " + JSON.stringify(xhr.responseText));
+            //var text = JSON.parse(xhr.responseText);
+            ////get course id to add to scheduleing
+            //var course = { "id": text.id, "courseAbbreviation": text.courseAbbrev };
+            //addToScheduleList(course);
             //generateSchedule();
             console.log("ADDED CUSTOM EVENT");
         }

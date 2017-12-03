@@ -129,7 +129,7 @@ namespace ucsdscheduleme.Controllers
             //_context.Courses.RemoveRange(_context.Courses.Where(c => c.Id.Contains("1002")));
             //_context.SaveChanges();
 
-            Console.WriteLine("Custom Event Controller " + data.ToString());
+            //Console.WriteLine("Custom Event Controller " + data.ToString());
 
             Days days = 0;
 
