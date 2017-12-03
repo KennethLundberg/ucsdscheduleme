@@ -108,7 +108,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="firstSection">The first section to pull the list of meetings from.</param>
         /// <param name="course">The course that all these sections are a part of.</param>
         /// <returns>A populated list of all calendar events.</returns>
-        private static List<CalendarEvent> PopulateBaseEvents(Section firstSection, Course course)
+        public static List<CalendarEvent> PopulateBaseEvents(Section firstSection, Course course)
         {
             // If a meeting is not associated with a section, then we know that it is used
             // by all classes in this base.
@@ -121,9 +121,11 @@ namespace ucsdscheduleme.Repo
             {
                 var type = baseMeeting.MeetingType;
 
+                string professorName = firstSection.Professor?.Name ?? "Unknown";
+
                 if (!IsOneTimeEvent(type))
                 {
-                    AddCalendarEvent(ref baseEvents, course.CourseAbbreviation, firstSection.Professor.Name, baseMeeting);
+                    AddCalendarEvent(ref baseEvents, course.CourseAbbreviation, professorName, baseMeeting);
                 }
             }
 

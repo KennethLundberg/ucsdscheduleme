@@ -29,7 +29,7 @@ namespace ucsdscheduleme
         {
             services.Configure<MvcOptions>(options =>
             {
-//                options.Filters.Add(new RequireHttpsAttribute());
+                options.Filters.Add(new RequireHttpsAttribute());
             });
                 
             // Remote database
@@ -67,11 +67,11 @@ namespace ucsdscheduleme
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
-           // app.UseRewriter(options);
+            app.UseRewriter(options);
 
             app.UseStaticFiles();
 
-//            app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

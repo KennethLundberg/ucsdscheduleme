@@ -5,15 +5,21 @@ using System.Threading.Tasks;
 
 namespace ucsdscheduleme.Models
 {
-    public class CustomEvent
+    public class CustomEventRequest
     {
-        public string name { get; set; }
-        public bool monday { get; set; }
-        public bool tuesday { get; set; }
-        public bool wednesday { get; set; }
-        public bool thursday { get; set; }
-        public bool friday { get; set; }
-        public string startTime { get; set; }
-        public string endTime { get; set; }
+        public string Name { get; set; }
+        public Days Days { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+    }
+
+    public class CustomEventResponse
+    {
+        public string Error { get; set; }
+        public bool Success { get; set; }
+        public int CourseId { get; set; }
+        public int SectionId { get; set; }
+        public string CourseAbbreviation { get; set; }
+        public List<CalendarEvent> CalendarEvents { get; set; }
     }
 }

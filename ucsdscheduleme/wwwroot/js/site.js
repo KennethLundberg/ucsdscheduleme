@@ -616,6 +616,8 @@ function calculateMeetingPosition(meeting) {
  */
 function insertMeeting(meeting, courseId, baseId, sectionId)
 {
+    var isCustomEvent = meeting.type != "CustomEvent";
+
     /* Calculate the meeting position using helper function */
     var pos = calculateMeetingPosition(meeting);
     var top = pos.top;
@@ -641,7 +643,6 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     /* create the Change and edit-button icon and add to event div */
     var editButton = document.createElement('div');
     editButton.className = "edit-button";
-    event.append(editButton);
 
     var editSpan = document.createElement('span');
     editSpan.innerHTML = "Change";
@@ -653,19 +654,18 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
     editIcon.setAttribute("aria-hidden", true); 
     editButton.append(editIcon);
 
-    event.append(editButton);
+    if (!isCustomEvent) {
+        event.append(editButton);
+    }
 
     /* create an icon label and add to icon div */
     var iconLabel = document.createElement('div');
     iconLabel.className = "class-icon-label";
-    iconLabel.innerText = "LE";
+    //iconLabel.innerText = "LE";
     icon.append(iconLabel);
 
     // Use first two letters as text
     iconLabel.innerText = meeting.type.toUpperCase().substr(0, 2);
-    console.log("----------");
-    console.log("Meeting type: " + meeting.type);
-    console.log("----------");
 
     /* create an event info div */
     var eventInfo = document.createElement('div');
@@ -678,7 +678,9 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
 
     /* professor */
     var profSpan = document.createElement('span');
-    profSpan.innerHTML = meeting.professorName;
+    if (!isCustomEvent) {
+        profSpan.innerHTML = meeting.professorName;
+    }
 
     /* time range */
     var timeSpan = document.createElement('span');
@@ -715,28 +717,37 @@ function insertMeeting(meeting, courseId, baseId, sectionId)
  * @param {Meeting} meetings - the JSON object with a list of selected bases, selections
  * See global variable TODO for the structure
  */
-function updateMeetings(meetings) {
+function updateMeetings(courses) {
     /* iterate through all the meetings in the JSON */
-    for(meeting in meetings) {
+    for (courseId in courses) {
+        var course = courses[courseId];
+        
         /* extract selected base and section - the events to display on calendar */
-        var selectedBase = meetings[meeting].selectedBase;
-        var selectedSection = meetings[meeting].selectedSection;
+        var selectedBase = course.selectedBase;
+        var selectedSection = course.selectedSection;
 
-        /* get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
-        var baseEvents = meetings[meeting].bases[selectedBase].baseEvents;
-        var sectionEvents = meetings[meeting].bases[selectedBase].sectionEvents[selectedSection];
+        var base = course.bases[selectedBase];
 
-        /* insert all base elements */
-        for(var i = 0; i < baseEvents.length; i++) {
-            insertMeeting(baseEvents[i], meeting, selectedBase);
+        // Get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
+        var baseEvents = base.baseEvents;
+        
+        // If there is no base events for this course, move on.
+        if (baseEvents) {
+            // Insert all base elements.
+            for (var i = 0; i < baseEvents.length; i++) {
+                insertMeeting(baseEvents[i], courseId, selectedBase);
+            }
         }
 
-        /* check if there are any sections */
-        if (sectionEvents != null) {
-
-            /* insert all section elements */
-            for(var i = 0; i < sectionEvents.length; i++) {
-                insertMeeting(sectionEvents[i], meeting, selectedBase, selectedSection);
+        // Check if our course has any section specific events.
+        if (base.sectionEvents) {
+            var sectionEvents = base.sectionEvents[selectedSection];
+            // Check if there are any sections.
+            if (sectionEvents) {
+                // Insert all section elements.
+                for (var i = 0; i < sectionEvents.length; i++) {
+                    insertMeeting(sectionEvents[i], courseId, selectedBase, selectedSection);
+                }
             }
         }
     }
@@ -1059,11 +1070,17 @@ function insertMetadata(metadata) {
 function updateMetadata(courses) {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
+        var course = courses[courseId];
         /* extract selected base - the events to display on calendar */
-        var selectedBase = courses[courseId].selectedBase;
+        var selectedBase = course.selectedBase;
 
         /* get list of one time events (i.e. finals) */
-        var metadata = courses[courseId].bases[selectedBase].metadata;
+        var metadata = course.bases[selectedBase].metadata;
+
+        // If there is no metadata for this class, skip over it.
+        if (!metadata) {
+            continue;
+        }
 
         /* insert metadata */
         insertMetadata(metadata);
@@ -1081,18 +1098,23 @@ function updateOverallMetadata(courses) {
     var overallReceivedGpa= 0;
 
     //iterate through all the metadata in the JSON
-    for (course in courses)
+    for (courseId in courses)
     {
+        var course = courses[courseId];
         /* extract selected base - the events to display on calendar */
-        var selectedBase = courses[course].selectedBase;
+        var selectedBase = course.selectedBase;
 
         /* get list of one time events (i.e. finals) */
-        var metadata = courses[course].bases[selectedBase].metadata;
+        var metadata = course.bases[selectedBase].metadata;
 
-        //var metadata = extractMetadata(course);
-        overallWorkload = overallWorkload + metadata.averageWorkload;
-        overallExpectedGpa = overallExpectedGpa + metadata.averageGpaExpected;
-        overallReceivedGpa = overallReceivedGpa + metadata.averageGpaReceived;
+        // If there is no metadata for this course, skip it.
+        if (!metadata) {
+            continue;
+        }
+
+        overallWorkload += metadata.averageWorkload;
+        overallExpectedGpa += metadata.averageGpaExpected;
+        overallReceivedGpa += metadata.averageGpaReceived;
 
         numCourses++;
     }
@@ -1208,11 +1230,18 @@ function insertOneTimeEvents(oneTimeEventData) {
 function updateOneTimeEvents(courses) {
     /* iterate through all the meetings in the JSON */
     for (courseId in courses) {
+        var course = courses[courseId];
+
         /* extract selected base - the events to display on calendar */
-        var selectedBase = courses[courseId].selectedBase;
+        var selectedBase = course.selectedBase;
 
         /* get list of one time events (i.e. finals) */
-        var oneTimeEvents = courses[courseId].bases[selectedBase].oneTimeEvents;
+        var oneTimeEvents = course.bases[selectedBase].oneTimeEvents;
+
+        // If there are no one time events for this course, go to the next one.
+        if (!oneTimeEvents) {
+            continue;
+        }
 
         /* insert all one time events */
         for (var i = 0; i < oneTimeEvents.length; i++) {
@@ -1284,54 +1313,64 @@ function visibility_off(id) {
     e.style.display = 'none';
 }
 
-function customEventCallout(n, m, tu, w, th, f, st, et) {
+function customEventCallout(name, days, startTime, endTime) {
     var xhr = new XMLHttpRequest();
     var url = myApp.urls.customEvent;
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     var send = {
-        "name": n,
-        "monday": m,
-        "tuesday": tu,
-        "wednesday": w,
-        "thursday": th,
-        "friday": f,
-        "startTime": st,
-        "endTime": et
+        "name": name,
+        "days": days,
+        "startTime": startTime,
+        "endTime": endTime
     };
 
     //TODO check valid input
 
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
-    //console.log("test");
-    // generate schedule with new event
+
+    // Generate schedule with new event
     xhr.onreadystatechange = function () {
-        //console.log("test2");
         if (xhr.readyState == 4 && xhr.status == 200) {
-            //console.log("Custom Event: " + JSON.stringify(xhr.responseText));
-            //var text = JSON.parse(xhr.responseText);
-            ////get course id to add to scheduleing
-            //var course = { "id": text.id, "courseAbbreviation": text.courseAbbrev };
-            //addToScheduleList(course);
-            //generateSchedule();
-            console.log("ADDED CUSTOM EVENT");
+            console.log("Custom Event: " + JSON.stringify(xhr.responseText));
+            var text = JSON.parse(xhr.responseText);
+
+            //get course id to add to scheduleing
+            var course = { "id": text.courseId, "courseAbbreviation": text.courseAbbreviation };
+            addToScheduleList(course);
+
+            var scheduleCourse = {
+                "selectedBase": "A",
+                "selectedSection": text.sectionId,
+                "bases": {
+                    "A": {
+                        "baseEvents": text.calendarEvents
+                    }
+                }
+            }
+
+            myApp.courses[text.courseId] = scheduleCourse;
+
+            updateSchedule(myApp.courses);
         }
     }
 }
 
 function saveCustomEvent() {
     var name = document.getElementById('custom-event-name').value;
-    var monday = document.getElementById('custom-event-monday').checked;
-    var tuesday = document.getElementById('custom-event-tuesday').checked;
-    var wednesday = document.getElementById('custom-event-wednesday').checked;
-    var thursday = document.getElementById('custom-event-thursday').checked;
-    var friday = document.getElementById('custom-event-friday').checked;
+    var monday = document.getElementById('custom-event-monday').checked << 1;
+    var tuesday = document.getElementById('custom-event-tuesday').checked << 2;
+    var wednesday = document.getElementById('custom-event-wednesday').checked << 3;
+    var thursday = document.getElementById('custom-event-thursday').checked << 4;
+    var friday = document.getElementById('custom-event-friday').checked << 5;
     var startTime = document.getElementById('custom-event-starttime').value;
     var endTime = document.getElementById('custom-event-endtime').value;
 
+    var days = monday | tuesday | wednesday | thursday | friday;
+
     /*callout function*/
-    customEventCallout(name, monday, tuesday, wednesday, thursday, friday, startTime, endTime);
+    customEventCallout(name, days, startTime, endTime);
 
     closeCustomEvent();
 }

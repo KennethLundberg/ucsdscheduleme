@@ -23,7 +23,7 @@ namespace ucsdscheduleme.Data
 
             // Calling the Scraping Controller
             ScrapeRepo scrapeAll = new ScrapeRepo(context);
-            scrapeAll.Update();
+            //scrapeAll.Update();
 
             //context.Database.ExecuteSqlCommandAsync();
 

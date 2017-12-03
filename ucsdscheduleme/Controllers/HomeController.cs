@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using PossibleSchedules = System.Collections.Generic.List<System.Collections.Generic.List<ucsdscheduleme.Models.Section>>;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ucsdscheduleme.Controllers
 {
-#if !DEBUG
     [Authorize]
-#endif
     public class HomeController : Controller
     {
         private readonly ScheduleContext _context;
@@ -121,50 +120,23 @@ namespace ucsdscheduleme.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCustomEvent([FromBody] CustomEvent data)
+        public IActionResult CreateCustomEvent([FromBody] CustomEventRequest data)
         {
-            //var user = _userManager.GetUserAsync(User).Result;
+            var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
+            var user = _userManager.GetUserAsync(User).Result;
 
-            //testing
-            //_context.Courses.RemoveRange(_context.Courses.Where(c => c.Id.Contains("1002")));
-            //_context.SaveChanges();
-
-            //Console.WriteLine("Custom Event Controller " + data.ToString());
-
-            Days days = 0;
-
-            if(data.monday == true) {
-                days = days & Days.Monday;
-            }
-            if (data.tuesday == true)
-            {
-                days = days & Days.Tuesday;
-            }
-            if (data.wednesday == true)
-            {
-                days = days & Days.Wednesday;
-            }
-            if (data.thursday == true)
-            {
-                days = days & Days.Thursday;
-            }
-            if (data.friday == true)
-            {
-                days = days & Days.Friday;
-            }
-
-            string[] startTokens = data.startTime.Split(':');
-            string[] endTokens = data.endTime.Split(':');
-
+            // Get time data
+            string[] startTokens = data.StartTime.Split(':');
+            string[] endTokens = data.EndTime.Split(':');
             var startHr = Int32.Parse(startTokens[0]);
             var startMin = Int32.Parse(startTokens[1]);
             var endHr = Int32.Parse(endTokens[0]);
             var endMin = Int32.Parse(endTokens[1]);
 
+            // Initialize database objects
             var course = new Course() {
-                CourseAbbreviation = data.name,
-                //UserId = user.Id,
-                //User = user
+                CourseAbbreviation = data.Name,
+                User = user
             };
 
             var section = new Section() {
@@ -172,34 +144,40 @@ namespace ucsdscheduleme.Controllers
             };
 
             var meeting = new Meeting() {
-                Days = days,
+                MeetingType = MeetingType.CustomEvent,
+                Days = data.Days,
                 StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
                 EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
             };
 
-            //Add back connections
+            // Add back connections
             section.Meetings.Add(meeting);
             course.Sections.Add(section);
 
-            //var userSection = new UserSection() {
-            //    Section = section,
-            //    SectionId = 
-            //    section.Id,
-            //    User = user,
-            //    UserId = user.Id
-            //};
+            var userSection = new UserSection() {
+                Section = section,
+                User = user,
+            };
 
-            //WILL THIS ADD IT TO DATABASE?
-            //user.UserSections.Add(userSection);
-
-            //add to database
+            // Add to database
             _context.Courses.Add(course);
             _context.Sections.Add(section);
             _context.Meetings.Add(meeting);
             _context.SaveChanges();
 
-            return Json(course);
-            //return View();
+            // Return response object
+
+            var calendarEvents = FormatRepo.PopulateBaseEvents(section, course);
+
+            var response = new CustomEventResponse
+            {
+                CourseId = course.Id,
+                SectionId = section.Id,
+                CourseAbbreviation = course.CourseAbbreviation,
+                CalendarEvents = calendarEvents
+            };
+
+            return Json(response);
         }
     }
 }
