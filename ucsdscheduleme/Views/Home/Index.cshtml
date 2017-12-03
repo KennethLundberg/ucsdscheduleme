@@ -1,4 +1,4 @@
-﻿@model ucsdscheduleme.Models.ScheduleViewModel
+﻿@model ucsdscheduleme.Models.UserScheduleViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,79 +8,19 @@
         <div class="calendar">
             <div class="schedule">
                 <div id="monday" class="schedule-group">
-                    <div class="schedule-header"><span>Monday</span></div>
-                    <div class="event">
-                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-                        <div class="event-header">
-                            <div class="class-icon" id="lecture"><div class="class-icon-label">LE</div></div>
-                            <div class="event-info">
-                                <span>CSE 110</span>
-                                <span>Gary Gillespie</span>
-                                <span>8:00am - 9:20am</span>
-                                <span>A00</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="schedule-header"><span>Monday</span></div>                   
                 </div>
                 <div id="tuesday" class="schedule-group">
-                    <div class="schedule-header"><span>Tuesday</span></div>
-                    <div class="event">
-                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-                        <div class="event-header">
-                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
-                            <div class="event-info">
-                                <span>CSE 110</span>
-                                <span>Gary Gillespie</span>
-                                <span>8:00am - 9:20am</span>
-                                <span>A00</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="schedule-header"><span>Tuesday</span></div>                 
                 </div>
                 <div id="wednesday" class="schedule-group">
-                    <div class="schedule-header"><span>Wednesday</span></div>
-                    <div class="event">
-                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-                        <div class="event-header">
-                            <div class="class-icon" id="discussion"><div class="class-icon-label">DI</div></div>
-                            <div class="event-info">
-                                <span>CSE 110</span>
-                                <span>Gary Gillespie</span>
-                                <span>8:00am - 9:20am</span>
-                                <span>A00</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="schedule-header"><span>Wednesday</span></div>                   
                 </div>
                 <div id="thursday" class="schedule-group">
                     <div class="schedule-header"><span>Thursday</span></div>
-                    <div class="event">
-                        <div class="edit-button"><span class="edit-span">Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-                        <div class="event-header">
-                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
-                            <div class="event-info">
-                                <span>CSE 110</span>
-                                <span>Gary Gillespie</span>
-                                <span>8:00am - 9:20am</span>
-                                <span>A00</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div id="friday" class="schedule-group">
                     <div class="schedule-header"><span>Friday</span></div>
-                    <div class="event">
-                        <div class="edit-button"><span >Change</span><i class="fa fa-cog" aria-hidden="true"></i></div>
-                        <div class="event-header">
-                            <div class="class-icon" id="lab"><div class="class-icon-label">LA</div></div>
-                            <div class="event-info">
-                                <span>CSE 110</span>
-                                <span>Gary Gillespie</span>
-                                <span>8:00am - 9:20am</span>
-                                <span>A00</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="time">
@@ -130,83 +70,6 @@
                 </tr>
             </thead>
             <tbody id="onetime">
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
-                <tr>
-                    <td>CSE 100</td>
-                    <td>Final</td>
-                    <td>Monday 11/17</td>
-                    <td>8:00AM-12:00PM</td>
-                    <td>WLH 2201</td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -227,6 +90,15 @@
             </div>
         </div>
         <div class="class-list" id="class-list">
+            @foreach(var courseItem in Model.CourseListItems)
+            {
+                <div class="@((courseItem.IsCustomEvent) ? "custom class" : "class")" id="@courseItem.CourseId">
+                    <span>@courseItem.CourseAbbreviation</span>
+                    <div class="class-icon">
+                        <i class="fa fa-window-close" aria-hidden="true"></i>
+                    </div>
+                </div>
+            }
         </div>
         <div class="generate-schedule-container">
             <select id="optimization" style="width: 100%;">
@@ -249,67 +121,83 @@
             <table id="tabledata">
                 <tr>
                     <td>Overall Workload</td>
-                    <td id="overall-workload">29.9 Hr/wk</td>
+                    <td id="overall-workload">0 Hr/wk</td>
                 </tr>
                 <tr> 
                     <td>Overall Avg. GPA Expected</td>
-                    <td id="gpa-expected">B+ (3.34)</td>
+                    <td id="gpa-expected">F (NaN)</td>
                 </tr>
                 <tr>
                     <td>Overall Avg. Received</td>
-                    <td id="gpa-received">B- (2.99)</td>
+                    <td id="gpa-received">F (NaN)</td>
                 </tr>
             </table>
         </div>
         <div class="course-stat-container" id="course-stat-container">
-            <div class="course-stat" id="course1">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Gary Gillespie</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
-            </div>
-            <div class="course-stat" id="course2">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Professor Name</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
-            </div>
-            <div class="course-stat" id="course3">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Gary Gillespie</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
-            </div>
-            <div class="course-stat" id="course3">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Gary Gillespie</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
-            </div>
-            <div class="course-stat" id="course3">
-                <div class="course-name">CSE 110</div>
-                <div class="professor-name">Gary Gillespie</div>
-                <div class="course-info">Avg. Workload: 69 Hrs/Wk </div>
-                <div class="course-info">Avg. Grade Expected: F- (0.00)</div>
-                <div class="course-info">Avg. Grade Received: F- (0.00)</div>
-            </div>
         </div>
+        <div class="button" onclick="visibility_on('friend-form');">Add Custom Event</div>
         <div class="logout-button"></div>
     </div>
 </div>
 
+<div class="custom-event-modal" id="friend-form">
+    <div id="custom-event-wrapper">
+        <div id="custom-event-name-wrapper">
+            <input type="text" maxlength="10" placeholder="Event Name" id="custom-event-name" />
+        </div>
+        <div>
+            <div id="custom-event-time-wrapper">
+                <input type="time" id="custom-event-starttime" min="07:30" max="23:15"/>
+                <span> to </span>
+                <input type="time" id="custom-event-endtime" min="7:45" max="23:30" />
+            </div>
+        </div>
+        <div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-monday" />
+                <span>Mon</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-tuesday" />
+                <span>Tue</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-wednesday" />
+                <span>Wed</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-thursday" />
+                <span>Thu</span>
+            </div>
+            <div class="custom-event-day-input">
+                <input type="checkbox" id="custom-event-friday" />
+                <span>Fri</span>
+            </div>
+        </div>
+        <div class="custom-event-button" onclick="saveCustomEvent();">Save</div>
+        <div class="custom-event-button" onclick="closeCustomEvent();">Cancel</div>
+    </div>
+</div>
+
 <script>
+    var coursesFromModel = @Html.Raw(Json.Serialize(@Model.ScheduleViewModel.Courses));
+    var courseListFromModel = @Html.Raw(Json.Serialize(@Model.CourseListItems.Select(cl => cl.CourseId)));
     var myApp = {
+        constants: {
+            coursePrefix: "_c",
+            basePrefix: "_b",
+            sectionPrefix: "_s",
+            baseEventClass: "undefined"
+        },
         urls: {
             generateSchedule: "@Url.Action("GenerateSchedule","Home")",
-            typeAhead: "@Url.Action("TypeAhead", "Home")"
+            typeAhead: "@Url.Action("TypeAhead", "Home")",
+            customEvent: "@Url.Action("CreateCustomEvent", "Home")",
+            removeCustomEvent: "@Url.Action("RemoveCustomEvent", "Home")",
+            changeScheduleSection: "@Url.Action("ChangeScheduleSection", "Home")"
         },
-	    coursesToSchedule: [],
-        courses: []
+        coursesToSchedule: courseListFromModel,
+        courses: coursesFromModel
     };
 
     var isEditing = false;
@@ -318,17 +206,17 @@
     	var search = document.getElementById("search");
         search.addEventListener("input", typeAhead);
 
-	
+
         var input = document.getElementById("search");
         var dropdown = document.getElementById("courseItems");
 
-	
+
         input.addEventListener("focusin", fin);
         input.addEventListener("focusout", fout);
 
         dropdown.addEventListener("focusin", fin);
 	    dropdown.addEventListener("focusout", fout);
-	
+
 	    var isHover;
         dropdown.onmouseover = function() {
             isHover = true;
@@ -343,24 +231,24 @@
         }
 
         function fout() {
-	        
+
 	        if(!isHover) {
 	        	dropdown.style.display = "none";
-	        }            	
+	        }
         }
 
 	    document.addEventListener('click',function(e) {
             if (e.target) {
                 if (e.target.classList.contains("courseItem")) {
                     //call addList
-                    addList(e.target);
+                    addCourse(e.target);
                 } else if (e.target.classList.contains("fa-window-close")) {
                     removeCourse(e);
                 }
             }
 
 	        // clicked on a calendar event
-	        var outerDiv = findOuterDiv(e.target, 'event'); 
+	        var outerDiv = findOuterDiv(e.target, 'event');
 	        if(e.target && outerDiv) {
 	        	// currently editing AND event is activated
 	        	if(isEditing && outerDiv.classList.contains('event-activated')) {
@@ -403,7 +291,7 @@
 				    });
 		        }
 		    }
-	        
+
         });
     })();
 </script>

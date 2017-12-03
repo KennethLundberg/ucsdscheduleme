@@ -29,12 +29,13 @@ namespace ucsdscheduleme
         {
             services.Configure<MvcOptions>(options =>
             {
-//                options.Filters.Add(new RequireHttpsAttribute());
+                options.Filters.Add(new RequireHttpsAttribute());
             });
                 
             // Remote database
             services.AddDbContext<ScheduleContext>(options =>
-                options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseSqlServer(@"Data Source=usm.c97rq5qtindm.us-west-2.rds.amazonaws.com;Initial Catalog=usm;User Id=uadmin;Password=testtest;"));
        
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScheduleContext>()
@@ -66,11 +67,11 @@ namespace ucsdscheduleme
             var options = new RewriteOptions()
                 .AddRedirectToHttps();
 
-           // app.UseRewriter(options);
+            app.UseRewriter(options);
 
             app.UseStaticFiles();
 
-//            app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
