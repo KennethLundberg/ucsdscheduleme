@@ -148,8 +148,9 @@ namespace ucsdscheduleme.Controllers
         {
             var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
 
-            var suggestedCourses = _context.Courses.AsNoTracking()
-                                      .Where(c => c.CourseAbbreviation.ToUpper().StartsWith(search.Input.ToUpper()));
+            var suggestedCourses = _context.Courses                          
+                                           .AsNoTracking()
+                                           .Where(c => c.UserId == null && c.CourseAbbreviation.ToUpper().StartsWith(search.Input.ToUpper()));
 
             if (search.AlreadyAddedCourses != null)
             {
