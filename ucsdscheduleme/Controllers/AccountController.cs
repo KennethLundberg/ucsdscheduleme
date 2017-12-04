@@ -103,7 +103,7 @@ namespace ucsdscheduleme.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Json(Url.Action(nameof(HomeController.Index), "Home"));
+            return Content(Url.Action(nameof(HomeController.Index), "Home"));
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
