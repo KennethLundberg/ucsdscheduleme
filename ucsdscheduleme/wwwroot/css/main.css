@@ -149,7 +149,6 @@ ul {
     top: 50px;
     height: 100px;
     z-index: 1;
-    cursor: pointer;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -190,23 +189,25 @@ ul {
         }
 
         .event .event-header .event-info {
-            margin-top: 10px;
+            margin-top: 5px;
             position: relative;
             text-align: center;
         }
 
             .event .event-header .event-info span {
                 display: block;
-                font-size: 10px;
+                font-size: 11px;
             }
 
 .event-activated {
+    cursor: pointer;
     box-shadow: 0px 0px 10px black;
     background-color: #C5EFF7;
     z-index: 2;
 }
 
 .event-deactivated {
+    cursor: pointer;
     opacity: 0.75;
     background-color: rgba(255, 0, 0, 0.2);
 }
@@ -236,7 +237,6 @@ ul {
 
     .bottom thead th {
         width: 20%;
-        padding-right: 20px;
         color: #FEFEFE;
         font-size: 14px;
         height: 2em;
@@ -325,11 +325,16 @@ ul {
                     color: #FEFEFE;
                 }
 
+.class-list {
+    height: 42%;
+    margin-top: 15px;
+    overflow-y: scroll;
+}
+
 .class {
     border-top: 4px solid #FFCC03;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     padding: 15px;
-    margin-top: 15px;
     margin-bottom: 15px;
     background-color: #203E5F;
     color: #FEFEFE;
@@ -468,12 +473,13 @@ ul {
 
 .edit-button {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
-    font-size: 10px;
+    font-size: 11px;
     padding: 5px;
+    margin-right: 2px;
     vertical-align: text-bottom;
-    color: #666;
+    color: #EDEDED;
 }
 
     .edit-button:hover {
@@ -482,7 +488,7 @@ ul {
     }
 
     .edit-button span {
-        margin-right: 5px;
+        margin-right: 3px;
     }
 
 .unlock-button {
@@ -737,6 +743,15 @@ ul {
     background-color: #f03434;
     color: white;
     margin-bottom: 15px;
+    position: absolute;
+    top: 0;
+    left: -500px;
+    transform: translateY(50%);
+}
+
+.pop-up {
+    left: 25px;
+    transition: 0.5s;
 }
 
 /* The close button */
