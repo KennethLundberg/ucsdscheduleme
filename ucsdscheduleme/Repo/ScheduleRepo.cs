@@ -323,38 +323,38 @@ namespace ucsdscheduleme.Repo
         public List<Section> EarliestEnd(List<List<Section>> possibleSchedules)
         {
             List<Section> result = possibleSchedules[0];
-            DateTime? earliestEnd = new DateTime(0, 0, 0, 23, 59, 0);
+            DateTime? earliestEnd = new DateTime(1, 1, 1, 23, 59, 0);
 
-            // Get the lastest time for a schedule
+            // Get the latest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
                 DateTime? lastestScheduleTime = new DateTime(1, 1, 1, 0, 0, 0);
-                DateTime? lastestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
 
-                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    lastestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
+                    DateTime? latestCourseTime = new DateTime(1, 1, 1, 0, 0, 0);
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
                             meeting.MeetingType != MeetingType.Final &&
                             meeting.MeetingType != MeetingType.Midterm)
                         {
-                            if (meeting.EndTime > lastestClassTime)
+                            // Get the latest end time for a course
+                            if (meeting.EndTime > latestCourseTime)
                             {
-                                lastestClassTime = meeting.EndTime;
+                                latestCourseTime = meeting.EndTime;
                             }
                         }
                     }
+
+                    // Get the latest end time for the schedule
+                    if (latestCourseTime > lastestScheduleTime)
+                    {
+                        lastestScheduleTime = latestCourseTime;
+                    }
                 }
 
-                if (lastestClassTime > lastestScheduleTime)
-                {
-                    lastestScheduleTime = lastestClassTime;
-                }
-                
-                //Compare
+                // Get scheduele with the earliest schedule
                 if (earliestEnd > lastestScheduleTime)
                 {
                     earliestEnd = lastestScheduleTime;
@@ -377,34 +377,35 @@ namespace ucsdscheduleme.Repo
             // Get the lastest time for a schedule
             foreach (List<Section> schedule in possibleSchedules)
             {
-                DateTime? earliestScheduleTime = new DateTime(1, 1, 1, 0, 0, 0);
-                DateTime? earliestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
+                DateTime? earliestScheduleTime = new DateTime(1, 1, 1, 23, 59, 0);
 
-                // Get the lastest time for a class
                 foreach (Section section in schedule)
                 {
-                    earliestClassTime = new DateTime(1, 1, 1, 0, 0, 0);
+                    DateTime? earliestCourseTime = new DateTime(1, 1, 1, 23, 59, 0);
+
                     foreach (Meeting meeting in section.Meetings)
                     {
                         if (meeting.MeetingType != MeetingType.Review &&
                             meeting.MeetingType != MeetingType.Final &&
                             meeting.MeetingType != MeetingType.Midterm)
                         {
-                            if (meeting.StartTime < earliestClassTime)
+                            // Get earliest start time for course
+                            if (meeting.StartTime < earliestCourseTime)
                             {
-                                earliestClassTime = meeting.EndTime;
+                                earliestCourseTime = meeting.StartTime;
                             }
                         }
                     }
-                }
 
-                if (earliestClassTime < earliestScheduleTime)
-                {
-                    earliestScheduleTime = earliestClassTime;
+                    // Get the earliest start time for schedule
+                    if (earliestCourseTime < earliestScheduleTime)
+                    {
+                        earliestScheduleTime = earliestCourseTime;
+                    }
                 }
                 
                 // Compare
-                if (latestStart > earliestScheduleTime)
+                if (latestStart < earliestScheduleTime)
                 {
                     latestStart = earliestScheduleTime;
                     result = schedule;
