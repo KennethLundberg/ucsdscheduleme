@@ -146,18 +146,21 @@ function removeCustomEventCallout(courseId) {
 function removeCourse(e) {
     var course = e.target.parentNode.parentNode;
     var id = course.id;
-    var index = myApp.coursesToSchedule.indexOf(id);
-    myApp.coursesToSchedule.splice(index, 1);
-    console.log("Courses: " + myApp.coursesToSchedule);
 
-    if (course.classList.contains("custom")) {
-        removeCustomEventCallout(id);
-        delete myApp.courses[id];
-        updateSchedule(myApp.courses);
+    var index = myApp.coursesToSchedule.indexOf(Number(id));
+
+    if (index >= 0) {
+        myApp.coursesToSchedule.splice(index, 1);
+
+        if (course.classList.contains("custom")) {
+            removeCustomEventCallout(id);  
+            delete myApp.courses[id];
+            updateSchedule(myApp.courses);
+        }
+
+        course.remove();
+        typeAheadCallout(document.getElementById("search").value);
     }
-
-    course.remove();
-    typeAheadCallout(document.getElementById("search").value);
 }
 
 /**
