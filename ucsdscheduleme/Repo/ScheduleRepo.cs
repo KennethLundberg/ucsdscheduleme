@@ -411,7 +411,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
-            int leastDay = 5;
+            int leastDay = 10;
             List<Section> leastDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counting the number of days
@@ -463,49 +463,22 @@ namespace ucsdscheduleme.Repo
         private int NumDays(List<Section> schedule)
         {
             int numDays = 0;
-            int[] currDays = { 0, 0, 0, 0, 0 };
-            foreach (Section section in schedule)
-            {
-                foreach (Meeting meeting in section.Meetings)
-                {
-                    // Add to day array
-                    if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                        || meeting.MeetingType != MeetingType.Review)
-                    {
-                        if (meeting.Days.HasFlag(Days.Monday))
-                        {
-                            currDays[0]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Tuesday))
-                        {
-                            currDays[1]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Wednesday))
-                        {
-                            currDays[2]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Thursday))
-                        {
-                            currDays[3]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Friday))
-                        {
-                            currDays[4]++;
-                        }
-                    }
-                }
-            }
 
-            // Totals the days scheduled.
-            foreach (int day in currDays)
+            var allDays = schedule.SelectMany(s => s.Meetings)
+                                  .Where(m => !FormatRepo.IsOneTimeEvent(m.MeetingType))
+                                  .Select(m => m.Days);
+
+            List<Days> days = Enum.GetValues(typeof(Days)).Cast<Days>().ToList();
+
+            foreach(var day in days)
             {
-                if (day != 0)
+                if(allDays.Any(d => d.HasFlag(day)))
                 {
                     numDays++;
                 }
             }
 
-            return numDays;
+            return numDays; 
         }
 
         /// <summary>
