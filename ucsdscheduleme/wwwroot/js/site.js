@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setup();
 });
 
-/**
+/*
  * @description Calls all the functions necessary on page load
  */
 function setup() {
@@ -171,10 +171,10 @@ function removeCourse(e) {
  * @description Clears the calendar of events by removing all elements with class 'event'
  */
 function clearAllMeetings() {
-    /* retrieve elements with class 'event' */
+    /* retrieve elements with class 'event' 
     var elements = document.getElementsByClassName('event');
 
-    /* remove first element in resulting list until all children are deleted*/
+    // remove first element in resulting list until all children are deleted
     while (elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
@@ -188,7 +188,7 @@ function clearMeetings(className) {
     /* retrieve elements with class 'event' */
     var elements = document.getElementsByClassName(className);
 
-    /* remove first element in resulting list until all children are deleted*/
+    // remove first element in resulting list until all children are deleted
     while (elements[0]) {
         elements[0].parentNode.removeChild(elements[0]);
     }
@@ -243,29 +243,29 @@ function calculateMeetingPosition(meeting) {
 function insertMeeting(meeting, courseId, baseId, sectionId) {
     var isCustomEvent = meeting.type == "CustomEvent";
 
-    /* Calculate the meeting position using helper function */
+    // Calculate the meeting position using helper function
     var pos = calculateMeetingPosition(meeting);
     var top = pos.top;
     var height = pos.height;
 
-    /* create an event div */
+    // create an event div
     var event = document.createElement('div');
     event.style.top = top;
     event.className = "event";
     event.style.height = height;
 
-    /* create an event header div and add to event div */
+    // create an event header div and add to event div
     var eventHeader = document.createElement('div');
     eventHeader.className = "event-header";
     event.append(eventHeader);
 
-    /* create an icon and add to event header div */
+    // create an icon and add to event header div
     var icon = document.createElement('div');
     icon.className = "class-icon";
     icon.id = meeting.type.toLowerCase();
     eventHeader.append(icon);
 
-    /* create the Change and edit-button icon and add to event div */
+    // create the Change and edit-button icon and add to event div
     var editButton = document.createElement('div');
     editButton.className = "edit-button";
 
@@ -283,39 +283,39 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
         event.append(editButton);
     }
 
-    /* create an icon label and add to icon div */
+    // create an icon label and add to icon div
     var iconLabel = document.createElement('div');
     iconLabel.className = "class-icon-label";
-    //iconLabel.innerText = "LE";
+    
     icon.append(iconLabel);
 
     // Use first two letters as text
     iconLabel.innerText = meeting.type.toUpperCase().substr(0, 2);
 
-    /* create an event info div */
+    // create an event info div
     var eventInfo = document.createElement('div');
     eventInfo.className = "event-info";
 
     /** create spans from meeting object **/
-    /* courseAbbreviation */
+    // courseAbbreviation
     var classSpan = document.createElement('span');
     classSpan.innerHTML = meeting.courseAbbreviation;
 
-    /* professor */
+    // professor
     var profSpan = document.createElement('span');
     if (!isCustomEvent) {
         profSpan.innerHTML = meeting.professorName;
     }
 
-    /* time range */
+    // time range
     var timeSpan = document.createElement('span');
     timeSpan.innerHTML = meeting.timespan;
 
-    /* section code */
+    // section code
     var sectSpan = document.createElement('span');
     sectSpan.innerHTML = meeting.sectionCode;
 
-    /* add spans to event info div */
+    // add spans to event info div
     eventInfo.append(classSpan);
     eventInfo.append(profSpan);
     eventInfo.append(timeSpan);
@@ -329,7 +329,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
     event.className += baseId;
     event.className += sectionId;
 
-    /* add event to day of meeting */
+    // add event to day of meeting
     var dayElem = document.getElementById(meeting.day.toLowerCase());
     dayElem.append(event);
 
@@ -343,17 +343,17 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
  * See global variable TODO for the structure
  */
 function updateMeetings(courses) {
-    /* iterate through all the meetings in the JSON */
+    // iterate through all the meetings in the JSON
     for (courseId in courses) {
         var course = courses[courseId];
 
-        /* extract selected base and section - the events to display on calendar */
+        // extract selected base and section - the events to display on calendar
         var selectedBase = course.selectedBase;
         var selectedSection = course.selectedSection;
 
         var base = course.bases[selectedBase];
 
-        // Get list of selected bases (i.e. lectures) and section elements (i.e. discussions) */
+        // Get list of selected bases (i.e. lectures) and section elements (i.e. discussions)
         var baseEvents = base.baseEvents;
 
         // If there is no base events for this course, move on.
@@ -736,13 +736,13 @@ function insertMetadata(metadata) {
  * @param {ScheduleViewModel} courses Courses to display metadata
  */
 function updateMetadata(courses) {
-    /* iterate through all the meetings in the JSON */
+    // iterate through all the meetings in the JSON 
     for (courseId in courses) {
         var course = courses[courseId];
-        /* extract selected base - the events to display on calendar */
+        // extract selected base - the events to display on calendar 
         var selectedBase = course.selectedBase;
 
-        /* get list of one time events (i.e. finals) */
+        // get list of one time events (i.e. finals) 
         var metadata = course.bases[selectedBase].metadata;
 
         // If there is no metadata for this class, skip over it.
@@ -750,7 +750,7 @@ function updateMetadata(courses) {
             continue;
         }
 
-        /* insert metadata */
+        // insert metadata 
         insertMetadata(metadata);
     }
 }
@@ -768,10 +768,10 @@ function updateOverallMetadata(courses) {
     //iterate through all the metadata in the JSON
     for (courseId in courses) {
         var course = courses[courseId];
-        /* extract selected base - the events to display on calendar */
+        // extract selected base - the events to display on calendar 
         var selectedBase = course.selectedBase;
 
-        /* get list of one time events (i.e. finals) */
+        // get list of one time events (i.e. finals) 
         var metadata = course.bases[selectedBase].metadata;
 
         // If there is no metadata for this course, skip it.
@@ -885,14 +885,14 @@ function insertOneTimeEvents(oneTimeEventData) {
  * @param {ScheduleViewModel} courses Dictionary of CourseViewModels
  */
 function updateOneTimeEvents(courses) {
-    /* iterate through all the meetings in the JSON */
+    // iterate through all the meetings in the JSON 
     for (courseId in courses) {
         var course = courses[courseId];
 
-        /* extract selected base - the events to display on calendar */
+        // extract selected base - the events to display on calendar 
         var selectedBase = course.selectedBase;
 
-        /* get list of one time events (i.e. finals) */
+        // get list of one time events (i.e. finals) 
         var oneTimeEvents = course.bases[selectedBase].oneTimeEvents;
 
         // If there are no one time events for this course, go to the next one.
@@ -900,7 +900,7 @@ function updateOneTimeEvents(courses) {
             continue;
         }
 
-        /* insert all one time events */
+        // insert all one time events 
         for (var i = 0; i < oneTimeEvents.length; i++) {
             insertOneTimeEvents(oneTimeEvents[i]);
         }
@@ -941,8 +941,8 @@ function generateSchedule() {
     // Grab courses to schedule
     var courseIds = myApp.coursesToSchedule;
     if (courseIds.length < 1) {
-        return;
         // TODO error message
+        return;
     }
 
     var request = { "optimization": selectedValue, "courseIds": courseIds };
@@ -1030,7 +1030,7 @@ function saveCustomEvent() {
 
     var days = monday | tuesday | wednesday | thursday | friday;
 
-    /*callout function*/
+    // callout function
     customEventCallout(name, days, startTime, endTime);
 
     closeCustomEvent();
