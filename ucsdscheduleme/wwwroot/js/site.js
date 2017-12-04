@@ -491,8 +491,7 @@ function updateSelectedSection(event) {
     course.selectedSection = ids.sectionId;
     course.selectedBase = ids.baseId;
 
-    clearAllMeetings();
-    updateMeetings(myApp.courses);
+    updateSchedule(myApp.courses);
 
     isEditing = false;
     console.log("before changeScheduleSectionCallout");
