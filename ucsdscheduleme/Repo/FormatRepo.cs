@@ -30,14 +30,22 @@ namespace ucsdscheduleme.Repo
             {
                 var course = courseSection.Value;
                 var selectedSection = courseSection.Key;
+
+                char selectedBaseId = ' ';
+
+                var meetingWithCode = selectedSection.Meetings?
+                                                         .FirstOrDefault(m => m.Code != null);
+
+                selectedBaseId = meetingWithCode?.Code[0] ??
+                            throw new ArgumentException($"Section with no meeting found: Id'{selectedSection.Id}'");
+
                 CourseViewModel thisCourse = new CourseViewModel
-                {
+                { 
                     CourseAbbreviation = course.CourseAbbreviation,
                     Bases = new Dictionary<char, BaseViewModel>(),
                     SelectedSection = selectedSection.Id,
                     // If our sections have no meetings, we're in trouble. Time to abort.
-                    SelectedBase = selectedSection.Meetings?.First().Code[0] ?? 
-                        throw new ArgumentException($"Section with no meeting found: Id'{selectedSection.Id}'")
+                    SelectedBase = selectedBaseId
                 };
 
                 model.Courses.Add(course.Id,thisCourse);
@@ -285,6 +293,12 @@ namespace ucsdscheduleme.Repo
 
             int durationInMinutes = (int)meeting.EndTime.Subtract(start).TotalMinutes;
             int startTimeInMinutes = (start.Hour - START_HOUR) * MINUTES_IN_HOUR + start.Minute - START_MINUTES;
+
+            // If the start time is less than 0, this event isnt during our calendar, so skip it. 
+            if(startTimeInMinutes < 0)
+            {
+                return;
+            }
 
             var days = Enum.GetValues(typeof(Days))
                 .Cast<Days>()

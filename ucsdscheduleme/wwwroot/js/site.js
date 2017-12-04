@@ -266,8 +266,8 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
 
     // create an icon and add to event header div
     var icon = document.createElement('div');
-    icon.className = "class-icon";
-    icon.id = meeting.type.toLowerCase();
+    icon.className = "class-icon ";
+    icon.className += meeting.type.toLowerCase();
     eventHeader.append(icon);
 
     // create the Change and edit-button icon and add to event div
@@ -324,15 +324,17 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
     eventInfo.append(classSpan);
     eventInfo.append(profSpan);
     eventInfo.append(timeSpan);
-    eventInfo.append(sectSpan);
+    if (!isCustomEvent) {
+        eventInfo.append(sectSpan);
+    }
     eventHeader.append(eventInfo);
 
-    courseId = ' _c' + courseId;
-    baseId = ' _b' + baseId;
-    sectionId = ' _s' + sectionId;
-    event.className += courseId;
-    event.className += baseId;
-    event.className += sectionId;
+    courseId = '_c' + courseId;
+    baseId = '_b' + baseId;
+    sectionId = '_s' + sectionId;
+    event.classList.add(courseId);
+    event.classList.add(baseId);
+    event.classList.add(sectionId);
 
     // add event to day of meeting
     var dayElem = document.getElementById(meeting.day.toLowerCase());
@@ -404,7 +406,7 @@ function showAllBasesAndAllSections(ids) {
 
             // insert base and set activated class
             var event = insertMeeting(meeting, ids.courseId, baseKeys[i], baseEventClass);
-            event.className += " event-activated";
+            event.classList.add("event-activated");
         }
 
         // insert each section
@@ -416,7 +418,7 @@ function showAllBasesAndAllSections(ids) {
             // insert section and set activated class
             for (var k = 0; k < section.length; k++) {
                 var event = insertMeeting(section[k], ids.courseId, baseKeys[i], key);
-                event.className += " event-activated";
+                event.classList.add("event-activated");
             }
         });
     }
@@ -432,18 +434,30 @@ function showBaseAndAllSections(ids) {
     var baseEvents = course.bases[ids.baseId].baseEvents;
     var sectionEvents = course.bases[ids.baseId].sectionEvents;
 
-    clearMeetings(ids.courseId);
+    clearMeetings(myApp.constants.coursePrefix + ids.courseId);
 
-    for (var i = 0; i < baseEvents.length; i++) {
-        var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, baseEventClass);
-        event.className += " event-activated";
+    // if selected section has no bases and acts like a base
+    if(baseEvents.length <= 0) {
+        showAllBasesAndAllSections(ids);
+    }
+
+    if(baseEvents) {
+        for (var i = 0; i < baseEvents.length; i++) {
+            var event = insertMeeting(baseEvents[i], ids.courseId, ids.baseId, baseEventClass);
+            event.classList.add("event-activated");
+        }
     }
 
     var sectionsKeys = Object.keys(sectionEvents);
+    console.log("showBaseAndAllSections key: " + JSON.stringify(sectionsKeys));
     sectionsKeys.forEach(function (key) {
         var section = sectionEvents[key];
-        var event = insertMeeting(section[0], ids.courseId, ids.baseId, key);
-        event.className += " event-activated";
+        console.log("showBaseAndAllSections section: " + JSON.stringify(section));
+        for(var sectionIndex in section) {
+            console.log("showBaseAndAllSections section[sectionIndex]: " + JSON.stringify(section[sectionIndex]));
+            var eventElement = insertMeeting(section[sectionIndex], ids.courseId, ids.baseId, key);
+            eventElement.classList.add("event-activated");
+        }
     });
 
     hideEditButtons();
@@ -454,14 +468,21 @@ function showBaseAndAllSections(ids) {
  * @param event
  */
 function changeSchedule(event) {
+    console.log("changeSchedule event")
+    console.log(event)
+
     var info = extractEventInfo(event);
+    console.log("changeSchedule info")
+    console.log(info)
 
     // base selected
     if (info.isBaseEvent) {
+        console.log("changeSchedule calls showAllBasesAndAllSections")
         showAllBasesAndAllSections(info);
     }
     // section selected
     else {
+        console.log("changeSchedule calls showBaseAndAllSections")
         showBaseAndAllSections(info);
     }
 }
@@ -527,6 +548,31 @@ function updateSelectedBase(event) {
     showBaseAndAllSections(ids);
 }
 
+
+/**
+ * updatedSelectedSectionAsBase
+ * @param: sectionId: 
+ */
+function updatedSelectedSectionAsBase(event) {
+    var ids = extractEventInfo(event);
+
+    var course = myApp.courses[ids.courseId];
+    var currentBase = course.selectedBase;
+    var currentSectionId = course.selectedSection;
+
+    // update the base and section IDs in the global object
+    course.selectedSection = ids.sectionId;
+    course.selectedBase = ids.baseId;
+
+    clearAllMeetings();
+    updateMeetings(myApp.courses);
+
+    isEditing = false;
+    console.log("before changeScheduleSectionCallout");
+    changeScheduleSectionCallout(currentSectionId, ids.sectionId);
+    showEditButtons();
+}
+
 /**
  * @description Call update depending on whether a section or base is selected
  * @param event
@@ -548,10 +594,18 @@ function updateEvent(event) {
  */
 function activateSelectedBasesAndSections(event) {
     var infoForSelected = extractEventInfo(event, false);
+    
+    console.log("activateSelectedBasesAndSections")
+    console.log(infoForSelected)
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
+    console.log("allActivatedEvents")
+    console.log(allActivatedEvents)
+
 
     if (!infoForSelected.isBaseEvent) {
+
+        console.log("activateSelectedBasesAndSections !infoForSelected.isBaseEvent")
         var toDeactivate = [];
         for (var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
@@ -560,9 +614,11 @@ function activateSelectedBasesAndSections(event) {
             if (classList.contains(infoForSelected.courseId) && classList.contains(infoForSelected.baseId)) {
                 if (classList.contains(infoForSelected.sectionId) || infoForCurrent.isBaseEvent) {
                 } else {
+                    console.log("Remove 1");
                     toDeactivate.push(allActivatedEvents[j]);
                 }
             } else {
+                console.log("Remove 2");
                 toDeactivate.push(allActivatedEvents[j]);
             }
         }
@@ -598,7 +654,7 @@ function reactivateAllBasesAndAllSections(event) {
     var ids = extractEventInfo(event, false);
     var allActivatedEvents = document.getElementsByClassName('event-deactivated');
     while (allActivatedEvents.length > 0) {
-        allActivatedEvents[0].className += ' event-activated';
+        allActivatedEvents[0].classList.add('event-activated');
         allActivatedEvents[0].classList.remove('event-deactivated');
     }
 }
@@ -624,7 +680,7 @@ function extractEventInfo(event, noUnderscore = true) {
     var baseId = findClassWithPrefix(event, constants.basePrefix, prefixLength);
     var sectionId = findClassWithPrefix(event, constants.sectionPrefix, prefixLength);
 
-    var isBaseEvent = sectionId === constants.sectionPrefix + constants.baseEventClass;
+    var isBaseEvent = sectionId === (constants.sectionPrefix + constants.baseEventClass);
 
     if (noUnderscore) {
         courseId = courseId.substr(prefixLength);
@@ -1127,4 +1183,17 @@ function closeCustomEvent() {
     document.getElementById('custom-event-friday').checked = false;
     document.getElementById('custom-event-starttime').value = document.getElementById('custom-event-starttime').defaultValue;
     document.getElementById('custom-event-endtime').value = document.getElementById('custom-event-endtime').defaultValue;
+}
+
+function logoutCallout() {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.logout;
+    xhr.open("POST", url, true);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            window.location = xhr.responseText;
+        }
+    }
 }
