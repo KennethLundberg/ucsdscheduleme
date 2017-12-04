@@ -709,10 +709,20 @@ function insertMetadata(metadata) {
     //attaching all class information to course div
     courseMetadata.append(courseName);
     courseMetadata.append(professorName);
-    courseMetadata.append(rateMyProfessor);
-    courseMetadata.append(avgWorkload);
-    courseMetadata.append(avgExpected);
-    courseMetadata.append(avgRecieved);
+
+    // If there is no rateMyProfessor, do not append
+    if (metadata.quality != 0 || metadata.difficulty != 0) 
+    {
+        courseMetadata.append(rateMyProfessor);
+    }
+
+    // IF there is no CAPE, do not append
+    if ( metadata.averageWorkload != 0 || metadata.averageGpaExpected != 0
+        || metadata.averageGpaReceived != 0) {
+        courseMetadata.append(avgWorkload);
+        courseMetadata.append(avgExpected);
+        courseMetadata.append(avgRecieved);
+    }
 
     //retrieving course-stat-container
     var courseGoesHere = document.getElementById("course-stat-container");
@@ -765,7 +775,8 @@ function updateOverallMetadata(courses) {
         var metadata = course.bases[selectedBase].metadata;
 
         // If there is no metadata for this course, skip it.
-        if (!metadata) {
+        if (!metadata || metadata.averageWorkload === 0 
+            || metadata.averageGpaExpected === 0 || metadata.averageGpaReceived === 0) {
             continue;
         }
 
