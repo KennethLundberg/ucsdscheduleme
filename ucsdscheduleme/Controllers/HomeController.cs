@@ -116,25 +116,24 @@ namespace ucsdscheduleme.Controllers
             // Call the schedule finding algorithm.
             PossibleSchedules schedules = scheduleRepo.FindScheduleForClasses(courses);
 
-            // Get the current user.
-            var user = _userManager.GetUserAsync(User).Result;
-            // Get the schedule sections for this user.
-            var sectionsToRemove = _context.UserSections.Where(us => us.User == user);
-            // Remove old sections.
-            _context.RemoveRange(sectionsToRemove);
+            
 
             if (!schedules.Any())
             {
                 // TODO: return error
-                _context.SaveChanges();
                 return Json(new ScheduleViewModel());
             }
             List<Section> schedule = scheduleRepo.Optimize(optimization, schedules);
             
+            // Get the current user.
+            var user = _userManager.GetUserAsync(User).Result;
 
             // Create user sections to add.
-            var sectionsToAdd = schedule.Select(s => new UserSection { Section = s, User = user });
-
+            var sectionsToAdd = schedule.Select(s => new UserSection { Section = s, User = user });           
+            // Get the schedule sections for this user.
+            var sectionsToRemove = _context.UserSections.Where(us => us.User == user);
+            // Remove old sections.
+            _context.RemoveRange(sectionsToRemove);
             // Add new ones.
             _context.AddRange(sectionsToAdd);
             _context.SaveChanges();
