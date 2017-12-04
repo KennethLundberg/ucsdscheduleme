@@ -286,6 +286,12 @@ namespace ucsdscheduleme.Repo
             int durationInMinutes = (int)meeting.EndTime.Subtract(start).TotalMinutes;
             int startTimeInMinutes = (start.Hour - START_HOUR) * MINUTES_IN_HOUR + start.Minute - START_MINUTES;
 
+            // If the start time is less than 0, this event isnt during our calendar, so skip it. 
+            if(startTimeInMinutes < 0)
+            {
+                return;
+            }
+
             var days = Enum.GetValues(typeof(Days))
                 .Cast<Days>()
                 .Where(s => meeting.Days.HasFlag(s));
