@@ -176,7 +176,12 @@ ul {
     top: 50px;
     height: 100px;
     z-index: 1;
+    overflow: hidden;
     @include boxshadow();
+
+    &:hover {
+        height: auto !important;
+    }
 
     .event-header {
         position: relative;
@@ -711,7 +716,7 @@ ul {
 .course-stat-container {
     overflow-y: scroll;
     margin-top: 15px;
-    height: 61%;
+    height: 56%;
 }
 
 .course-stat {
