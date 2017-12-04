@@ -30,14 +30,22 @@ namespace ucsdscheduleme.Repo
             {
                 var course = courseSection.Value;
                 var selectedSection = courseSection.Key;
+
+                char selectedBaseId = ' ';
+
+                var meetingWithCode = selectedSection.Meetings?
+                                                         .FirstOrDefault(m => m.Code != null);
+
+                selectedBaseId = meetingWithCode?.Code[0] ??
+                            throw new ArgumentException($"Section with no meeting found: Id'{selectedSection.Id}'");
+
                 CourseViewModel thisCourse = new CourseViewModel
-                {
+                { 
                     CourseAbbreviation = course.CourseAbbreviation,
                     Bases = new Dictionary<char, BaseViewModel>(),
                     SelectedSection = selectedSection.Id,
                     // If our sections have no meetings, we're in trouble. Time to abort.
-                    SelectedBase = selectedSection.Meetings?.First().Code[0] ?? 
-                        throw new ArgumentException($"Section with no meeting found: Id'{selectedSection.Id}'")
+                    SelectedBase = selectedBaseId
                 };
 
                 model.Courses.Add(course.Id,thisCourse);
