@@ -48,15 +48,23 @@ namespace ucsdscheduleme.Repo
 
             // List of professor whose RMP page couldn't be found
             List<string> profRMPNotFound = new List<string>();
-
+            
+            // Keep track of number of professors we scrape RMP for
+            int delay = 0;
+            
             // For each professor in the list from database
             foreach (var professor in professors)
-            {
+            {    
                 // Check if the professor has RateMyProfessor object, if no make an object
                 if (professor.RateMyProfessor == null)
                 {
                     professor.RateMyProfessor = new RateMyProfessor();
                 }
+
+                // Quick fix for the only weird professor : William Arctander O'Brien
+                // character " ' " results in weird characters in the last name
+                if (professor.Name.Contains("O&#039;Brien")) // TODO: Change name to O'Brien
+                    continue;
 
                 // Get the URL needed to scrape that Professors page at RMP 
                 string rateMyProfURL = GetTidFromProfessorName(professor.Name);
@@ -75,10 +83,18 @@ namespace ucsdscheduleme.Repo
                 {
                     profRMPNotFound.Add(professor.Name);
                 }
+                
+                // Every time we scrape 100 professors, wait for 10 seconds
+                delay++;
+                if (delay % 100 == 0 )
+                {
+                    System.Threading.Thread.Sleep(10000);
+                    //_context.SaveChanges();
+                }
             }
 
             // Save changes made in the database
-            _context.SaveChanges();
+           _context.SaveChanges();
 
         }
 
@@ -92,15 +108,17 @@ namespace ucsdscheduleme.Repo
             // Split the name to get first and last name
             string[] names = ProfName.Split(",");
 
-            // If the professor's name is staff, then there is no RMP page!
-            if (names[0] == "Staff")
+            // If the professor's name is staff or empty, then there is no RMP page!
+            if (names[0] == "Staff" || names[0]=="")
             {
                 return ("");
             }
-
+            
             // Get the first word of first name and last name
             string[] firstName = names[1].Split(" ");
             string[] lastName = names[0].Split(" ");
+
+
 
             // Need to add edge cases; when there are muntiple first and last names in the act and RMP.
 
