@@ -138,7 +138,7 @@
         <div class="course-stat-container" id="course-stat-container">
         </div>
         <div class="button" onclick="visibilityOn('custom-event-form');">Add Custom Event</div>
-        <div class="logout-button"></div>
+        <div class="logout-button" onclick="logoutCallout()></div>
     </div>
 </div>
 
@@ -176,8 +176,8 @@
                 <span>Fri</span>
             </div>
         </div>
-        <div class="custom-event-button" onclick="saveCustomEvent();">Save</div>
-        <div class="custom-event-button" onclick="closeCustomEvent();">Cancel</div>
+        <div class="custom-event-button" onclick="saveCustomEvent()">Save</div>
+        <div class="custom-event-button" onclick="closeCustomEvent()">Cancel</div>
     </div>
 </div>
 
@@ -196,7 +196,8 @@
             typeAhead: "@Url.Action("TypeAhead", "Home")",
             customEvent: "@Url.Action("CreateCustomEvent", "Home")",
             removeCustomEvent: "@Url.Action("RemoveCustomEvent", "Home")",
-            changeScheduleSection: "@Url.Action("ChangeScheduleSection", "Home")"
+            changeScheduleSection: "@Url.Action("ChangeScheduleSection", "Home")",
+            logout: "@Url.Action("Logout", "Account")"
         },
         coursesToSchedule: courseListFromModel,
         courses: coursesFromModel

@@ -1099,3 +1099,16 @@ function closeCustomEvent() {
     document.getElementById('custom-event-starttime').value = document.getElementById('custom-event-starttime').defaultValue;
     document.getElementById('custom-event-endtime').value = document.getElementById('custom-event-endtime').defaultValue;
 }
+
+function logoutCallout() {
+    var xhr = new XMLHttpRequest();
+    var url = myApp.urls.logout;
+    xhr.open("POST", url, true);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            window.location = xhr.responseText;
+        }
+    }
+}
