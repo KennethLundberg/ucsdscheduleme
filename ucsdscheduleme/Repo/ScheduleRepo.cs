@@ -392,7 +392,7 @@ namespace ucsdscheduleme.Repo
                             // Get earliest start time for course
                             if (meeting.StartTime < earliestCourseTime)
                             {
-                                earliestCourseTime = meeting.EndTime;
+                                earliestCourseTime = meeting.StartTime;
                             }
                         }
                     }
