@@ -168,7 +168,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="type">The meeting type of the meeting to check.</param>
         /// <returns>True if meeting is a one time event, false otherwise.</returns>
-        private static bool IsOneTimeEvent(MeetingType type)
+        public static bool IsOneTimeEvent(MeetingType type)
         {
             return type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm;
         }
