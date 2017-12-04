@@ -14,7 +14,6 @@ namespace ucsdscheduleme.Data
         public static void Initialize(ScheduleContext context)
         {
             // TODO put back before commiting
-            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             if(context.Courses.Any())
             {
