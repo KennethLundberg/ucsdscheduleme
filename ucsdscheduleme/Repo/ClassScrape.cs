@@ -185,7 +185,7 @@ namespace HtmlAgilitySandbox
             // Vars to keep track of current class number, professor and course.
             string currentClassNum = "";
             string currentProf = "";
-            Course currentCourse = new Course();        // TODO fix maybe necessary
+            Course currentCourse = new Course();
             // Chars to trim from the extracted units.
             char[] unitsTrimChars = { '(', ')' };
 
@@ -409,7 +409,10 @@ namespace HtmlAgilitySandbox
 
                             // Check for edge case where professor field is empty, so we use the previous professor.
                             HtmlNode instrNode = daysNode.NextSibling.NextSibling?.SelectSingleNode(ActStrings.AnchorChildNode) ?? daysNode.NextSibling.NextSibling;
-                            currentProf = instrNode.InnerText;
+                            if (!String.IsNullOrEmpty(instrNode.InnerText.Trim()))
+                            {
+                                currentProf = instrNode.InnerText.Trim();
+                            }
                         }
                         // Class is cancelled so continue to next node.
                         else if (daysNode.InnerText.Contains("Cancelled")) continue;
@@ -451,30 +454,29 @@ namespace HtmlAgilitySandbox
                         }
                         else
                         {
-                            // Add new Meeting (to be added to every section) to the static list .
+                            // Add new Meeting (to be added to every section) to the static list.
                             meetingList.Add(currentMeeting);
                         }
                     }
 
-                    // Else check if node is a TR that contains final/midterms data
+                    // Else check if node is a TR that contains final/midterms data.
                     else if (nodeClasses != null && nodeClasses.Contains(ActStrings.TRTestClass))
                     {
-                        // Select the test type node to begin iterating from
+                        // Select the test type node to begin iterating from.
                         HtmlNode testTypeTDNode = node?.SelectSingleNode(ActStrings.MeetingTypeNode);
 
-                        // Create new meeting
+                        // Create new meeting.
                         Meeting currentMeeting = new Meeting();
 
-                        // Edge case for when test fields contains title information
+                        // Edge case for when test fields contains title information.
                         if (testTypeTDNode == null) continue;
 
                         // Set meeting type.
                         string testType = testTypeTDNode.InnerText;
                         currentMeeting.MeetingType = GetMeetingType(testType);
 
-                        // If we get a meeting of type lecture go back to start of if
-                        // statement
-                        if (testType == "LE")
+                        // If we get a meeting of type non-test or review, go back to start of if statement.
+                        if (testType != "FI" && testType != "MI" && testType != "RE" && testType != "PB")
                         {
                             foundLE = true;
                             goto lectureInFinal;
@@ -487,6 +489,8 @@ namespace HtmlAgilitySandbox
 
                         // Set test day.
                         HtmlNode testDayNode = testDateNode.NextSibling.NextSibling;
+                        // Check if test is cancelled, else continue grabbing data.
+                        if (testDayNode.InnerText.Contains("Cancelled")) continue;
                         string days = testDayNode.InnerText.Trim();
                         currentMeeting.Days = GetDays(days);
 
@@ -609,6 +613,12 @@ namespace HtmlAgilitySandbox
                     return MeetingType.Tutorial;
                 case "PB":
                     return MeetingType.ProblemSession;
+                case "FW":
+                    return MeetingType.Fieldwork;
+                case "SA":
+                    return MeetingType.StudyAbroad;
+                case "MU":
+                    return MeetingType.MakeUpSession;
                 default:
                     throw new FormatException(meetingType);
 
