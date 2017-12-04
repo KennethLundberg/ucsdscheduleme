@@ -413,11 +413,12 @@ function showBaseAndAllSections(ids) {
     var baseEvents = course.bases[ids.baseId].baseEvents;
     var sectionEvents = course.bases[ids.baseId].sectionEvents;
 
-    console.log("showBaseAndAllSections ids")
-    console.log(ids)
-
-
     clearMeetings(myApp.constants.coursePrefix + ids.courseId);
+
+    // if selected section has no bases and acts like a base
+    if(baseEvents.length <= 0) {
+        showAllBasesAndAllSections(ids);
+    }
 
     if(baseEvents) {
         for (var i = 0; i < baseEvents.length; i++) {
@@ -440,6 +441,8 @@ function showBaseAndAllSections(ids) {
 
     hideEditButtons();
 }
+
+
 
 function changeSchedule(event) {
     console.log("changeSchedule event")
