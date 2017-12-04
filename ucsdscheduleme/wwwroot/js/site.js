@@ -147,16 +147,13 @@ function removeCourse(e) {
     var course = e.target.parentNode.parentNode;
     var id = course.id;
 
-    for (var i = 0; i < myApp.coursesToSchedule.length; ++i) {
-        console.log(myApp.coursesToSchedule[i]);
-    }
-
     var index = myApp.coursesToSchedule.indexOf(Number(id));
+
     if (index >= 0) {
         myApp.coursesToSchedule.splice(index, 1);
 
         if (course.classList.contains("custom")) {
-            removeCustomEventCallout(id);
+            removeCustomEventCallout(id);  
             delete myApp.courses[id];
             updateSchedule(myApp.courses);
         }
