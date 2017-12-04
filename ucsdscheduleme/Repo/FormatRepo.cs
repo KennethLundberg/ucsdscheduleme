@@ -168,7 +168,7 @@ namespace ucsdscheduleme.Repo
         /// </summary>
         /// <param name="type">The meeting type of the meeting to check.</param>
         /// <returns>True if meeting is a one time event, false otherwise.</returns>
-        private static bool IsOneTimeEvent(MeetingType type)
+        public static bool IsOneTimeEvent(MeetingType type)
         {
             return type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm;
         }
@@ -304,6 +304,12 @@ namespace ucsdscheduleme.Repo
                 .Cast<Days>()
                 .Where(s => meeting.Days.HasFlag(s));
 
+            Location location = meeting.Location;
+            string building = location?.Building ?? "";
+            string room = location?.RoomNumber ?? "";
+            string trimmedLocation = $"{room} {building}".Trim();
+            string locationString = (string.IsNullOrWhiteSpace(trimmedLocation)) ? "TBA" : trimmedLocation;
+
             foreach (var day in days)
             {
                 CalendarEvent calendarEvent = new CalendarEvent
@@ -315,7 +321,8 @@ namespace ucsdscheduleme.Repo
                     ProfessorName = professorName,
                     Timespan = $"{startString} - {endString}",
                     DurationInMinutes = durationInMinutes,
-                    StartTimeInMinutesAfterFirstHour = startTimeInMinutes
+                    StartTimeInMinutesAfterFirstHour = startTimeInMinutes,
+                    Location = locationString
                 };
 
                 events.Add(calendarEvent);

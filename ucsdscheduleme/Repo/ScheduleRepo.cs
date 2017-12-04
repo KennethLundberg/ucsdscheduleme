@@ -140,15 +140,15 @@ namespace ucsdscheduleme.Repo
                     if ((meeting1.Days & meeting2.Days) != 0)
                     {
                         // Want to compare recurring events like lecture, discussion, labs
-                        if (!IsOneTimeEvent(meeting1.MeetingType)
-                            && (!IsOneTimeEvent(meeting2.MeetingType)))
+                        if (!FormatRepo.IsOneTimeEvent(meeting1.MeetingType)
+                            && (!FormatRepo.IsOneTimeEvent(meeting2.MeetingType)))
                         {
                             if (Conflict(meeting1, meeting2))
                             {
                                 return true;
                             }
                         }
-                        else if (IsOneTimeEvent(meeting1.MeetingType) && IsOneTimeEvent(meeting2.MeetingType))
+                        else if (FormatRepo.IsOneTimeEvent(meeting1.MeetingType) && FormatRepo.IsOneTimeEvent(meeting2.MeetingType))
                         {
                             if (meeting1.StartDate == meeting2.StartDate)
                             {
@@ -191,16 +191,6 @@ namespace ucsdscheduleme.Repo
                 }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Tests whether or not a meeting is a one time event or not.
-        /// </summary>
-        /// <param name="type">The meeting type of the meeting to check.</param>
-        /// <returns>True if meeting is a one time event, false otherwise.</returns>
-        private static bool IsOneTimeEvent(MeetingType type)
-        {
-            return type == MeetingType.Final || type == MeetingType.Review || type == MeetingType.Midterm;
         }
 
         /// <summary>
@@ -268,10 +258,7 @@ namespace ucsdscheduleme.Repo
                     // Find a cape that corresponds to the course and professor
                     var cape = section.Course.Cape.First(c => c.ProfessorId == section.Professor.Id);
 
-                    if (cape != null)
-                    {
-                        currentGPA += cape.AverageGradeReceived;
-                    }
+                    currentGPA += cape?.AverageGradeReceived ?? 0M;
                 }
 
                 // Compare GPA of this schedule to the highest schedule GPA
@@ -421,7 +408,7 @@ namespace ucsdscheduleme.Repo
         /// <param name="possibleSchedules">Possible schedules with no time conflicts.</param>
         public List<Section> LeastDays(List<List<Section>> possibleSchedules)
         {
-            int leastDay = 5;
+            int leastDay = 10;
             List<Section> leastDaySchedule = possibleSchedules[0];
 
             // Iterate through the possible schedules and counting the number of days
@@ -473,49 +460,22 @@ namespace ucsdscheduleme.Repo
         private int NumDays(List<Section> schedule)
         {
             int numDays = 0;
-            int[] currDays = { 0, 0, 0, 0, 0 };
-            foreach (Section section in schedule)
-            {
-                foreach (Meeting meeting in section.Meetings)
-                {
-                    // Add to day array
-                    if (meeting.MeetingType != MeetingType.Final || meeting.MeetingType != MeetingType.Midterm
-                        || meeting.MeetingType != MeetingType.Review)
-                    {
-                        if (meeting.Days.HasFlag(Days.Monday))
-                        {
-                            currDays[0]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Tuesday))
-                        {
-                            currDays[1]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Wednesday))
-                        {
-                            currDays[2]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Thursday))
-                        {
-                            currDays[3]++;
-                        }
-                        if (meeting.Days.HasFlag(Days.Friday))
-                        {
-                            currDays[4]++;
-                        }
-                    }
-                }
-            }
 
-            // Totals the days scheduled.
-            foreach (int day in currDays)
+            var allDays = schedule.SelectMany(s => s.Meetings)
+                                  .Where(m => !FormatRepo.IsOneTimeEvent(m.MeetingType))
+                                  .Select(m => m.Days);
+
+            List<Days> days = Enum.GetValues(typeof(Days)).Cast<Days>().ToList();
+
+            foreach(var day in days)
             {
-                if (day != 0)
+                if(allDays.Any(d => d.HasFlag(day)))
                 {
                     numDays++;
                 }
             }
 
-            return numDays;
+            return numDays; 
         }
 
         /// <summary>
@@ -604,52 +564,50 @@ namespace ucsdscheduleme.Repo
         }
 
         /// <summary>
-        /// Calculates the average gap size between sections
+        /// Calculates the total gap size for a schedule.
         /// </summary>
         /// <param name="schedule">Schedule of classes</param>
-        /// <returns>The average hours of gaps in the schedule between classes</returns>
+        /// <returns>The total time gaps for a particular schedule</returns>
         private TimeSpan TotalGap(List<Section> schedule)
         {
-            TimeSpan gap;
-            List<DateTime?> Monday = new List<DateTime?>();
-            List<DateTime?> Tuesday = new List<DateTime?>();
-            List<DateTime?> Wednesday = new List<DateTime?>();
-            List<DateTime?> Thursday = new List<DateTime?>();
-            List<DateTime?> Friday = new List<DateTime?>();
+            TimeSpan gap = new TimeSpan(0);
+            List<DateTime> Monday = new List<DateTime>();
+            List<DateTime> Tuesday = new List<DateTime>();
+            List<DateTime> Wednesday = new List<DateTime>();
+            List<DateTime> Thursday = new List<DateTime>();
+            List<DateTime> Friday = new List<DateTime>();
 
-            foreach (Section section in schedule)
+            var allMeetings = schedule.SelectMany(s => s.Meetings);
+            foreach(Meeting meeting in allMeetings)
             {
-                foreach (Meeting meeting in section.Meetings)
+                if (!FormatRepo.IsOneTimeEvent(meeting.MeetingType) 
+                    && meeting.StartTime.Hour != 0 
+                    && meeting.EndTime.Hour != 0)
                 {
-                    if (meeting.MeetingType != MeetingType.Final || 
-                        meeting.MeetingType != MeetingType.Midterm ||
-                        meeting.MeetingType != MeetingType.Review)
+                    if (meeting.Days.HasFlag(Days.Monday))
                     {
-                        if (meeting.Days.HasFlag(Days.Monday))
-                        {
-                            Monday.Add(meeting.StartTime);
-                            Monday.Add(meeting.EndTime);
-                        }
-                        if (meeting.Days.HasFlag(Days.Tuesday))
-                        {
-                            Tuesday.Add(meeting.StartTime);
-                            Tuesday.Add(meeting.EndTime);
-                        }
-                        if (meeting.Days.HasFlag(Days.Wednesday))
-                        {
-                            Wednesday.Add(meeting.StartTime);
-                            Wednesday.Add(meeting.EndTime);
-                        }
-                        if (meeting.Days.HasFlag(Days.Thursday))
-                        {
-                            Thursday.Add(meeting.StartTime);
-                            Thursday.Add(meeting.EndTime);
-                        }
-                        if (meeting.Days.HasFlag(Days.Friday))
-                        {
-                            Friday.Add(meeting.StartTime);
-                            Friday.Add(meeting.EndTime);
-                        }
+                        Monday.Add(meeting.StartTime);
+                        Monday.Add(meeting.EndTime);
+                    }
+                    if (meeting.Days.HasFlag(Days.Tuesday))
+                    {
+                        Tuesday.Add(meeting.StartTime);
+                        Tuesday.Add(meeting.EndTime);
+                    }
+                    if (meeting.Days.HasFlag(Days.Wednesday))
+                    {
+                        Wednesday.Add(meeting.StartTime);
+                        Wednesday.Add(meeting.EndTime);
+                    }
+                    if (meeting.Days.HasFlag(Days.Thursday))
+                    {
+                        Thursday.Add(meeting.StartTime);
+                        Thursday.Add(meeting.EndTime);
+                    }
+                    if (meeting.Days.HasFlag(Days.Friday))
+                    {
+                        Friday.Add(meeting.StartTime);
+                        Friday.Add(meeting.EndTime);
                     }
                 }
             }
@@ -662,29 +620,29 @@ namespace ucsdscheduleme.Repo
             Friday.Sort();
             
             // Calculate the gaps in the schedule.
-            for (int i = 1; i < Monday.Count() - 1; i += 2)
+            for (int i = 1; i < Monday.Count - 1; i += 2)
             {
-                gap = gap + (Monday.ElementAt(i + 1) - Monday.ElementAt(i)).Value;
+                gap += (Monday[i + 1].TimeOfDay - Monday[i].TimeOfDay);
             }
 
-            for (int i = 1; i < Tuesday.Count() - 1; i += 2)
+            for (int i = 1; i < Tuesday.Count - 1; i += 2)
             {
-                gap = gap + (Tuesday.ElementAt(i + 1) - Tuesday.ElementAt(i)).Value;
+                gap += (Tuesday[i + 1].TimeOfDay - Tuesday[i].TimeOfDay);
             }
 
-            for (int i = 1; i < Wednesday.Count() - 1; i += 2)
+            for (int i = 1; i < Wednesday.Count - 1; i += 2)
             {
-                gap = gap + (Wednesday.ElementAt(i + 1) - Wednesday.ElementAt(i)).Value;
+                gap += (Wednesday[i + 1].TimeOfDay - Wednesday[i].TimeOfDay);
             }
 
-            for (int i = 1; i < Thursday.Count() - 1; i += 2)
+            for (int i = 1; i < Thursday.Count - 1; i += 2)
             {
-                gap = gap + (Thursday.ElementAt(i + 1) - Thursday.ElementAt(i)).Value;
+                gap += (Thursday[i + 1].TimeOfDay - Thursday[i].TimeOfDay);
             }
 
-            for (int i = 1; i < Friday.Count() - 1; i += 2)
+            for (int i = 1; i < Friday.Count - 1; i += 2)
             {
-                gap = gap + (Friday.ElementAt(i + 1) - Friday.ElementAt(i)).Value;
+                gap += (Friday[i + 1].TimeOfDay - Friday[i].TimeOfDay);
             }
 
             return gap;
