@@ -304,6 +304,10 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
     var timeSpan = document.createElement('span');
     timeSpan.innerHTML = meeting.timespan;
 
+    /* time range */
+    var locationSpan = document.createElement('span');
+    locationSpan.innerHTML = meeting.location;
+
     /* section code */
     var sectSpan = document.createElement('span');
     sectSpan.innerHTML = meeting.sectionCode;
@@ -313,6 +317,7 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
     eventInfo.append(profSpan);
     eventInfo.append(timeSpan);
     if (!isCustomEvent) {
+        eventInfo.append(locationSpan);
         eventInfo.append(sectSpan);
     }
     eventHeader.append(eventInfo);

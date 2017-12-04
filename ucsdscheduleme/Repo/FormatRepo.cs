@@ -304,6 +304,12 @@ namespace ucsdscheduleme.Repo
                 .Cast<Days>()
                 .Where(s => meeting.Days.HasFlag(s));
 
+            Location location = meeting.Location;
+            string building = location?.Building ?? "";
+            string room = location?.RoomNumber ?? "";
+            string trimmedLocation = $"{room} {building}".Trim();
+            string locationString = (string.IsNullOrWhiteSpace(trimmedLocation)) ? "TBA" : trimmedLocation;
+
             foreach (var day in days)
             {
                 CalendarEvent calendarEvent = new CalendarEvent
@@ -315,7 +321,8 @@ namespace ucsdscheduleme.Repo
                     ProfessorName = professorName,
                     Timespan = $"{startString} - {endString}",
                     DurationInMinutes = durationInMinutes,
-                    StartTimeInMinutesAfterFirstHour = startTimeInMinutes
+                    StartTimeInMinutesAfterFirstHour = startTimeInMinutes,
+                    Location = locationString
                 };
 
                 events.Add(calendarEvent);

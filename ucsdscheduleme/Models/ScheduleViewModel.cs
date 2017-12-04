@@ -74,5 +74,6 @@ namespace ucsdscheduleme.Models
         public string ProfessorName { get; set; }
         // For example "A00"
         public string SectionCode { get; set; }
+        public string Location { get; set; }
     }
 }
