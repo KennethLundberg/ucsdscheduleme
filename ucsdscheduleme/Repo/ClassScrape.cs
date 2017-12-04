@@ -576,8 +576,8 @@ namespace HtmlAgilitySandbox
             foreach (Course course in courseList)
             {
                 _context.Courses.Add(course);
-                _context.SaveChanges();
             }
+            _context.SaveChanges();
         }
 
         /// <summary>
