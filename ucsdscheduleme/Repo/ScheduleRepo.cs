@@ -258,10 +258,7 @@ namespace ucsdscheduleme.Repo
                     // Find a cape that corresponds to the course and professor
                     var cape = section.Course.Cape.First(c => c.ProfessorId == section.Professor.Id);
 
-                    if (cape != null)
-                    {
-                        currentGPA += cape.AverageGradeReceived;
-                    }
+                    currentGPA += cape?.AverageGradeReceived ?? 0M;
                 }
 
                 // Compare GPA of this schedule to the highest schedule GPA

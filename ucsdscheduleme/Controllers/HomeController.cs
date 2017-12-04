@@ -42,7 +42,7 @@ namespace ucsdscheduleme.Controllers
                                         .ThenInclude(c => c.User)
                                    .Include(s => s.Course)
                                         .ThenInclude(c => c.Sections)
-                                            .Include(s => s.Professor)
+                                            .ThenInclude(s => s.Professor)
                                    .Include(s => s.Course)
                                         .ThenInclude(c => c.Sections)
                                             .ThenInclude(s => s.Meetings)
