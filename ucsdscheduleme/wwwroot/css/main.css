@@ -154,7 +154,7 @@ ul {
 }
 
     .event:hover {
-        height: auto !important;
+        overflow: visible;
     }
 
     .event .event-header {

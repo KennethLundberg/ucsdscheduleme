@@ -180,7 +180,7 @@ ul {
     @include boxshadow();
 
     &:hover {
-        height: auto !important;
+        overflow: visible;
     }
 
     .event-header {
