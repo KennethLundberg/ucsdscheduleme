@@ -72,11 +72,6 @@ ul {
 
 #logo {
     text-align: center;
-    color: $secondary-color;
-    background-color: $primary-color;
-    padding: 10px;
-    font-size: 1.5em;
-    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -710,7 +705,7 @@ ul {
 .course-stat-container {
     overflow-y: scroll;
     margin-top: 15px;
-    height: 435px;
+    height: 61%;
 }
 
 .course-stat {
