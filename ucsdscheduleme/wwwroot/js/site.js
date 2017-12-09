@@ -956,7 +956,7 @@ function generateSchedule() {
     var selectedValue = optimizationSelect.options[optimizationSelect.selectedIndex].value;
 
     if (selectedValue == -1) {
-        myApp.errors.push("Please select a prefrence.");
+        myApp.errors.push("Please select a schedule preference.");
         showAlert();
         return;
     }
@@ -972,9 +972,14 @@ function generateSchedule() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
-
             if (response.error != "") {
-                myApp.errors.push(response.error);
+                if (response.courses == null) {
+                    myApp.errors.push("Please add a class to generate a schedule.");
+                } else if (response.error == null) {
+                    myApp.errors.push("An unknown error occurred.");
+                } else {
+                    myApp.errors.push(response.error);
+                }
                 showAlert();
                 return;
             }
@@ -1059,12 +1064,6 @@ function saveCustomEvent() {
         error = true;
     }
 
-    if (days == 0) {
-        myApp.errors.push("Please enter select at least on day.");
-        showAlert();
-        error = true;
-    }
-
     if (startTime == "") {
         myApp.errors.push("Please enter a start time.");
         showAlert();
@@ -1073,6 +1072,12 @@ function saveCustomEvent() {
 
     if (endTime == "") {
         myApp.errors.push("Please enter a end time.");
+        showAlert();
+        error = true;
+    }
+
+    if (days == 0) {
+        myApp.errors.push("Please select at least one day.");
         showAlert();
         error = true;
     }
