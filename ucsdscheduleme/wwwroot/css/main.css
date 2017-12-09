@@ -101,7 +101,7 @@ ul {
         border: 1px dashed #E0E0E0;
         border-right: none;
         border-top: none;
-        /* fix the Friday border due to overflow scroll */
+        /* fix for the Friday border due to overflow scroll */
     }
 
         .schedule .schedule-group:first-of-type {
@@ -201,7 +201,7 @@ ul {
 
             .event .event-header .event-info span {
                 display: block;
-                font-size: 11px;
+                font-size: 10px;
             }
 
 .event-activated {
@@ -642,6 +642,8 @@ ul {
         -ms-flex-order: 1;
         -webkit-order: 1;
         order: 1;
+        display: flex;
+        flex-direction: column;
         padding: 15px;
     }
 
@@ -651,9 +653,12 @@ ul {
         -ms-flex-order: 3;
         -webkit-order: 3;
         order: 3;
+        display: flex;
+        flex-direction: column;
         padding: 15px;
     }
 }
+
 /* For the right side bar */
 #overall-stat {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
@@ -671,7 +676,6 @@ ul {
     border: none;
     outline: none;
     border-collapse: collapse;
-    margin-bottom: 15px;
 }
 
     #tabledata tr:last-of-type {
@@ -701,7 +705,6 @@ ul {
 .course-stat-container {
     overflow-y: scroll;
     margin-top: 15px;
-    height: 56%;
 }
 
 .course-stat {
