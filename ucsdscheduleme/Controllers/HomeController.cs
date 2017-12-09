@@ -145,7 +145,7 @@ namespace ucsdscheduleme.Controllers
             if (!schedules.Any())
             {
                 // TODO: return error
-                return Json(new ScheduleViewModel());
+                return Json(new ScheduleViewModel() { Error = "No possible schedule for given courses." });
             }
 
 
@@ -162,6 +162,7 @@ namespace ucsdscheduleme.Controllers
             _context.SaveChanges();
 
             ScheduleViewModel model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+            model.Error = "";
 
             return Json(model);
         }

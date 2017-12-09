@@ -80,9 +80,11 @@
             <div id="logo">
                 <img src="~/images/logo.svg" />
 
-                <div class="alert">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    This is an alert box.
+                <div class="alert" id="alert">
+                    <span class="closebtn" onclick="hideAlert();">&times;</span>
+                    <ul id="error-list">
+                        <li>This is an alert box.</li>
+                    </ul>
                 </div>
             </div> 
         </div>
@@ -141,8 +143,10 @@
         </div>
         <div class="course-stat-container" id="course-stat-container">
         </div>
-        <div class="button" onclick="visibilityOn('custom-event-form');">Add Custom Event</div>
-        <div class="logout-button" onclick="logoutCallout()"></div>
+        <div class="button-wrapper">
+            <div class="button" onclick="visibilityOn('custom-event-form');">Add Custom Event</div>
+            <div class="logout-button" onclick="logoutCallout()"></div>
+        </div>
     </div>
 </div>
 
@@ -204,7 +208,8 @@
             logout: "@Url.Action("Logout", "Account")"
         },
         coursesToSchedule: courseListFromModel,
-        courses: coursesFromModel
+        courses: coursesFromModel,
+        errors: []
     };
 
     var isEditing = false;
