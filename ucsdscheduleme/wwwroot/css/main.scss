@@ -363,7 +363,7 @@ ul {
 }
 
 .class-list {
-    height: 42%;
+    height: 40%;
     margin-top: 15px;
     overflow-y: scroll;
 }
@@ -399,8 +399,8 @@ ul {
     @include boxshadow();
     display: none;
     position: absolute;
-    left: 40%;
-    top: 25%;
+    left: 43.6%;
+    top: 30%;
     min-width: 250px;
     min-height: 10px;
     z-index: 9;
@@ -676,7 +676,6 @@ ul {
     @include boxshadow();
     position: relative;
     text-align: center;
-    margin: auto;
     background-color: $primary-color;
     border-top: 4px solid $secondary-color;
 }
@@ -718,10 +717,8 @@ ul {
 
 .course-stat-container {
     overflow-y: scroll;
+    height: 60%;
     margin-top: 15px;
-}
-
-.button-wrapper {
 }
 
 .course-stat {
@@ -775,6 +772,7 @@ ul {
 
 #error-list {
     padding: 0;
+    padding-top: 5px;
     text-align: left;
 }
 
