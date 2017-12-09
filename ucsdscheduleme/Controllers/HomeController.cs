@@ -10,6 +10,7 @@ using PossibleSchedules = System.Collections.Generic.List<System.Collections.Gen
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using ucsdscheduleme.Repo.OptimizationStrategies;
 
 namespace ucsdscheduleme.Controllers
 {
@@ -36,6 +37,17 @@ namespace ucsdscheduleme.Controllers
             var sectionIds = _context.UserSections
                                     .Where(us => us.User == user)
                                     .Select(us => us.SectionId);
+
+            // If we have no courses to show, why don't we just stop here?
+            if(sectionIds.Count() == 0)
+            {
+                var emptyReturn = new UserScheduleViewModel
+                {
+                    CourseListItems = new List<CourseListItemViewModel>(),
+                    ScheduleViewModel = new ScheduleViewModel()
+                };
+                return View(emptyReturn);
+            }
 
             var schedule = _context.Sections
                                    .Include(s => s.Course)
@@ -66,6 +78,7 @@ namespace ucsdscheduleme.Controllers
                         IsCustomEvent = s.Course.User != null
                     }).ToList();
             }
+            // We shouldn't ever get here, because if a user has a user section, then schedule shouldn't be null.
             else
             {
                 model.ScheduleViewModel = new ScheduleViewModel();
@@ -99,6 +112,19 @@ namespace ucsdscheduleme.Controllers
         [HttpPost]
         public IActionResult GenerateSchedule([FromBody] CourseInfoToSchedule courseInfo)
         {
+            // Get the current user.
+            var user = _userManager.GetUserAsync(User).Result;
+
+            // Check if there are no course ids, if there arn't remove all courses from schedule.
+            if (courseInfo.CourseIds?.Length == 0)
+            {
+                // Remove all user sections for this user.
+                var sectionsForUser = _context.UserSections.Where(us => us.UserId == user.Id).ToList();
+                _context.UserSections.RemoveRange(sectionsForUser ?? new List<UserSection>());
+                _context.SaveChanges();
+                return Json(new ScheduleViewModel());
+            }
+
             Course[] courses = _context.Courses
                 .Include(c => c.Sections)
                     .ThenInclude(s => s.Professor)
@@ -116,17 +142,14 @@ namespace ucsdscheduleme.Controllers
             // Call the schedule finding algorithm.
             PossibleSchedules schedules = scheduleRepo.FindScheduleForClasses(courses);
 
-            
-
             if (!schedules.Any())
             {
                 // TODO: return error
-                return Json(new ScheduleViewModel());
+                return Json(new ScheduleViewModel() { Error = "No possible schedule for given courses." });
             }
-            List<Section> schedule = scheduleRepo.Optimize(optimization, schedules);
-            
-            // Get the current user.
-            var user = _userManager.GetUserAsync(User).Result;
+
+
+            List<Section> schedule = ScheduleOptimizationFactory.GetOptimization(optimization).Optimize(schedules);
 
             // Create user sections to add.
             var sectionsToAdd = schedule.Select(s => new UserSection { Section = s, User = user });           
@@ -139,6 +162,7 @@ namespace ucsdscheduleme.Controllers
             _context.SaveChanges();
 
             ScheduleViewModel model = FormatRepo.FormatSectionsToCalendarEvent(schedule);
+            model.Error = "";
 
             return Json(model);
         }
@@ -172,14 +196,6 @@ namespace ucsdscheduleme.Controllers
             var modelStateErrors = this.ModelState.Values.SelectMany(m => m.Errors);
             var user = _userManager.GetUserAsync(User).Result;
 
-            // Get time data
-            string[] startTokens = data.StartTime.Split(':');
-            string[] endTokens = data.EndTime.Split(':');
-            var startHr = Int32.Parse(startTokens[0]);
-            var startMin = Int32.Parse(startTokens[1]);
-            var endHr = Int32.Parse(endTokens[0]);
-            var endMin = Int32.Parse(endTokens[1]);
-
             // Initialize database objects
             var course = new Course() {
                 CourseAbbreviation = data.Name,
@@ -195,8 +211,8 @@ namespace ucsdscheduleme.Controllers
                 MeetingType = MeetingType.CustomEvent,
                 Code = "A00",
                 Days = data.Days,
-                StartTime = new DateTime(1, 1, 1, startHr, startMin, 0),
-                EndTime = new DateTime(1, 1, 1, endHr, endMin, 0),
+                StartTime = new DateTime(1, 1, 1, data.StartTime.Hour, data.StartTime.Minute, 0),
+                EndTime = new DateTime(1, 1, 1, data.EndTime.Hour, data.EndTime.Minute, 0),
             };
 
             // Add back connections
@@ -216,7 +232,6 @@ namespace ucsdscheduleme.Controllers
             _context.SaveChanges();
 
             // Return response object
-
             var calendarEvents = FormatRepo.PopulateSectionEventsForBase(new List<Section> { section }, course)
                                            .Select(d => d.Value).First();
 

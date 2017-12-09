@@ -1,6 +1,5 @@
 ﻿function setup() {
     updateSchedule(myApp.courses);
-    console.log("setup()");
 }
 
 /* called when DOM is ready */
@@ -19,7 +18,6 @@ function typeAheadCallout(input) {
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     var send = { "input": input, "alreadyAddedCourses": myApp.coursesToSchedule };
-    console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
 
     // When the text is edited, it clears the search and populates it
@@ -30,7 +28,6 @@ function typeAheadCallout(input) {
 
             for (i = 0; i < text.length; i++) {
                 populateSearch(text[i]);
-                console.log(text[i]);
             }
         }
     }
@@ -70,9 +67,6 @@ function populateSearch(data) {
 
     course.id = data.id;
 
-    console.log("populateSearch");
-    console.log(course);
-
     // Add it to the drop down
     courses.append(course);
 }
@@ -107,7 +101,6 @@ function addToScheduleList(event, isCustom = false) {
     list.append(course);
 
     // Add course to current schedule
-    console.log("data.id: " + event.id);
     myApp.coursesToSchedule.push(event.id);
 }
 
@@ -116,7 +109,6 @@ function addToScheduleList(event, isCustom = false) {
  * @param {HTMLElement} data class div selected to add
  */
 function addCourse(data) {
-    console.log("Data: " + JSON.stringify(data));
 
     // Hide dropdown menu
     var dropdown = document.getElementById("courseItems");
@@ -135,7 +127,6 @@ function removeCustomEventCallout(courseId) {
     var url = myApp.urls.removeCustomEvent + "?courseId=" + courseId;
     xhr.open("DELETE", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    console.log("Payload: " + JSON.stringify(courseId));
     xhr.send();
 }
 
@@ -147,7 +138,13 @@ function removeCourse(e) {
     var course = e.target.parentNode.parentNode;
     var id = course.id;
 
-    var index = myApp.coursesToSchedule.indexOf(Number(id));
+    var index = -1;
+    for (var i = 0; i < myApp.coursesToSchedule.length; i++) {
+        if (myApp.coursesToSchedule[i] == id) {
+            index = i;
+            break;
+        }
+    }
 
     if (index >= 0) {
         myApp.coursesToSchedule.splice(index, 1);
@@ -343,7 +340,6 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
  * @description From the list of all bases and sections, get only the selected ones.
  * Then add each event to the calendar by calling insertMeeting on each meeting
  * @param {Meeting} meetings - the JSON object with a list of selected bases, selections
- * See global variable TODO for the structure
  */
 function updateMeetings(courses) {
     /* iterate through all the meetings in the JSON */
@@ -438,12 +434,9 @@ function showBaseAndAllSections(ids) {
     }
 
     var sectionsKeys = Object.keys(sectionEvents);
-    console.log("showBaseAndAllSections key: " + JSON.stringify(sectionsKeys));
     sectionsKeys.forEach(function (key) {
         var section = sectionEvents[key];
-        console.log("showBaseAndAllSections section: " + JSON.stringify(section));
         for(var sectionIndex in section) {
-            console.log("showBaseAndAllSections section[sectionIndex]: " + JSON.stringify(section[sectionIndex]));
             var eventElement = insertMeeting(section[sectionIndex], ids.courseId, ids.baseId, key);
             eventElement.classList.add("event-activated");
         }
@@ -452,30 +445,20 @@ function showBaseAndAllSections(ids) {
     hideEditButtons();
 }
 
-
-
 function changeSchedule(event) {
-    console.log("changeSchedule event")
-    console.log(event)
-
     var info = extractEventInfo(event);
-    console.log("changeSchedule info")
-    console.log(info)
 
     // base selected
     if (info.isBaseEvent) {
-        console.log("changeSchedule calls showAllBasesAndAllSections")
         showAllBasesAndAllSections(info);
     }
     // section selected
     else {
-        console.log("changeSchedule calls showBaseAndAllSections")
         showBaseAndAllSections(info);
     }
 }
 
 function changeScheduleSectionCallout(oldSectionId, newSectionId) {
-    console.log("changeScheduleSectionCallout");
     var xhr = new XMLHttpRequest();
     var url = myApp.urls.changeScheduleSection;
     xhr.open("POST", url, true);
@@ -502,7 +485,6 @@ function updateSelectedSection(event) {
     updateSchedule(myApp.courses);
 
     isEditing = false;
-    console.log("before changeScheduleSectionCallout");
     changeScheduleSectionCallout(currentSectionId, ids.sectionId);
     showEditButtons();
 }
@@ -528,7 +510,6 @@ function updateSelectedBase(event) {
     showBaseAndAllSections(ids);
 }
 
-
 /**
  * updatedSelectedSectionAsBase
  * @param: sectionId: 
@@ -548,11 +529,9 @@ function updatedSelectedSectionAsBase(event) {
     updateMeetings(myApp.courses);
 
     isEditing = false;
-    console.log("before changeScheduleSectionCallout");
     changeScheduleSectionCallout(currentSectionId, ids.sectionId);
     showEditButtons();
 }
-
 
 // clicked on section or base, as defined by extractEventInfo
 function updateEvent(event) {
@@ -568,18 +547,10 @@ function updateEvent(event) {
 
 function activateSelectedBasesAndSections(event) {
     var infoForSelected = extractEventInfo(event, false);
-    
-    console.log("activateSelectedBasesAndSections")
-    console.log(infoForSelected)
 
     var allActivatedEvents = document.getElementsByClassName('event-activated');
-    console.log("allActivatedEvents")
-    console.log(allActivatedEvents)
-
 
     if (!infoForSelected.isBaseEvent) {
-
-        console.log("activateSelectedBasesAndSections !infoForSelected.isBaseEvent")
         var toDeactivate = [];
         for (var j = 0; j < allActivatedEvents.length; j++) {
             var classList = allActivatedEvents[j].classList;
@@ -588,11 +559,9 @@ function activateSelectedBasesAndSections(event) {
             if (classList.contains(infoForSelected.courseId) && classList.contains(infoForSelected.baseId)) {
                 if (classList.contains(infoForSelected.sectionId) || infoForCurrent.isBaseEvent) {
                 } else {
-                    console.log("Remove 1");
                     toDeactivate.push(allActivatedEvents[j]);
                 }
             } else {
-                console.log("Remove 2");
                 toDeactivate.push(allActivatedEvents[j]);
             }
         }
@@ -966,9 +935,6 @@ function updateOneTimeEvents(courses) {
 }
 
 function updateSchedule(courses) {
-    console.log("------------------------------------------")
-    console.log(JSON.stringify(courses));
-    console.log("------------------------------------------")
     myApp.courses = courses;
     clearOneTimeEvents();
     updateOneTimeEvents(courses);
@@ -985,27 +951,20 @@ function generateSchedule() {
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    // TODO check if optimization isn't -1 and also that there is at least one course.
-
     // Grab optimization from select list.
     var optimizationSelect = document.getElementById("optimization");
     var selectedValue = optimizationSelect.options[optimizationSelect.selectedIndex].value;
 
     if (selectedValue == -1) {
+        myApp.errors.push("Please select a prefrence.");
+        showAlert();
         return;
-        // TODO Error Message
     }
 
     // Grab courses to schedule
     var courseIds = myApp.coursesToSchedule;
-    if (courseIds.length < 1) {
-        return;
-        // TODO error message
-    }
 
     var request = { "optimization": selectedValue, "courseIds": courseIds };
-
-    console.log("Payload: " + JSON.stringify(request));
 
     xhr.send(JSON.stringify(request));
 
@@ -1013,6 +972,13 @@ function generateSchedule() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
+
+            if (response.error != "") {
+                myApp.errors.push(response.error);
+                showAlert();
+                return;
+            }
+
             updateSchedule(response.courses);
         }
     }
@@ -1040,15 +1006,11 @@ function customEventCallout(name, days, startTime, endTime) {
         "endTime": endTime
     };
 
-    //TODO check valid input
-
-    console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
 
     // Generate schedule with new event
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log("Custom Event: " + JSON.stringify(xhr.responseText));
             var text = JSON.parse(xhr.responseText);
 
             //get course id to add to scheduleing
@@ -1088,6 +1050,37 @@ function saveCustomEvent() {
 
     var days = monday | tuesday | wednesday | thursday | friday;
 
+    // Check valid input
+    var error = false;
+
+    if (name == "") {
+        myApp.errors.push("Please enter a name.");
+        showAlert();
+        error = true;
+    }
+
+    if (days == 0) {
+        myApp.errors.push("Please enter select at least on day.");
+        showAlert();
+        error = true;
+    }
+
+    if (startTime == "") {
+        myApp.errors.push("Please enter a start time.");
+        showAlert();
+        error = true;
+    }
+
+    if (endTime == "") {
+        myApp.errors.push("Please enter a end time.");
+        showAlert();
+        error = true;
+    }
+
+    if (error == true) {
+        return;
+    }
+
     /*callout function*/
     customEventCallout(name, days, startTime, endTime);
 
@@ -1118,4 +1111,28 @@ function logoutCallout() {
             window.location = xhr.responseText;
         }
     }
+}
+
+function showAlert() {
+    var errorList = document.getElementById('error-list');
+
+    while (errorList.firstChild) {
+        errorList.removeChild(errorList.firstChild);
+    }
+    console.log(JSON.stringify(myApp.errors));
+    for (errorIndex in myApp.errors) {
+        var errorItem = document.createElement('li');
+        errorItem.innerHTML = myApp.errors[errorIndex];
+        errorList.append(errorItem);
+    }
+
+    var alert = document.getElementById('alert');
+    alert.classList.add('pop-up');
+}
+
+function hideAlert() {
+    var alert = document.getElementById('alert');
+    alert.classList.remove('pop-up');
+
+    myApp.errors = [];
 }

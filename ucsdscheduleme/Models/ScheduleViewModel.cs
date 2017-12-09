@@ -21,6 +21,7 @@ namespace ucsdscheduleme.Models
     public class ScheduleViewModel
     {
         public Dictionary<CourseId, CourseViewModel> Courses { get; set; }
+        public string Error { get; set; }
     }
 
     public class CourseViewModel
