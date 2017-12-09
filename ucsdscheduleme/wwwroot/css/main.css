@@ -752,9 +752,13 @@ ul {
     color: white;
     margin-bottom: 15px;
     position: absolute;
-    top: 0;
+    top: 30px;
     left: -500px;
-    transform: translateY(50%);
+}
+
+#error-list {
+    padding: 0;
+    text-align: left;
 }
 
 .pop-up {

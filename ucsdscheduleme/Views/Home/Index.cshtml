@@ -80,9 +80,11 @@
             <div id="logo">
                 <img src="~/images/logo.svg" />
 
-                <div class="alert">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    This is an alert box.
+                <div class="alert" id="alert">
+                    <span class="closebtn" onclick="hideAlert();">&times;</span>
+                    <ul id="error-list">
+                        <li>This is an alert box.</li>
+                    </ul>
                 </div>
             </div> 
         </div>
@@ -206,7 +208,8 @@
             logout: "@Url.Action("Logout", "Account")"
         },
         coursesToSchedule: courseListFromModel,
-        courses: coursesFromModel
+        courses: coursesFromModel,
+        errors: []
     };
 
     var isEditing = false;

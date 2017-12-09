@@ -343,7 +343,6 @@ function insertMeeting(meeting, courseId, baseId, sectionId) {
  * @description From the list of all bases and sections, get only the selected ones.
  * Then add each event to the calendar by calling insertMeeting on each meeting
  * @param {Meeting} meetings - the JSON object with a list of selected bases, selections
- * See global variable TODO for the structure
  */
 function updateMeetings(courses) {
     /* iterate through all the meetings in the JSON */
@@ -452,8 +451,6 @@ function showBaseAndAllSections(ids) {
     hideEditButtons();
 }
 
-
-
 function changeSchedule(event) {
     console.log("changeSchedule event")
     console.log(event)
@@ -528,7 +525,6 @@ function updateSelectedBase(event) {
     showBaseAndAllSections(ids);
 }
 
-
 /**
  * updatedSelectedSectionAsBase
  * @param: sectionId: 
@@ -552,7 +548,6 @@ function updatedSelectedSectionAsBase(event) {
     changeScheduleSectionCallout(currentSectionId, ids.sectionId);
     showEditButtons();
 }
-
 
 // clicked on section or base, as defined by extractEventInfo
 function updateEvent(event) {
@@ -985,23 +980,18 @@ function generateSchedule() {
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    // TODO check if optimization isn't -1 and also that there is at least one course.
-
     // Grab optimization from select list.
     var optimizationSelect = document.getElementById("optimization");
     var selectedValue = optimizationSelect.options[optimizationSelect.selectedIndex].value;
 
     if (selectedValue == -1) {
+        myApp.errors.push("Please select a prefrence.");
+        showAlert();
         return;
-        // TODO Error Message
     }
 
     // Grab courses to schedule
     var courseIds = myApp.coursesToSchedule;
-    if (courseIds.length < 1) {
-        return;
-        // TODO error message
-    }
 
     var request = { "optimization": selectedValue, "courseIds": courseIds };
 
@@ -1013,6 +1003,13 @@ function generateSchedule() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
+
+            if (response.error != "") {
+                myApp.errors.push(response.error);
+                showAlert();
+                return;
+            }
+
             updateSchedule(response.courses);
         }
     }
@@ -1040,8 +1037,7 @@ function customEventCallout(name, days, startTime, endTime) {
         "endTime": endTime
     };
 
-    //TODO check valid input
-
+    
     console.log("Payload: " + JSON.stringify(send));
     xhr.send(JSON.stringify(send));
 
@@ -1088,6 +1084,37 @@ function saveCustomEvent() {
 
     var days = monday | tuesday | wednesday | thursday | friday;
 
+    // Check valid input
+    var error = false;
+
+    if (name == "") {
+        myApp.errors.push("Please enter a name.");
+        showAlert();
+        error = true;
+    }
+
+    if (days == 0) {
+        myApp.errors.push("Please enter select at least on day.");
+        showAlert();
+        error = true;
+    }
+
+    if (startTime == "") {
+        myApp.errors.push("Please enter a start time.");
+        showAlert();
+        error = true;
+    }
+
+    if (endTime == "") {
+        myApp.errors.push("Please enter a end time.");
+        showAlert();
+        error = true;
+    }
+
+    if (error == true) {
+        return;
+    }
+
     /*callout function*/
     customEventCallout(name, days, startTime, endTime);
 
@@ -1118,4 +1145,28 @@ function logoutCallout() {
             window.location = xhr.responseText;
         }
     }
+}
+
+function showAlert() {
+    var errorList = document.getElementById('error-list');
+
+    while (errorList.firstChild) {
+        errorList.removeChild(errorList.firstChild);
+    }
+    console.log(JSON.stringify(myApp.errors));
+    for (errorIndex in myApp.errors) {
+        var errorItem = document.createElement('li');
+        errorItem.innerHTML = myApp.errors[errorIndex];
+        errorList.append(errorItem);
+    }
+
+    var alert = document.getElementById('alert');
+    alert.classList.add('pop-up');
+}
+
+function hideAlert() {
+    var alert = document.getElementById('alert');
+    alert.classList.remove('pop-up');
+
+    myApp.errors = [];
 }
