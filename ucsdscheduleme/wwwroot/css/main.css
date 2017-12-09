@@ -101,7 +101,7 @@ ul {
         border: 1px dashed #E0E0E0;
         border-right: none;
         border-top: none;
-        /* fix the Friday border due to overflow scroll */;
+        /* fix for the Friday border due to overflow scroll */
     }
 
         .schedule .schedule-group:first-of-type {
@@ -144,7 +144,7 @@ ul {
 .event {
     position: absolute;
     background-color: white;
-    width: calc( 100% - 10px);
+    width: calc( 100% - 10px );
     /*off-set for very first line @ 7:30am */
     top: 50px;
     height: 100px;
@@ -777,3 +777,5 @@ ul {
     .closebtn:hover {
         color: #151515;
     }
+
+/*# sourceMappingURL=main.css.map */
