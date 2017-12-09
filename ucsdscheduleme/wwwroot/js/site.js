@@ -975,13 +975,16 @@ function generateSchedule() {
             if (response.error != "") {
                 if (response.courses == null) {
                     myApp.errors.push("Please add a class to generate a schedule.");
+                    showAlert();
                 } else if (response.error == null) {
                     myApp.errors.push("An unknown error occurred.");
+                    showAlert();
+                    return;
                 } else {
                     myApp.errors.push(response.error);
+                    showAlert();
+                    return;
                 }
-                showAlert();
-                return;
             }
 
             updateSchedule(response.courses);
