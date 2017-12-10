@@ -122,7 +122,7 @@ namespace ucsdscheduleme.Controllers
                 var sectionsForUser = _context.UserSections.Where(us => us.UserId == user.Id).ToList();
                 _context.UserSections.RemoveRange(sectionsForUser ?? new List<UserSection>());
                 _context.SaveChanges();
-                return Json(new ScheduleViewModel());
+                return Json(new ScheduleViewModel() {Error = "Please add a class to generate a schedule." });
             }
 
             Course[] courses = _context.Courses

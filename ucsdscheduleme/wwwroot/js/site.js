@@ -973,13 +973,8 @@ function generateSchedule() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
             if (response.error != "") {
-                if (response.courses == null) {
-                    myApp.errors.push("Please add a class to generate a schedule.");
-                } else if (response.error == null) {
-                    myApp.errors.push("An unknown error occurred.");
-                } else {
-                    myApp.errors.push(response.error);
-                }
+                console.log(response.error);
+                myApp.errors.push(response.error);
                 showAlert();
                 return;
             }
